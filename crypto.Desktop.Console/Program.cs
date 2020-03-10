@@ -13,7 +13,7 @@ namespace crypto.Desktop.Cnsl
             }
             catch (ArgumentException e)
             {
-                RunTimeNotifier.Error($"Something went wrong: {e.Message}");
+                Notifier.Error($"Something went wrong: {e.Message}");
             }
 
             // new argument

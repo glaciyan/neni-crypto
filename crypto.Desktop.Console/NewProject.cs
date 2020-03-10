@@ -19,11 +19,6 @@ namespace crypto.Desktop.Cnsl
             Path = path;
         }
 
-        public int GetMinimumArguments()
-        {
-            return 0;
-        }
-
         public void Run()
         {
             Debug.WriteLine($"Name: {Name ?? "null"}, Path: {Path ?? "null"}");

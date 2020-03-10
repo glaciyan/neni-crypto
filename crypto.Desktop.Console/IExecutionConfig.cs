@@ -2,7 +2,6 @@
 {
     public interface IExecutionConfig
     {
-        int GetMinimumArguments();
         void Run();
     }
 }

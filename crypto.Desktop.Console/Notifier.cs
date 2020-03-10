@@ -2,7 +2,7 @@
 
 namespace crypto.Desktop.Cnsl
 {
-    public static class RunTimeNotifier
+    public static class Notifier
     {
         public static void Error(string message, bool color = true)
         {
