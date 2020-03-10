@@ -3,6 +3,8 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <AssemblyName>crypto</AssemblyName>
+    <RootNamespace>crypto.Desktop.Cnsl</RootNamespace>
   </PropertyGroup>
 
 </Project>

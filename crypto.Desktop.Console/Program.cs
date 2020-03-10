@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace crypto.Desktop.Console
+namespace crypto.Desktop.Cnsl
 {
     class Program
     {
