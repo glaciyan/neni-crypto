@@ -6,15 +6,18 @@ namespace crypto.Desktop.Cnsl
     {
         static void Main(string[] args)
         {
+            CommandLineArgumentParser.ParseConfig(args).Run();
+
             // parse arguments
-            try
-            {
-                CommandLineArgumentParser.ParseConfig(args).Run();
-            }
-            catch (ArgumentException e)
-            {
-                Notifier.Error($"Something went wrong: {e.Message}");
-            }
+            //try
+            //{
+            //    CommandLineArgumentParser.ParseConfig(args).Run();
+            //}
+            //catch (ArgumentException e)
+            //{
+            //    Notifier.Error($"Something went wrong: {e.Message}");
+            //}
+            // file not found execp
 
             // new argument
             // open argument

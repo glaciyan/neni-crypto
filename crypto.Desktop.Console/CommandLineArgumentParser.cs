@@ -11,8 +11,8 @@ namespace crypto.Desktop.Cnsl
 
             return args[0] switch
             {
-                NewProject.ArgumentKeyword => new NewProject(args.TryGetString(1), args.TryGetString(2)),
-
+                NewProject.Keyword => new NewProject(args.TryGetString(1), args.TryGetString(2)),
+                TestExec.Keyword => new TestExec(args.TryGetString(1), args.TryGetString(2)),
                 _ => throw new ArgumentException("Argument was not recognized")
             };
         }

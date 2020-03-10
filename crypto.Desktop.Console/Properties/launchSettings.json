@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "crypto.Desktop.Console": {
+      "commandName": "Project",
+      "commandLineArgs": "test testFile.txt target.enc"
+    }
+  }
+}
