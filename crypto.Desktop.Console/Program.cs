@@ -6,7 +6,23 @@ namespace crypto.Desktop.Cnsl
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            // parse arguments
+            try
+            {
+                CommandLineArgumentParser.ParseConfig(args).Run();
+            }
+            catch (ArgumentException e)
+            {
+                RunTimeNotifier.Error($"Something went wrong: {e.Message}");
+            }
+
+            // new argument
+            // open argument
+
+            // app config
+            // all classes should be extensible
+
+            // encrypt/decrypt
         }
     }
 }
