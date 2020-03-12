@@ -1,4 +1,4 @@
-﻿#nullable enable 
+﻿#nullable enable
 
 namespace crypto.Desktop.Cnsl
 {
@@ -7,13 +7,8 @@ namespace crypto.Desktop.Cnsl
         public static string? TryGetString(this string[] array, int index)
         {
             if (array.Length > index)
-            {
                 return array[index];
-            }
-            else
-            {
-                return null;
-            }
+            return null;
         }
     }
 }

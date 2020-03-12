@@ -8,12 +8,12 @@ namespace crypto.Core
     // maybe replace with memory mapped file
     public class RandomLengthFileContent
     {
-        public byte[] Data { get; set; }
-
         public RandomLengthFileContent(byte[] data)
         {
             Data = data;
         }
+
+        public byte[] Data { get; set; }
 
         public void WriteTo(Stream target)
         {

@@ -4,17 +4,15 @@ namespace crypto.Core
 {
     public class KeyIVPair
     {
-        private readonly byte[] _key;
-        private readonly byte[] _iv;
-
-        public byte[] Key => _key;
-        public byte[] IV => _iv;
-
         public KeyIVPair([NotNull] byte[] key, [NotNull] byte[] iv)
         {
-            _key = key;
-            _iv = iv;
+            Key = key;
+            IV = iv;
         }
+
+        public byte[] Key { get; }
+
+        public byte[] IV { get; }
 
         public static KeyIVPair FromPasswordString(string password, byte[] iv = null)
         {

@@ -3,9 +3,9 @@ using Serilog;
 
 namespace crypto.Desktop.Cnsl
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             // logger setup
 #if DEBUG

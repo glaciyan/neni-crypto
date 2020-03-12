@@ -4,6 +4,15 @@ namespace crypto.Core
 {
     public class CryptoFile
     {
+        private FileInfo _fi;
+        private string _name;
+
+        public CryptoFile(string fileName, FileInfo fileInfo = null)
+        {
+            FileName = fileName;
+            _fi = fileInfo;
+        }
+
         public string FileName { get; }
 
         public FileInfo FileInfo
@@ -22,15 +31,6 @@ namespace crypto.Core
                 return _name;
             }
             private set => _name = value;
-        }
-
-        private FileInfo _fi;
-        private string _name;
-
-        public CryptoFile(string fileName, FileInfo fileInfo = null)
-        {
-            FileName = fileName;
-            _fi = fileInfo;
         }
     }
 }

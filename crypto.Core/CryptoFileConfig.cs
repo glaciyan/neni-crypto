@@ -4,18 +4,15 @@ namespace crypto.Core
 {
     public class CryptoFileConfig
     {
-        public string FileName { get; set; }
-        public FileInfo PartnerFileInfo { get; set; }
-        public byte[] IV => _iv;
-
-        private readonly byte[] _iv;
-
-
         public CryptoFileConfig(string fileName, FileInfo partnerFileInfo, byte[] iv)
         {
             FileName = fileName;
             PartnerFileInfo = partnerFileInfo;
-            _iv = iv;
+            IV = iv;
         }
+
+        public string FileName { get; set; }
+        public FileInfo PartnerFileInfo { get; set; }
+        public byte[] IV { get; }
     }
 }
