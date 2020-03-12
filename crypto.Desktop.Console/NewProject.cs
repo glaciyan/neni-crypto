@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+﻿using Serilog;
 
 namespace crypto.Desktop.Cnsl
 {
@@ -7,8 +7,6 @@ namespace crypto.Desktop.Cnsl
         // new -> uses current directory
         // new name -> creates a new directory with that name and uses that
         // new name path -> goes to that path and creates a new directory with the given name and uses that
-
-        public const string Keyword = "new";
 
         public string Name { get; }
         public string Path { get; private set; }
@@ -21,7 +19,9 @@ namespace crypto.Desktop.Cnsl
 
         public void Run()
         {
-            Debug.WriteLine($"Name: {Name ?? "null"}, Path: {Path ?? "null"}");
+            Log.Debug("Running NewProject with " +
+                            $"Name = {Name ?? "null"}, Path = {Path ?? "null"}");
+
 
 
         }

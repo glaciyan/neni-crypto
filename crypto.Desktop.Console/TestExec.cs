@@ -5,8 +5,6 @@ namespace crypto.Desktop.Cnsl
 {
     public class TestExec : IExecutionConfig
     {
-        public const string Keyword = "test";
-
         public CryptoFile Source { get; }
         public string Destination { get; }
 

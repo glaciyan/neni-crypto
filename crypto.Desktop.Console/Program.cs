@@ -1,4 +1,5 @@
 ﻿using System;
+using Serilog;
 
 namespace crypto.Desktop.Cnsl
 {
@@ -6,18 +7,20 @@ namespace crypto.Desktop.Cnsl
     {
         static void Main(string[] args)
         {
-            CommandLineArgumentParser.ParseConfig(args).Run();
+            // logger setup
+#if DEBUG
+            Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateLogger();
+#endif
 
-            // parse arguments
-            //try
-            //{
-            //    CommandLineArgumentParser.ParseConfig(args).Run();
-            //}
-            //catch (ArgumentException e)
-            //{
-            //    Notifier.Error($"Something went wrong: {e.Message}");
-            //}
-            // file not found execp
+            //parse arguments
+            try
+            {
+                CommandLineArgumentParser.ParseConfig(args).Run();
+            }
+            catch (Exception e)
+            {
+                Notifier.Error($"Something went wrong: {e.Message}");
+            }
 
             // new argument
             // open argument
