@@ -19,6 +19,7 @@ namespace crypto.Desktop.Cnsl
             }
             catch (Exception e)
             {
+                Log.Error(e.ToString());
                 Notifier.Error($"Something went wrong: {e.Message}");
             }
 

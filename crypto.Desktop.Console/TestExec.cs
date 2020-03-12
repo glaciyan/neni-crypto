@@ -3,6 +3,7 @@ using crypto.Core;
 
 namespace crypto.Desktop.Cnsl
 {
+    // TODO: remove
     public class TestExec : IExecutionConfig
     {
         public CryptoFile Source { get; }
@@ -20,6 +21,8 @@ namespace crypto.Desktop.Cnsl
             var pw = Console.ReadLine();
 
             var keyring = KeyIVPair.FromPasswordString(pw);
+
+            var cFConfig = new CryptoFileConfig(Source.FileName, Source.FileInfo, keyring.IV);
 
             CryptoFileWriter.WriteCryptoFile(Source, keyring, Destination);
         }

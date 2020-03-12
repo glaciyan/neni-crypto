@@ -16,12 +16,12 @@ namespace crypto.Core
             _iv = iv;
         }
 
-        public static KeyIVPair FromPasswordString(string password)
+        public static KeyIVPair FromPasswordString(string password, byte[] iv = null)
         {
             return
                 new KeyIVPair(
                     password.ToByteArraySHA256(32),
-                    CryptoRNG.GetRandomByte(16)
+                    iv ?? CryptoRNG.GetRandomByte(16)
                 );
         }
     }

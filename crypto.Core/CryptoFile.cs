@@ -6,7 +6,6 @@ namespace crypto.Core
     {
         public string FileName { get; }
 
-        private FileInfo _fi;
         public FileInfo FileInfo
         {
             get => _fi ??= new FileInfo(FileName);
@@ -14,6 +13,19 @@ namespace crypto.Core
         }
 
         public bool Exists => FileInfo.Exists;
+
+        public string Name
+        {
+            get
+            {
+                _name ??= Exists ? Path.GetFileName(FileName) : throw new FileNotFoundException();
+                return _name;
+            }
+            private set => _name = value;
+        }
+
+        private FileInfo _fi;
+        private string _name;
 
         public CryptoFile(string fileName, FileInfo fileInfo = null)
         {
