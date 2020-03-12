@@ -25,6 +25,7 @@ namespace crypto.Desktop.Cnsl
             var cFConfig = new CryptoFileConfig(Source.FileName, Source.FileInfo, keyring.IV);
 
             CryptoFileWriter.WriteCryptoFile(Source, keyring, Destination);
+            CryptoFileConfigWriter.WriteCryptoFileConfig(cFConfig, Destination + ".ncg");
         }
     }
 }

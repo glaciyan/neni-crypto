@@ -6,8 +6,10 @@ namespace crypto.Core
     {
         public string FileName { get; set; }
         public FileInfo PartnerFileInfo { get; set; }
+        public byte[] IV => _iv;
 
         private readonly byte[] _iv;
+
 
         public CryptoFileConfig(string fileName, FileInfo partnerFileInfo, byte[] iv)
         {

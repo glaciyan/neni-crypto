@@ -3,20 +3,21 @@ using System.IO;
 
 namespace crypto.Core
 {
+    // not memory friendly,
+    // but good enough for the small amount of data I will write,
+    // maybe replace with memory mapped file
     public class RandomLengthFileContent
     {
         public byte[] Data { get; set; }
-        public long Size { get; set; }
 
         public RandomLengthFileContent(byte[] data)
         {
             Data = data;
-            Size = data.LongLength;
         }
 
         public void WriteTo(Stream target)
         {
-            target.Write(BitConverter.GetBytes(Size));
+            target.Write(BitConverter.GetBytes(Data.Length));
             target.Write(Data);
         }
 
@@ -24,9 +25,9 @@ namespace crypto.Core
         {
             var longBuffer = new byte[sizeof(long)];
             destination.Read(longBuffer);
-            Size = BitConverter.ToInt64(longBuffer);
+            var size = BitConverter.ToInt32(longBuffer);
 
-            Data = new byte[Size];
+            Data = new byte[size];
             destination.Read(Data);
 
             return Data;
