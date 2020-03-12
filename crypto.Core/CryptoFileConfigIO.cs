@@ -7,7 +7,7 @@ namespace crypto.Core
     {
         public static void Write(CryptoFileConfig cfg, string destination)
         {
-            using var configStream = new FileStream(destination, FileMode.CreateNew);
+            using var configStream = new FileStream(destination, FileMode.Create);
 
             configStream.Write(cfg.IV);
 

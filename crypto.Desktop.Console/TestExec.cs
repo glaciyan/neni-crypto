@@ -24,6 +24,8 @@ namespace crypto.Desktop.Cnsl
 
             CryptoFileIO.Write(Source, keyring, Destination);
             CryptoFileConfigIO.Write(cFConfig, Destination + ".ncg");
+
+            CryptoFileIO.WriteDecrypted(Destination, keyring, Destination + "_dencrypted");
         }
     }
 }
