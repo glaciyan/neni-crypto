@@ -5,7 +5,7 @@ namespace crypto.Core
 {
     // not memory friendly,
     // but good enough for the small amount of data I will write,
-    // maybe replace with memory mapped file
+    // probably will replace with memory mapped file
     public class RandomLengthFileContent
     {
         public byte[] Data { get; set; }
@@ -31,11 +31,6 @@ namespace crypto.Core
             destination.Read(Data);
 
             return Data;
-        }
-
-        public void EncryptData(KeyIVPair keyRing)
-        {
-            var memStream = new MemoryStream(Data);
         }
     }
 }

@@ -1,5 +1,7 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Text;
+using Serilog;
 
 namespace crypto.Core
 {
@@ -9,11 +11,29 @@ namespace crypto.Core
         {
             using var configStream = new FileStream(destination, FileMode.Create);
 
-            configStream.Write(cfg.IV);
+            
+
+            // save last time edited
 
             // add encryption
-            var ranLFileContent = new RandomLengthFileContent(Encoding.Unicode.GetBytes(cfg.FileName));
+            var byteCryptoKeyRing = new KeyIVPair();
+
+            var encryptedFileArray = StringCryptography.EncryptString(cfg.FileName, byteCryptoKeyRing);
+
+            var ranLFileContent = new RandomLengthFileContent(encryptedFileArray);
+
+            // 16 bytes
+            configStream.Write(cfg.IV);
+
+            // 32 bytes
+            configStream.Write(byteCryptoKeyRing.Key);
+            // 16 bytes
+            configStream.Write(byteCryptoKeyRing.IV);
+
+            // random length
             ranLFileContent.WriteTo(configStream);
+
+            Log.Debug("Encrypted the string: " + StringCryptography.DecryptByteArray(encryptedFileArray, byteCryptoKeyRing));
         }
     }
 }

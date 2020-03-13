@@ -4,7 +4,7 @@ namespace crypto.Core
 {
     public static class CryptoRNG
     {
-        public static byte[] GetRandomByte(int length)
+        public static byte[] GetRandomBytes(int length)
         {
             var randomBytes = new byte[length];
 
