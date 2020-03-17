@@ -1,5 +1,4 @@
-﻿using System;
-using Serilog;
+﻿using Serilog;
 
 namespace crypto.Desktop.Cnsl
 {
@@ -15,7 +14,7 @@ namespace crypto.Desktop.Cnsl
             //parse arguments
             //try
             //{
-                CommandLineArgumentParser.ParseConfig(args).Run();
+            CommandLineArgumentParser.ParseConfig(args).Run();
             //}
             //catch (Exception e)
             //{

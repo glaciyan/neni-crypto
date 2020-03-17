@@ -4,10 +4,6 @@ namespace crypto.Core
 {
     public class KeyIVPair
     {
-        public byte[] Key { get; }
-
-        public byte[] IV { get; }
-
         public KeyIVPair()
         {
             Key = CryptoRNG.GetRandomBytes(32);
@@ -19,6 +15,10 @@ namespace crypto.Core
             Key = key;
             IV = iv;
         }
+
+        public byte[] Key { get; }
+
+        public byte[] IV { get; }
 
         public static KeyIVPair FromPasswordString(string password, byte[] iv = null)
         {

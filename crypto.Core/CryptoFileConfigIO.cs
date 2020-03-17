@@ -1,24 +1,22 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Text;
-using Serilog;
 
 namespace crypto.Core
 {
     public static class CryptoFileConfigIO
     {
-        /*public static void Write(CryptoFileConfig cfg, string destination)
+        public static void Write(CryptoFileConfig cfg, string destination)
         {
             using var configStream = new FileStream(destination, FileMode.Create);
 
-            
 
             // save last time edited
 
             // add encryption
             var byteCryptoKeyRing = new KeyIVPair();
 
-            var encryptedFileArray = SimpleCryptography.EncryptString(cfg.FileName, byteCryptoKeyRing);
+            var encryptedFileArray = SimpleCryptography.EncryptBytes(
+                Encoding.Unicode.GetBytes(cfg.FileName), byteCryptoKeyRing.Key, byteCryptoKeyRing.IV);
 
             var ranLFileContent = new RandomLengthFileContent(encryptedFileArray);
 
@@ -32,6 +30,6 @@ namespace crypto.Core
 
             // random length
             ranLFileContent.WriteTo(configStream);
-        }*/
+        }
     }
 }
