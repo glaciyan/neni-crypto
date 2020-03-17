@@ -7,7 +7,7 @@ namespace crypto.Core
 {
     public static class CryptoFileConfigIO
     {
-        public static void Write(CryptoFileConfig cfg, string destination)
+        /*public static void Write(CryptoFileConfig cfg, string destination)
         {
             using var configStream = new FileStream(destination, FileMode.Create);
 
@@ -18,7 +18,7 @@ namespace crypto.Core
             // add encryption
             var byteCryptoKeyRing = new KeyIVPair();
 
-            var encryptedFileArray = StringCryptography.EncryptString(cfg.FileName, byteCryptoKeyRing);
+            var encryptedFileArray = SimpleCryptography.EncryptString(cfg.FileName, byteCryptoKeyRing);
 
             var ranLFileContent = new RandomLengthFileContent(encryptedFileArray);
 
@@ -32,8 +32,6 @@ namespace crypto.Core
 
             // random length
             ranLFileContent.WriteTo(configStream);
-
-            Log.Debug("Encrypted the string: " + StringCryptography.DecryptByteArray(encryptedFileArray, byteCryptoKeyRing));
-        }
+        }*/
     }
 }

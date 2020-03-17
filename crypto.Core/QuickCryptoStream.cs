@@ -7,16 +7,32 @@ namespace crypto.Core
     {
         public static Stream GetDecryptor(Stream source, KeyIVPair keyRing)
         {
-            return new CryptoStream(source,
-                Aes.Create().CreateDecryptor(keyRing.Key, keyRing.IV),
+            using var aes = GetAes256(keyRing.Key, keyRing.IV);
+
+            var cryptoStream = new CryptoStream(source,
+                aes.CreateDecryptor(),
                 CryptoStreamMode.Read);
+
+            return cryptoStream;
         }
 
         public static Stream GetEncryptor(Stream source, KeyIVPair keyRing)
         {
+            using var aes = GetAes256(keyRing.Key, keyRing.IV);
+
             return new CryptoStream(source,
-                Aes.Create().CreateEncryptor(keyRing.Key, keyRing.IV),
+                aes.CreateEncryptor(),
                 CryptoStreamMode.Read);
+        }
+
+        private static Aes GetAes256(byte[] key, byte[] iv)
+        {
+            var aes = Aes.Create();
+            aes.KeySize = 256;
+            aes.Key = key;
+            aes.IV = iv;
+
+            return aes;
         }
     }
 }

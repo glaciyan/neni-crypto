@@ -23,7 +23,7 @@ namespace crypto.Desktop.Cnsl
             var cFConfig = new CryptoFileConfig(Source.FileName, Source.FileInfo, keyring.IV);
 
             CryptoFileIO.Write(Source, keyring, Destination);
-            CryptoFileConfigIO.Write(cFConfig, Destination + ".ncg");
+            //CryptoFileConfigIO.Write(cFConfig, Destination + ".ncg");
 
             CryptoFileIO.WriteDecrypted(Destination, keyring, Destination + "_dencrypted");
         }
