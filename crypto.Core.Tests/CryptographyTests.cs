@@ -17,14 +17,22 @@ namespace crypto.Core.Tests
 
             var encryptedData = SimpleCryptography.EncryptBytes(byteData, kiPair.Key, kiPair.IV);
 
-            Console.WriteLine($"Original data: {BitConverter.ToString(byteData)}\n" +
-                              $"Encrypted Data: {BitConverter.ToString(encryptedData)}");
+            Console.WriteLine($"Original data: {ByteRepres(byteData)}\n" +
+                              $"Encrypted Data: {ByteRepres(encryptedData)}");
 
             Assert.AreNotEqual(encryptedData, byteData);
 
             var decryptedData = SimpleCryptography.DecryptBytes(encryptedData, kiPair.Key, kiPair.IV);
 
             Assert.AreEqual(decryptedData, byteData);
+
+            Console.WriteLine($"Original data: {ByteRepres(byteData)}\n" +
+                              $"Decrypted Data: {ByteRepres(decryptedData)}");
+        }
+
+        private string ByteRepres(byte[] b)
+        {
+            return $"({b.Length}){BitConverter.ToString(b)}";
         }
     }
 }
