@@ -7,15 +7,17 @@ namespace crypto.Desktop.Cnsl
         public static IExecutionConfig ParseConfig(string[] args)
         {
             if (args.Length == 0)
-                throw new ArgumentException("No arguments given");
+                throw new NoConsoleArgumentException();
+            
+            var arguments = new ArrayEnumerator<string>(args);
 
-            return args[0] switch
+            return arguments.NextOrNull() switch
             {
                 // create new project
-                "new" => new NewProject(args.TryGetString(1), args.TryGetString(2)),
+                "new" => new NewProject(arguments.NextOrNull(), arguments.NextOrNull()),
 
                 // test TODO: remove
-                "test" => new TestExec(args.TryGetString(1), args.TryGetString(2)),
+                "test" => new TestExec(arguments.NextOrNull(), arguments.NextOrNull()),
 
                 _ => throw new ArgumentException("Argument was not recognized")
             };

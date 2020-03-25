@@ -4,13 +4,25 @@ namespace crypto.Desktop.Cnsl
 {
     public static class Notifier
     {
-        public static void Error(string message, bool color = true)
+        public static bool EnableColor { get; set; } = true;
+        
+        public static void Error(string message)
         {
-            if (color) Console.ForegroundColor = ConsoleColor.Red;
+            PrintColor(message, ConsoleColor.Red);
+        }
+        
+        public static void Info(string message)
+        {
+            PrintColor(message, ConsoleColor.Yellow);
+        }
 
-            Console.Error.WriteLine(message);
+        private static void PrintColor(string m, ConsoleColor col)
+        {
+            if (EnableColor) Console.ForegroundColor = col;
 
-            if (color) Console.ResetColor();
+            Console.Error.WriteLine(m);
+
+            if (EnableColor) Console.ResetColor();
         }
     }
 }

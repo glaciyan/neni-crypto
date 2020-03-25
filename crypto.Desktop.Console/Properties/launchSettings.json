@@ -3,7 +3,7 @@
     "crypto.Desktop.Console": {
       "commandName": "Project",
       "commandLineArgs":
-        "test \"D:\\user\\CodingProjects\\C#\\slime-crypto\\crypto.Core.Tests\\testdata\\testfile\" data"
+        ""
     }
   }
 }

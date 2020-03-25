@@ -1,4 +1,5 @@
-﻿using Serilog;
+﻿using System;
+using Serilog;
 
 namespace crypto.Desktop.Cnsl
 {
@@ -12,15 +13,19 @@ namespace crypto.Desktop.Cnsl
 #endif
 
             //parse arguments
-            //try
-            //{
-            CommandLineArgumentParser.ParseConfig(args).Run();
-            //}
-            //catch (Exception e)
-            //{
-            //    Log.Error(e.ToString());
-            //    Notifier.Error($"Something went wrong: {e.Message}");
-            //}
+            try
+            {
+                CommandLineArgumentParser.ParseConfig(args).Run();
+            }
+            catch (NoConsoleArgumentException)
+            {
+                Notifier.Info("No console arguments given");
+            }
+            catch (Exception e)
+            {
+                Log.Error(e.ToString());
+                Notifier.Error($"Something went wrong: {e.Message}");
+            }
 
             // new argument
             // open argument
