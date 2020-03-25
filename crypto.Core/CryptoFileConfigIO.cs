@@ -16,7 +16,7 @@ namespace crypto.Core
             // add encryption
             var byteCryptoKeyRing = new KeyIVPair();
 
-            var encrypt = new AesByteCryptography(byteCryptoKeyRing);
+            using var encrypt = new AesByteCryptography(byteCryptoKeyRing);
             
             var encryptedFileArray = encrypt.EncryptBytes(Encoding.Unicode.GetBytes(cfg.FileName));
 
