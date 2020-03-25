@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Text;
+using crypto.Core.Cryptography;
 
 namespace crypto.Core
 {
@@ -15,8 +16,9 @@ namespace crypto.Core
             // add encryption
             var byteCryptoKeyRing = new KeyIVPair();
 
-            var encryptedFileArray = SimpleCryptography.EncryptBytes(
-                Encoding.Unicode.GetBytes(cfg.FileName), byteCryptoKeyRing.Key, byteCryptoKeyRing.IV);
+            var encrypt = new AesByteCryptography(byteCryptoKeyRing);
+            
+            var encryptedFileArray = encrypt.EncryptBytes(Encoding.Unicode.GetBytes(cfg.FileName));
 
             var ranLFileContent = new RandomLengthFileContent(encryptedFileArray);
 

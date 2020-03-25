@@ -1,4 +1,5 @@
 ﻿using crypto.Core;
+using crypto.Core.Cryptography;
 
 namespace crypto.Desktop.Cnsl
 {
@@ -16,16 +17,7 @@ namespace crypto.Desktop.Cnsl
 
         public void Run()
         {
-            var pw = PasswordPromt.PromtPassword();
-
-            var keyring = KeyIVPair.FromPasswordString(pw);
-
-            var cFConfig = new CryptoFileConfig(Source.FileName, Source.FileInfo, keyring.IV);
-
-            CryptoFileIO.Write(Source, keyring, Destination);
-            CryptoFileConfigIO.Write(cFConfig, Destination + ".ncg");
-
-            CryptoFileIO.WriteDecrypted(Destination, keyring, Destination + "_dencrypted");
+            
         }
     }
 }
