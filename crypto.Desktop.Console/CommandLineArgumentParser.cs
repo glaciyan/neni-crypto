@@ -16,9 +16,6 @@ namespace crypto.Desktop.Cnsl
                 // create new project
                 "new" => new NewProject(arguments.NextOrNull(), arguments.NextOrNull()),
 
-                // test TODO: remove
-                "test" => new TestExec(arguments.NextOrNull(), arguments.NextOrNull()),
-
                 _ => throw new ArgumentException("Argument was not recognized")
             };
         }

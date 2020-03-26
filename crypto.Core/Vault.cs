@@ -7,19 +7,17 @@ namespace crypto.Core
     /// </summary>
     public class Vault
     {
+        public string Name { get; set; }
+        public List<VaultItemInfo> VaultItems { get; set; } = new List<VaultItemInfo>();
+        
         public Vault(string name)
         {
             Name = name;
         }
 
-        public Dictionary<CipherFile, VaultItemInfo> CryptoFiles { get; } =
-            new Dictionary<CipherFile, VaultItemInfo>();
-
-        public string Name { get; set; }
-
-        public void Add(CipherFile file, VaultItemInfo config)
+        public void AddFile(string path)
         {
-            CryptoFiles.Add(file, config);
+            VaultItems.Add(new VaultItemInfo(new PlainTextFile(path)));
         }
     }
 }

@@ -5,7 +5,7 @@ namespace crypto.Core
 {
     public static class StringHashing
     {
-        public static byte[] ToByteArraySHA256(this string s, int size)
+        public static byte[] ToByteArraySHA256(this string s)
         {
             using var sha256 = SHA256.Create();
 

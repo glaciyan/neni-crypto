@@ -8,10 +8,12 @@ namespace crypto.Core
 
         public VaultItem(string name)
         {
+            Name = name;
             FileInfo = new FileInfo(name);
         }
 
-        public string Name => FileInfo.Name;
+        public string Name { get; }
+        public string FileName => FileInfo.Name;
         public string Path => FileInfo.FullName;
     }
 }

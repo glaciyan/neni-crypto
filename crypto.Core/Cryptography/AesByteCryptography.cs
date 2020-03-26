@@ -20,7 +20,11 @@ namespace crypto.Core.Cryptography
             _aes.IV = _keyIvPair.IV;
             _aes.Padding = PaddingMode.PKCS7;
         }
-        
+
+        public AesByteCryptography(byte[] key, byte[] iv) : this(new KeyIVPair(key, iv))
+        {
+        }
+
         public byte[] EncryptBytes(byte[] plainText)
         {
             // get the size with spacing for padding
