@@ -22,6 +22,13 @@ namespace crypto.Core.Tests
             const string data = "Mock";
             Data_Gets_Encrypted_Decrypted_Correctly(data);
         }
+        
+        [Test]
+        public void Data_Gets_Encrypted_Decrypted_Correctly_2_Block_String()
+        {
+            const string data = "12345678901234567890123";
+            Data_Gets_Encrypted_Decrypted_Correctly(data);
+        }
 
         private void Data_Gets_Encrypted_Decrypted_Correctly(string data)
         {
