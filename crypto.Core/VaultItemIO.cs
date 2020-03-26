@@ -2,7 +2,7 @@
 
 namespace crypto.Core
 {
-    public static class CryptoFileIO
+    public static class VaultItemIO
     {
         public static void Write(CipherFile cipherFile, KeyIVPair keyRing, string destination)
         {
