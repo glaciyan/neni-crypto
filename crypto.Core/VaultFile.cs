@@ -2,9 +2,9 @@
 
 namespace crypto.Core
 {
-    public class CryptoFileConfig
+    public class VaultFile
     {
-        public CryptoFileConfig(string fileName, FileInfo partnerFileInfo, byte[] iv)
+        public VaultFile(string fileName, FileInfo partnerFileInfo, byte[] iv)
         {
             FileName = fileName;
             PartnerFileInfo = partnerFileInfo;
@@ -12,6 +12,7 @@ namespace crypto.Core
         }
 
         public string FileName { get; set; }
+        public string DecryptedFileName { get; set; }
         public FileInfo PartnerFileInfo { get; set; }
         public byte[] IV { get; }
     }

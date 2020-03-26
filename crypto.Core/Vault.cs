@@ -12,12 +12,12 @@ namespace crypto.Core
             Name = name;
         }
 
-        public Dictionary<CryptoFile, CryptoFileConfig> CryptoFiles { get; } =
-            new Dictionary<CryptoFile, CryptoFileConfig>();
+        public Dictionary<CryptoFile, VaultFile> CryptoFiles { get; } =
+            new Dictionary<CryptoFile, VaultFile>();
 
         public string Name { get; set; }
 
-        public void Add(CryptoFile file, CryptoFileConfig config)
+        public void Add(CryptoFile file, VaultFile config)
         {
             CryptoFiles.Add(file, config);
         }

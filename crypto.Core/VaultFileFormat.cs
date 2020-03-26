@@ -4,9 +4,9 @@ using crypto.Core.Cryptography;
 
 namespace crypto.Core
 {
-    public static class CryptoFileConfigIO
+    public static class VaultFileFormat
     {
-        public static void Write(CryptoFileConfig cfg, string destination)
+        public static void Write(VaultFile cfg, string destination)
         {
             using var configStream = new FileStream(destination, FileMode.Create);
 
