@@ -1,5 +1,4 @@
 ﻿using crypto.Core;
-using crypto.Core.Cryptography;
 
 namespace crypto.Desktop.Cnsl
 {
@@ -8,11 +7,11 @@ namespace crypto.Desktop.Cnsl
     {
         public TestExec(string source, string destination)
         {
-            Source = new CryptoFile(source);
+            Source = new CipherFile(source);
             Destination = destination;
         }
 
-        public CryptoFile Source { get; }
+        public CipherFile Source { get; }
         public string Destination { get; }
 
         public void Run()

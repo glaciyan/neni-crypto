@@ -4,9 +4,9 @@ namespace crypto.Core
 {
     public static class CryptoFileIO
     {
-        public static void Write(CryptoFile cryptoFile, KeyIVPair keyRing, string destination)
+        public static void Write(CipherFile cipherFile, KeyIVPair keyRing, string destination)
         {
-            using var sourceStream = cryptoFile.FileInfo.OpenRead();
+            using var sourceStream = cipherFile.FileInfo.OpenRead();
             using var cryptoStream = QuickCryptoStream.GetEncryptor(sourceStream, keyRing);
 
             using var destinationStream = new FileStream(destination, FileMode.Create);
@@ -14,7 +14,7 @@ namespace crypto.Core
             cryptoStream.CopyTo(destinationStream);
         }
 
-        public static CryptoFile WriteDecrypted(string source, KeyIVPair keyRing, string destination)
+        public static CipherFile WriteDecrypted(string source, KeyIVPair keyRing, string destination)
         {
             var sourceFileInfo = new FileInfo(source);
 
@@ -27,7 +27,7 @@ namespace crypto.Core
 
             cryptoStream.CopyTo(destinationStream);
 
-            return new CryptoFile(destination, destinationFileInfo);
+            return new CipherFile(destination, destinationFileInfo);
         }
     }
 }

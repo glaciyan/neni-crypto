@@ -2,12 +2,12 @@
 
 namespace crypto.Core
 {
-    public class CryptoFile
+    public class CipherFile
     {
         private FileInfo _fi;
         private string _name;
 
-        public CryptoFile(string fileName, FileInfo fileInfo = null)
+        public CipherFile(string fileName, FileInfo fileInfo = null)
         {
             FileName = fileName;
             _fi = fileInfo;
