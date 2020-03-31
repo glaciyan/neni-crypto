@@ -13,5 +13,20 @@ namespace crypto.Core
 
             return hash;
         }
+        
+        public const int Rounds = 262143;
+
+        public static byte[] StretchKey(this string passphrase)
+        {
+            var sha2 = SHA256.Create();
+            var key = sha2.ComputeHash(passphrase.ToByteArraySHA256());
+
+            for (var i = 0; i < Rounds; i++)
+            {
+                key = sha2.ComputeHash(key);
+            }
+
+            return key;
+        }
     }
 }

@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using crypto.Core.Cryptography;
 using crypto.Core.Deprecated;
-using crypto.Core.File.Format;
+using crypto.Core.File;
 using NUnit.Framework;
 
 namespace crypto.Core.Tests
@@ -46,10 +46,16 @@ namespace crypto.Core.Tests
         [Test]
         public void Adding_Files_To_New_Vault()
         {
-            var key = Key.Stretch("passphrase");
-            Vault testingVault = Vault.Create("../testData/", "TestVault", key);
+            var key = "passphrase".StretchKey();
+            var testingVault = Vault.Create("../testData/", "TestVault", key);
             
             testingVault.AddFile("{filepath}");
+        }
+
+        [Test]
+        public void Create_Vault()
+        {
+            
         }
     }
 }
