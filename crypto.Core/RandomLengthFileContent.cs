@@ -1,25 +1,33 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace crypto.Core
 {
     public class RandomLengthFileContent
     {
-        public RandomLengthFileContent(byte[] data)
+        public RandomLengthFileContent(byte[] content)
         {
-            Data = data;
+            Content = content;
         }
 
         public RandomLengthFileContent()
         {
         }
 
-        public byte[] Data { get; private set; }
+        public byte[] Content { get; private set; }
+
+        public byte[] GetBytes()
+        {
+            var output = new byte[Content.Length + sizeof(int)];
+            output.CombineFrom(BitConverter.GetBytes(Content.Length), Content);
+            return output;
+        }
 
         public void WriteTo(Stream target)
         {
-            target.Write(BitConverter.GetBytes(Data.Length));
-            target.Write(Data);
+            target.Write(BitConverter.GetBytes(Content.Length));
+            target.Write(Content);
         }
 
         public void ReadFrom(Stream source)
@@ -28,8 +36,8 @@ namespace crypto.Core
             source.Read(longBuffer);
             var size = BitConverter.ToInt32(longBuffer);
 
-            Data = new byte[size];
-            source.Read(Data);
+            Content = new byte[size];
+            source.Read(Content);
         }
     }
 }

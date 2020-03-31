@@ -7,7 +7,7 @@ namespace crypto.Core.Cryptography
         public KeyIVPair()
         {
             Key = CryptoRNG.GetRandomBytes(CryptoRNG.Aes256KeySizeInBytes);
-            IV = CryptoRNG.GetRandomBytes(CryptoRNG.Aes256IvSizeInBytes);
+            IV = CryptoRNG.GetRandomBytes(CryptoRNG.Aes256IVSizeInBytes);
         }
 
         public KeyIVPair([NotNull] byte[] key, [NotNull] byte[] iv)
@@ -25,7 +25,7 @@ namespace crypto.Core.Cryptography
             return
                 new KeyIVPair(
                     password.ToByteArraySHA256(),
-                    iv ?? CryptoRNG.GetRandomBytes(CryptoRNG.Aes256IvSizeInBytes)
+                    iv ?? CryptoRNG.GetRandomBytes(CryptoRNG.Aes256IVSizeInBytes)
                 );
         }
     }

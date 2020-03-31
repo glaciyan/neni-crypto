@@ -2,7 +2,7 @@
 
 namespace crypto.Desktop.Cnsl
 {
-    public class NewProject : IExecutionConfig
+    public class NewProject : Command
     {
         public NewProject(string name, string path)
         {
@@ -16,7 +16,7 @@ namespace crypto.Desktop.Cnsl
         public string Name { get; }
         public string Path { get; }
 
-        public void Run()
+        public override void Run()
         {
             Log.Debug("Running NewProject with " +
                       $"Name = {Name ?? "null"}, Path = {Path ?? "null"}");

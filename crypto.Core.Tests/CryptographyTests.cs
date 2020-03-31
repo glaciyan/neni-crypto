@@ -36,7 +36,7 @@ namespace crypto.Core.Tests
 
             var kiPair = new KeyIVPair();
 
-            using var crypto = new AesByteCryptography(kiPair);
+            using var crypto = new AesBytes(kiPair);
 
             var encryptedData = crypto.EncryptBytes(byteData);
 

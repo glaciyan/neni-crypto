@@ -1,6 +1,6 @@
-﻿namespace crypto.Core.Deprecated
-{
-    public static class VaultItemIO
-    {
-    }
-}
+﻿// namespace crypto.Core.Deprecated
+// {
+//     public static class VaultItemIO
+//     {
+//     }
+// }

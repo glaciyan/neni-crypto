@@ -4,7 +4,7 @@ namespace crypto.Desktop.Cnsl
 {
     public static class CommandLineArgumentParser
     {
-        public static IExecutionConfig ParseConfig(string[] args)
+        public static Command ParseConfig(string[] args)
         {
             if (args.Length == 0)
                 throw new NoConsoleArgumentException();

@@ -14,7 +14,7 @@ namespace crypto.Core
             }
         }
 
-        public static void MergeFrom<T>(this T[] dest, params T[][] sources)
+        public static void CombineFrom<T>(this T[] dest, params T[][] sources)
         {
             var i = 0;
             foreach (var source in sources)

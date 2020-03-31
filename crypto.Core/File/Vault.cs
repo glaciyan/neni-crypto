@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using crypto.Core.Deprecated;
 
 namespace crypto.Core.File
 {
@@ -9,7 +8,7 @@ namespace crypto.Core.File
     public class Vault
     {
         public string Name { get; set; }
-        public List<?> VaultItems { get; set; } = new List<?>();
+        public List<VaultFile> VaultItems { get; set; } = new List<VaultFile>();
         
         public Vault(string name)
         {
@@ -18,7 +17,7 @@ namespace crypto.Core.File
 
         public void AddFile(string path)
         {
-            VaultItems.Add(new VaultItemInfo(new PlainTextFile(path)));
+            VaultItems.Add();
         }
 
         public static Vault Create(string path, string name, byte[] key)

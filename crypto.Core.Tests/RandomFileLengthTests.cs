@@ -22,7 +22,7 @@ namespace crypto.Core.Tests
             
             randReader.ReadFrom(memStream);
 
-            Assert.AreEqual(randReader.Data, data);
+            Assert.AreEqual(randReader.Content, data);
         }
     }
 }

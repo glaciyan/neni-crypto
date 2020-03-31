@@ -3,13 +3,13 @@ using System.Security.Cryptography;
 
 namespace crypto.Core.Cryptography
 {
-    public class AesByteCryptography : IDisposable
+    public class AesBytes : IDisposable
     {
         private const int AesBlockSize = 16;
         private readonly Aes _aes;
         private readonly KeyIVPair _keyIvPair;
 
-        public AesByteCryptography(KeyIVPair keyIvPair)
+        public AesBytes(KeyIVPair keyIvPair)
         {
             _keyIvPair = keyIvPair;
             
@@ -21,7 +21,7 @@ namespace crypto.Core.Cryptography
             _aes.Padding = PaddingMode.PKCS7;
         }
 
-        public AesByteCryptography(byte[] key, byte[] iv) : this(new KeyIVPair(key, iv))
+        public AesBytes(byte[] key, byte[] iv) : this(new KeyIVPair(key, iv))
         {
         }
 
@@ -79,7 +79,7 @@ namespace crypto.Core.Cryptography
             
             // create array with space for both buffer and last bytes
             var output = new byte[buffer.Length + finalBlock.Length];
-            output.MergeFrom(buffer, finalBlock);
+            output.CombineFrom(buffer, finalBlock);
             
             return output;
         }

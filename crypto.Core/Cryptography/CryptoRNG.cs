@@ -5,7 +5,7 @@ namespace crypto.Core.Cryptography
     public static class CryptoRNG
     {
         public const int Aes256KeySizeInBytes = 32;
-        public const int Aes256IvSizeInBytes = 16;
+        public const int Aes256IVSizeInBytes = 16;
         
         public static byte[] GetRandomBytes(int length)
         {
