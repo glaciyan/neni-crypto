@@ -1,16 +1,31 @@
-﻿using System.IO;
+﻿using crypto.Core.Cryptography;
 
-namespace crypto.Core
+namespace crypto.Core.Deprecated
 {
     public class VaultItemInfo
     {
+        private byte[] _cipherIv;
+
+        private byte[] _plainTextNameCipherIv;
+
+        public VaultItemInfo(PlainTextFile plainText)
+        {
+            CipherTextFile = new CipherTextFile(RandomGenerator.RandomFileName(CipherTextFile.NameLength));
+            PlainTextName = plainText.Name;
+            IsDecryptedInVault = false;
+        }
+
+        public VaultItemInfo(CipherTextFile cipherText)
+        {
+            CipherTextFile = cipherText;
+        }
+
         public CipherTextFile CipherTextFile { get; }
         public PlainTextFile PlainTextFile { get; }
 
         public string PlainTextName { get; set; }
         public string CipherTextFileName => CipherTextFile.FileInfo.Name;
 
-        private byte[] _plainTextNameCipherIv;
         public byte[] PlainTextNameCipherIV
         {
             get
@@ -23,7 +38,6 @@ namespace crypto.Core
 
         public bool IsDecryptedInVault { get; set; }
 
-        private byte[] _cipherIv;
         public byte[] CipherIv
         {
             get
@@ -32,18 +46,6 @@ namespace crypto.Core
                 return _cipherIv;
             }
             set => _cipherIv = value;
-        }
-
-        public VaultItemInfo(PlainTextFile plainText)
-        {
-            CipherTextFile = new CipherTextFile(RandomGenerator.RandomFileName(CipherTextFile.NameLength));
-            PlainTextName = plainText.Name;
-            IsDecryptedInVault = false;
-        }
-
-        public VaultItemInfo(CipherTextFile cipherText)
-        {
-            CipherTextFile = cipherText;
         }
     }
 }

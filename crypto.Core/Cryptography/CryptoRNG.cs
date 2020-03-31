@@ -1,6 +1,6 @@
 ﻿using System.Security.Cryptography;
 
-namespace crypto.Core
+namespace crypto.Core.Cryptography
 {
     public static class CryptoRNG
     {

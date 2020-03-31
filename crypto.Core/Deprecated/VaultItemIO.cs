@@ -1,6 +1,4 @@
-﻿using System.IO;
-
-namespace crypto.Core
+﻿namespace crypto.Core.Deprecated
 {
     public static class VaultItemIO
     {

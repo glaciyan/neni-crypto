@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Security.Cryptography;
+using crypto.Core.Cryptography;
 
 namespace crypto.Core
 {

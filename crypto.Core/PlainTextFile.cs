@@ -1,3 +1,5 @@
+using crypto.Core.Deprecated;
+
 namespace crypto.Core
 {
     public class PlainTextFile : VaultItem

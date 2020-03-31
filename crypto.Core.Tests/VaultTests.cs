@@ -1,5 +1,8 @@
 using System;
 using System.IO;
+using crypto.Core.Cryptography;
+using crypto.Core.Deprecated;
+using crypto.Core.File.Format;
 using NUnit.Framework;
 
 namespace crypto.Core.Tests
@@ -38,6 +41,15 @@ namespace crypto.Core.Tests
             Assert.AreEqual(vaultFileInfo.IsDecryptedInVault, cipherVaultItemInfo.IsDecryptedInVault);
 
             Console.WriteLine("Plain name: " + cipherVaultItemInfo.PlainTextName);
+        }
+
+        [Test]
+        public void Adding_Files_To_New_Vault()
+        {
+            var key = Key.Stretch("passphrase");
+            Vault testingVault = Vault.Create("../testData/", "TestVault", key);
+            
+            testingVault.AddFile("{filepath}");
         }
     }
 }

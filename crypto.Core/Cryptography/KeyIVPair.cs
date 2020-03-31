@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace crypto.Core
+namespace crypto.Core.Cryptography
 {
     public class KeyIVPair
     {

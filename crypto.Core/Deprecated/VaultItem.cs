@@ -1,16 +1,16 @@
 using System.IO;
 
-namespace crypto.Core
+namespace crypto.Core.Deprecated
 {
     public class VaultItem
     {
-        public FileInfo FileInfo { get; }
-
         public VaultItem(string name)
         {
             Name = name;
             FileInfo = new FileInfo(name);
         }
+
+        public FileInfo FileInfo { get; }
 
         public string Name { get; }
         public string FileName => FileInfo.Name;

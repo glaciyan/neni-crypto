@@ -1,4 +1,6 @@
-﻿namespace crypto.Core
+﻿using crypto.Core.Deprecated;
+
+namespace crypto.Core
 {
     public class CipherTextFile : VaultItem
     {

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using crypto.Core.Deprecated;
 
-namespace crypto.Core
+namespace crypto.Core.File.Format
 {
     /// <summary>
     ///     Class for managing multiple CryptoFiles that pair with their respective config

@@ -1,23 +1,22 @@
-using System.IO;
 using System.Text;
 using crypto.Core.Cryptography;
 
-namespace crypto.Core
+namespace crypto.Core.Deprecated
 {
     public class VaultItemInfoParser
     {
         public static readonly Encoding NameEncoding = Encoding.Unicode;
-
-        public VaultItemInfo ItemInfo { get; set; }
 
         public VaultItemInfoParser(VaultItemInfo itemInfo)
         {
             ItemInfo = itemInfo;
         }
 
+        public VaultItemInfo ItemInfo { get; set; }
+
         public byte GetByteFlags()
         {
-            return ItemInfo.IsDecryptedInVault ? (byte)1 : (byte)0;
+            return ItemInfo.IsDecryptedInVault ? (byte) 1 : (byte) 0;
         }
 
         public byte[] GetCipherIv()
@@ -29,19 +28,19 @@ namespace crypto.Core
         {
             return ItemInfo.PlainTextNameCipherIV;
         }
-        
+
         public RandomLengthFileContent GetPlainFileName(byte[] key)
         {
             var encodedName = NameEncoding.GetBytes(ItemInfo.PlainTextName);
             using var aes = new AesByteCryptography(key, ItemInfo.PlainTextNameCipherIV);
-            
+
             return new RandomLengthFileContent(aes.EncryptBytes(encodedName));
         }
-        
+
         public static string GetPlainFileName(byte[] data, byte[] key, byte[] iv)
         {
             using var aes = new AesByteCryptography(key, iv);
-            
+
             return NameEncoding.GetString(aes.DecryptBytes(data));
         }
     }
