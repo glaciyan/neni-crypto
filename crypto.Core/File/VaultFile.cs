@@ -7,13 +7,10 @@ namespace crypto.Core.File
     {
         private const int CipherTextNameLength = 16;
 
-        private SecretFileName _unlockedFilePath;
-
         private VaultFile(string filePath, string plainTextParentDirPath = "")
         {
             SecuredPlainName = new SecretFileName(plainTextParentDirPath + Path.GetFileName(filePath));
             GenerateCipherFileIV();
-            IsUnlocked = false;
             TargetPath = RandomGenerator.RandomFileName(CipherTextNameLength);
             TargetAuthentication = new byte[32];
         }
@@ -34,16 +31,8 @@ namespace crypto.Core.File
         public byte[] TargetAuthentication { get; set; }
         public string TargetPath { get; set; }
 
-        public bool IsUnlocked { get; private set; }
-        public SecretFileName UnlockedFilePath
-        {
-            get => _unlockedFilePath;
-            set
-            {
-                IsUnlocked = true;
-                _unlockedFilePath = value;
-            }
-        }
+        public bool IsUnlocked => UnlockedFilePath != null;
+        public SecretFileName UnlockedFilePath { get; set; }
 
         public void GenerateCipherFileIV()
         {
