@@ -7,7 +7,7 @@ namespace crypto.Core.File
     {
         private const int CipherTextNameLength = 16;
 
-        private string _unlockedFilePath;
+        private SecretFileName _unlockedFilePath;
 
         private VaultFile(string filePath, string plainTextParentDirPath = "")
         {
@@ -35,20 +35,13 @@ namespace crypto.Core.File
         public string TargetPath { get; set; }
 
         public bool IsUnlocked { get; private set; }
-        public string UnlockedFilePath
+        public SecretFileName UnlockedFilePath
         {
-            get => _unlockedFilePath ?? string.Empty;
+            get => _unlockedFilePath;
             set
             {
-                if (!string.IsNullOrEmpty(value))
-                {
-                    IsUnlocked = true;
-                    _unlockedFilePath = value;
-                }
-                else
-                {
-                    IsUnlocked = false;
-                }
+                IsUnlocked = true;
+                _unlockedFilePath = value;
             }
         }
 
