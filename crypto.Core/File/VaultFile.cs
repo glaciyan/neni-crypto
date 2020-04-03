@@ -18,14 +18,14 @@ namespace crypto.Core.File
             TargetAuthentication = new byte[32];
         }
 
-        public static VaultFile Create(string filePath, string pathToPlain = "")
+        public static VaultFile Create(string plainFileName, string pathToPlain = "")
         {
-            return new VaultFile(filePath, pathToPlain);
+            return new VaultFile(plainFileName, pathToPlain);
         }
 
-        public static VaultFile Open(string filePath)
+        public static VaultFile Open(string plainFileName)
         {
-            return new VaultFile(filePath);
+            return new VaultFile(plainFileName);
         }
 
         public SecretFileName SecuredPlainName { get; set; }
