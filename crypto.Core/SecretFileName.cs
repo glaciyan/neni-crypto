@@ -27,7 +27,7 @@ namespace crypto.Core
         }
         
         public byte[] IV { get; private set; }
-        public string PlainName { get; set; }
+        private string PlainName { get; set; }
         private byte[] DecryptedName { get; }
         
         private static Encoding Encoder { get; } = Encoding.Unicode;
@@ -40,10 +40,10 @@ namespace crypto.Core
             return aesEncrypt.EncryptBytes(plainTextPathBytes);
         }
 
-        public void SetNameFromEncrypted(byte[] key)
+        public string GetName(byte[] key)
         {
             using var aesDecrypt = new AesBytes(key, IV);
-            PlainName = Encoder.GetString(aesDecrypt.DecryptBytes(DecryptedName));
+            return Encoder.GetString(aesDecrypt.DecryptBytes(DecryptedName));
         }
         
         private void GenerateIV()
