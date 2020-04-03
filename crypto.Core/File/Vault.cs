@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace crypto.Core.File
 {
@@ -7,22 +8,22 @@ namespace crypto.Core.File
     /// </summary>
     public class Vault
     {
-        public string Name { get; set; }
-        public List<VaultFile> VaultItems { get; set; } = new List<VaultFile>();
-        
         public Vault(string name)
         {
             Name = name;
         }
 
-        public void AddFile(string path)
+        public string Name { get; set; }
+        public List<VaultFile> VaultItems { get; set; } = new List<VaultFile>();
+
+        public void AddFile(string name, string parentFolderPath)
         {
-            VaultItems.Add();
+            VaultItems.Add(VaultFile.Create(name, parentFolderPath));
         }
 
         public static Vault Create(string path, string name, byte[] key)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }

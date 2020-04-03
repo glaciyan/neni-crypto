@@ -6,7 +6,7 @@ namespace crypto.Core.Cryptography
     {
         public const int Aes256KeySizeInBytes = 32;
         public const int Aes256IVSizeInBytes = 16;
-        
+
         public static byte[] GetRandomBytes(int length)
         {
             var randomBytes = new byte[length];

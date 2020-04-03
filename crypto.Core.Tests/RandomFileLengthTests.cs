@@ -11,16 +11,16 @@ namespace crypto.Core.Tests
         public void Writing_Reading_Works()
         {
             var data = Encoding.ASCII.GetBytes("Random length string");
-            
+
             var randWriter = new RandomLengthFileContent(data);
-            
+
             using var memStream = new MemoryStream();
             randWriter.WriteTo(memStream);
             memStream.Position = 0;
-            
+
             var randReader = new RandomLengthFileContent();
-            
-            randReader.ReadFrom(memStream);
+
+            randReader.ReadFromAsync(memStream);
 
             Assert.AreEqual(randReader.Content, data);
         }

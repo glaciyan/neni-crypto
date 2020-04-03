@@ -8,7 +8,7 @@ namespace crypto.Desktop.Cnsl
         {
             if (args.Length == 0)
                 throw new NoConsoleArgumentException();
-            
+
             var arguments = new ArrayEnumerator<string>(args);
 
             return arguments.NextOrNull() switch

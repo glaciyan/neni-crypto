@@ -7,26 +7,27 @@ namespace crypto.Desktop.Cnsl
 {
     public class ArrayEnumerator<T> : IEnumerator<T>, IEnumerable<T> where T : class
     {
-        public int CurrentIndex { get; set; } = -1;
         private readonly T[] _innerArray;
-        
-        public T Current => _innerArray[CurrentIndex];
-        object? IEnumerator.Current => Current;
 
         public ArrayEnumerator(T[] array)
         {
             _innerArray = array;
         }
-        
-        public T? NextOrNull()
-        {
-            if (MoveNext())
-            {
-                return Current;
-            }
 
-            return null;
+        public int CurrentIndex { get; set; } = -1;
+
+        public IEnumerator<T> GetEnumerator()
+        {
+            return this;
         }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        public T Current => _innerArray[CurrentIndex];
+        object? IEnumerator.Current => Current;
 
         public bool MoveNext()
         {
@@ -42,14 +43,11 @@ namespace crypto.Desktop.Cnsl
         {
         }
 
-        public IEnumerator<T> GetEnumerator()
+        public T? NextOrNull()
         {
-            return this;
-        }
+            if (MoveNext()) return Current;
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
+            return null;
         }
     }
 }
