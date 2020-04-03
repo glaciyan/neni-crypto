@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Text;
 using crypto.Core.Cryptography;
@@ -9,6 +10,7 @@ namespace crypto.Core.File
         private const int CipherTextNameLength = 16;
 
         private string _decryptedPath;
+        private string _cipherTextName;
 
         private VaultFile(string filePath, string plainTextParentDirPath = "")
         {
@@ -20,25 +22,50 @@ namespace crypto.Core.File
             Authentication = new byte[32];
         }
 
-        internal VaultFile()
+        public VaultFile()
         {
+        }
+
+        public static VaultFile Create(string filePath, string pathToPlain = "")
+        {
+            return new VaultFile(filePath, pathToPlain);
         }
 
         private static Encoding Encoder { get; } = Encoding.Unicode;
 
-        public byte[] CipherFileIV { get; set; }
-        public byte[] PlainTextNameIV { get; set; }
-
         public bool IsDecrypted { get; set; }
+        public byte[] DecryptionIV { get; set; }
+        public byte[] NameIV { get; set; }
+
+        public string CipherTextName
+        {
+            get
+            {
+                if (CipherTextDirectory == null)
+                {
+                    return _cipherTextName;
+                }
+                
+                if (CipherTextDirectory[^0] == Path.PathSeparator)
+                {
+                    return CipherTextDirectory + _cipherTextName;
+                }
+                
+                return CipherTextDirectory + _cipherTextName;
+            }
+            
+            set => _cipherTextName = value;
+        }
+
 
         // config secret
-        public FileInfo PlainTextFileInfo { get; private set; }
+        private FileInfo PlainTextFileInfo { get; set; }
+        public byte[] Authentication { get; set; }
 
-        public string CipherTextName { get; set; }
-        private string ParentFolderPath { get; } = "";
-        public byte[] CipherTextPathBytes => Encoder.GetBytes(ParentFolderPath + CipherTextName);
+        public string CipherTextDirectory { get; set; }
 
-        public string DecryptedPath
+
+        public string UnlockedFilePath
         {
             get => _decryptedPath ?? string.Empty;
             set
@@ -55,35 +82,28 @@ namespace crypto.Core.File
             }
         }
 
-        public byte[] Authentication { get; set; }
-
-        public static VaultFile Create(string filePath, string pathToPlain = "")
-        {
-            return new VaultFile(filePath, pathToPlain);
-        }
-
         public byte[] GetEncryptedPlainTextPath(byte[] key)
         {
             var plainTextPathBytes = Encoder.GetBytes(PlainTextFileInfo.ToString());
-            using var aesEncrypt = new AesBytes(key, PlainTextNameIV);
+            using var aesEncrypt = new AesBytes(key, NameIV);
 
             return aesEncrypt.EncryptBytes(plainTextPathBytes);
         }
 
         public void SetPlainTextPathFromDecryptedBytes(byte[] decryptedPlainTextPath, byte[] key)
         {
-            using var aesDecrypt = new AesBytes(key, PlainTextNameIV);
+            using var aesDecrypt = new AesBytes(key, NameIV);
             PlainTextFileInfo = new FileInfo(Encoder.GetString(aesDecrypt.DecryptBytes(decryptedPlainTextPath)));
         }
 
         public void GenerateConfigIV()
         {
-            PlainTextNameIV = CryptoRNG.GetRandomBytes(CryptoRNG.Aes256IVSizeInBytes);
+            NameIV = CryptoRNG.GetRandomBytes(CryptoRNG.Aes256IVSizeInBytes);
         }
 
         public void GenerateCipherFileIV()
         {
-            CipherFileIV = CryptoRNG.GetRandomBytes(CryptoRNG.Aes256IVSizeInBytes);
+            DecryptionIV = CryptoRNG.GetRandomBytes(CryptoRNG.Aes256IVSizeInBytes);
         }
     }
 }
