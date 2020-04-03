@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
+using crypto.Core.Cryptography;
 
 namespace crypto.Core.File
 {
@@ -13,49 +14,71 @@ namespace crypto.Core.File
     
     public class VaultFileReaderWriter
     {
-        private VaultFile _underlying;
-        private ReaderWriter _mode;
-        private byte[] _key;
-
-        public VaultFileReaderWriter(VaultFile underlying, ReaderWriter mode, byte[] key)
+        private readonly VaultFile _underlying;
+        private readonly byte[] _key;
+        
+        public VaultFileReaderWriter(VaultFile underlying, byte[] key)
         {
             _underlying = underlying;
-            _mode = mode;
             _key = key;
         }
-
+        
         public void WriteTo(Stream destination)
         {
-            if (_mode != ReaderWriter.Writer) throw new InvalidOperationException("Not set to write");
-            
             using var binWriter = new BinaryWriter(destination, Encoding.Unicode, true);
-            
-            binWriter.Write(_underlying.IsUnlocked);
             
             // info from plaintext
             binWriter.Write(_underlying.SecuredPlainName.IV);
-            binWriter.Write(_underlying.SecuredPlainName.GetEncryptedName(_key));
+            // secret decrypted name
+            var encryptedName = _underlying.SecuredPlainName.GetEncryptedName(_key);
+            binWriter.Write(encryptedName.Length);
+            binWriter.Write(encryptedName);
             
-            // when file is unlocked
-            binWriter.Write(_underlying.IsUnlocked);
-            
-            // decrypted file
             binWriter.Write(_underlying.TargetCipherIV);
             binWriter.Write(_underlying.TargetAuthentication);
             binWriter.Write(_underlying.TargetPath);
             
+            binWriter.Write(_underlying.IsUnlocked);
+
             // write the path when unlocked
             if (_underlying.IsUnlocked)
             {
-                binWriter.Write(_underlying.UnlockedFilePath);
+                binWriter.Write(_underlying.UnlockedFilePath.IV);
+
+                var secretUnlockedFilePath = _underlying.UnlockedFilePath.GetEncryptedName(_key);
+                binWriter.Write(secretUnlockedFilePath.Length);
+                binWriter.Write(secretUnlockedFilePath);
             }
         }
 
-        public void ReadFrom(Stream source)
+        public static VaultFile ReadFrom(Stream source)
         {
-            if (_mode != ReaderWriter.Reader) throw new InvalidOperationException("Not set to read");
-            
             using var binReader = new BinaryReader(source, Encoding.Unicode, true);
+            var result = new VaultFile();
+            
+            // info from plaintext
+            var plainIV = binReader.ReadBytes(AesSizes.IV);
+            var plainNameLength = binReader.ReadInt32();
+            var encryptedPlainName = binReader.ReadBytes(plainNameLength);
+            
+            result.SecuredPlainName = new SecretFileName(encryptedPlainName, plainIV);
+
+            result.TargetCipherIV = binReader.ReadBytes(AesSizes.IV);
+            result.TargetAuthentication = binReader.ReadBytes(AesSizes.Auth);
+            result.TargetPath = binReader.ReadString();
+            
+            var isUnlocked = binReader.ReadBoolean();
+
+            if (isUnlocked)
+            {
+                var unlockedFilePathIV = binReader.ReadBytes(AesSizes.IV);
+                var length = binReader.ReadInt32();
+                var secretUnlockedFilePath = binReader.ReadBytes(length);
+                
+                result.UnlockedFilePath = new SecretFileName(secretUnlockedFilePath, unlockedFilePathIV);
+            }
+
+            return result;
         }
     }
 }
