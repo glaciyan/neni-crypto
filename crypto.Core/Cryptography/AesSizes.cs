@@ -4,5 +4,6 @@ namespace crypto.Core.Cryptography
     {
         public const int Key = 32;
         public const int IV = 16;
+        public const int Auth = 32;
     }
 }
