@@ -1,5 +1,7 @@
 using System.IO;
 using System.Threading.Tasks;
+using crypto.Core.Cryptography;
+using crypto.Core.File;
 using NUnit.Framework;
 
 namespace crypto.Core.Tests
@@ -7,13 +9,13 @@ namespace crypto.Core.Tests
     [TestFixture]
     public class VaultTests
     {
-        private string testFolderPath;
+        private const string testFolderPath = "../testData/";
         private const string FilePath = "../test/mock/testFile.txt";
 
         [OneTimeSetUp]
         public void Set_Up()
         {
-            testFolderPath = "../testData/";
+            
             Directory.CreateDirectory(testFolderPath);
         }
 
@@ -51,9 +53,34 @@ namespace crypto.Core.Tests
         // }
 
         [Test]
-        public async Task Create_CryptoConfig()
+        public void CreateCryptoConfigNoPrefixPath()
         {
-            _
+            const string targetFile = testFolderPath + "CreateCryptoConfigNoPrefixPath.td";
+            const string mockFileName = "importantData.txt";
+
+            var key = CryptoRNG.GetRandomBytes(AesSizes.Key);
+
+            var vaultFile = VaultFile.Create(mockFileName);
+            var writer = new VaultFileWriter(vaultFile, key);
+
+            using (var stream = new FileStream(targetFile, FileMode.Create, FileAccess.Write))
+            {
+                writer.WriteTo(stream);
+            }
+
+            VaultFile readVaultFile;
+
+            using (var stream = new FileStream(targetFile, FileMode.Open, FileAccess.Read))
+            {
+                readVaultFile = VaultFileReader.ReadFrom(stream);
+            }
+            
+            Assert.AreEqual(vaultFile.TargetPath, readVaultFile.TargetPath);
+            Assert.AreEqual(vaultFile.TargetCipherIV, readVaultFile.TargetCipherIV);
+            Assert.AreEqual(vaultFile.TargetAuthentication, readVaultFile.TargetAuthentication);
+            
+            Assert.AreEqual(vaultFile.IsUnlocked, readVaultFile.IsUnlocked);
+            Assert.AreEqual(vaultFile.SecuredPlainName.GetName(), readVaultFile.SecuredPlainName.GetName(key));
         }
     }
 }
