@@ -1,6 +1,4 @@
-using System;
 using System.IO;
-using System.Text;
 using crypto.Core.Cryptography;
 
 namespace crypto.Core.File
@@ -13,16 +11,11 @@ namespace crypto.Core.File
 
         private VaultFile(string filePath, string plainTextParentDirPath = "")
         {
-            GenerateConfigIV();
+            SecuredPlainName = new SecretFileName(plainTextParentDirPath + Path.GetFileName(filePath));
             GenerateCipherFileIV();
-            IsDecrypted = false;
-            PlainTextFileInfo = new FileInfo(plainTextParentDirPath + Path.GetFileName(filePath));
-            CipherTextPath = RandomGenerator.RandomFileName(CipherTextNameLength);
-            Authentication = new byte[32];
-        }
-
-        public VaultFile()
-        {
+            IsUnlocked = false;
+            TargetPath = RandomGenerator.RandomFileName(CipherTextNameLength);
+            TargetAuthentication = new byte[32];
         }
 
         public static VaultFile Create(string filePath, string pathToPlain = "")
@@ -30,20 +23,18 @@ namespace crypto.Core.File
             return new VaultFile(filePath, pathToPlain);
         }
 
-        private static Encoding Encoder { get; } = Encoding.Unicode;
+        public static VaultFile Open(string filePath)
+        {
+            return new VaultFile(filePath);
+        }
 
+        public SecretFileName SecuredPlainName { get; set; }
         
-        public byte[] DecryptionIV { get; set; }
-        public byte[] Authentication { get; set; }
-        public string CipherTextPath { get; set; }
+        public byte[] TargetCipherIV { get; set; }
+        public byte[] TargetAuthentication { get; set; }
+        public string TargetPath { get; set; }
 
-        public byte[] NameCryptoIV { get; set; }
-
-
-        // config secret
-
-        public bool IsDecrypted { get; set; }
-
+        public bool IsUnlocked { get; private set; }
         public string UnlockedFilePath
         {
             get => _unlockedFilePath ?? string.Empty;
@@ -51,44 +42,19 @@ namespace crypto.Core.File
             {
                 if (!string.IsNullOrEmpty(value))
                 {
-                    IsDecrypted = true;
+                    IsUnlocked = true;
                     _unlockedFilePath = value;
                 }
                 else
                 {
-                    IsDecrypted = false;
+                    IsUnlocked = false;
                 }
             }
         }
 
-        #region PlainTextName
-
-        private FileInfo PlainTextFileInfo { get; set; }
-
-        public byte[] GetEncryptedPlainTextPath(byte[] key)
-        {
-            var plainTextPathBytes = Encoder.GetBytes(PlainTextFileInfo.ToString());
-            using var aesEncrypt = new AesBytes(key, NameCryptoIV);
-
-            return aesEncrypt.EncryptBytes(plainTextPathBytes);
-        }
-
-        public void SetPlainTextPathFromDecryptedBytes(byte[] decryptedPlainTextPath, byte[] key)
-        {
-            using var aesDecrypt = new AesBytes(key, NameCryptoIV);
-            PlainTextFileInfo = new FileInfo(Encoder.GetString(aesDecrypt.DecryptBytes(decryptedPlainTextPath)));
-        }
-        
-        #endregion
-        
-        public void GenerateConfigIV()
-        {
-            NameCryptoIV = CryptoRNG.GetRandomBytes(CryptoRNG.Aes256IVSizeInBytes);
-        }
-
         public void GenerateCipherFileIV()
         {
-            DecryptionIV = CryptoRNG.GetRandomBytes(CryptoRNG.Aes256IVSizeInBytes);
+            TargetCipherIV = CryptoRNG.GetRandomBytes(CryptoRNG.Aes256IVSizeInBytes);
         }
     }
 }
