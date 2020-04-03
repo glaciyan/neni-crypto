@@ -54,7 +54,7 @@ namespace crypto.Core.File
 
         public void GenerateCipherFileIV()
         {
-            TargetCipherIV = CryptoRNG.GetRandomBytes(CryptoRNG.Aes256IVSizeInBytes);
+            TargetCipherIV = CryptoRNG.GetRandomBytes(AesSizes.IV);
         }
     }
 }

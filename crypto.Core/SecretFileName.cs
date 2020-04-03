@@ -48,7 +48,7 @@ namespace crypto.Core
         
         private void GenerateIV()
         {
-            IV = CryptoRNG.GetRandomBytes(CryptoRNG.Aes256IVSizeInBytes);
+            IV = CryptoRNG.GetRandomBytes(AesSizes.IV);
         }
     }
 }
