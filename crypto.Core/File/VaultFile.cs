@@ -27,7 +27,7 @@ namespace crypto.Core.File
         public SecretFileName SecuredPlainName { get; set; }
         
         public byte[] TargetCipherIV { get; set; }
-        public byte[] TargetAuthentication { get; set; }
+        public byte[] TargetAuthentication { get; set; } = new byte[AesSizes.Auth];
         public string TargetPath { get; set; }
 
         public bool IsUnlocked => UnlockedFilePath != null;
