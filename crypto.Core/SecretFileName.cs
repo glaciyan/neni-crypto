@@ -20,15 +20,15 @@ namespace crypto.Core
             }
         }
 
-        public SecretFileName(byte[] decryptedName, byte[] iv)
+        public SecretFileName(byte[] encryptedName, byte[] iv)
         {
             IV = iv;
-            DecryptedName = decryptedName;
+            EncryptedName = encryptedName;
         }
         
         public byte[] IV { get; private set; }
         private string PlainName { get; set; }
-        private byte[] DecryptedName { get; }
+        private byte[] EncryptedName { get; }
         
         private static Encoding Encoder { get; } = Encoding.Unicode;
 
@@ -40,10 +40,15 @@ namespace crypto.Core
             return aesEncrypt.EncryptBytes(plainTextPathBytes);
         }
 
-        public string GetName(byte[] key)
+        public string GetName(byte[] key = null)
         {
+            if (EncryptedName == null || key == null)
+            {
+                return PlainName;
+            }
+            
             using var aesDecrypt = new AesBytes(key, IV);
-            return Encoder.GetString(aesDecrypt.DecryptBytes(DecryptedName));
+            return Encoder.GetString(aesDecrypt.DecryptBytes(EncryptedName));
         }
         
         private void GenerateIV()
