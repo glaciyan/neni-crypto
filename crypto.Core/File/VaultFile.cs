@@ -24,6 +24,11 @@ namespace crypto.Core.File
             return new VaultFile(plainFileName, pathToPlain);
         }
 
+        public static VaultFile ReadFrom(Stream source)
+        {
+            return VaultFileReader.ReadFrom(source);
+        }
+
         public SecretFileName SecuredPlainName { get; set; }
         
         public byte[] TargetCipherIV { get; set; }
