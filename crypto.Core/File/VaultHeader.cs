@@ -4,17 +4,19 @@ using System.IO;
 
 namespace crypto.Core.File
 {
-    public class Vault
+    public class VaultHeader
     {
-        public Vault(string fullPath, MasterPassword masterPassword)
+        public static readonly byte[] MagicNumber = {0x6e, 0x76, 0x66};
+        
+        public VaultHeader(string fullPath, MasterPassword masterPassword)
         {
             FullPath = fullPath;
             MasterPassword = masterPassword;
         }
         
-        public static Vault Create(string path, string name, byte[] stretchedKey)
+        public static VaultHeader Create(string path, string name, byte[] stretchedKey)
         {
-            return new Vault(Path.GetFullPath(path + name), new MasterPassword());
+            return new VaultHeader(Path.GetFullPath(path + name), new MasterPassword());
         }
 
         // file and parent folder name
