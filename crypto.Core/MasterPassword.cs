@@ -16,15 +16,15 @@ namespace crypto.Core
 
         private CryptoMode _mode;
         
-        public byte[] IV { get; }
-        public byte[] AuthenticationHash { get; }
+        public byte[] IV { get; set; }
+        public byte[] AuthenticationHash { get; set; }
         private byte[] Password { get; }
 
         public MasterPassword()
         {
             IV = CryptoRNG.GetRandomBytes(AesSizes.IV);
-            Password = CryptoRNG.GetRandomBytes(AesSizes.Key);
             AuthenticationHash = GeneratePasswordHash(Password);
+            Password = CryptoRNG.GetRandomBytes(AesSizes.Key);
             _mode = CryptoMode.Encryption;
         }
 
