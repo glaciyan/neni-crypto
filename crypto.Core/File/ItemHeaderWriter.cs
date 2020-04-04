@@ -6,12 +6,6 @@ using crypto.Core.Cryptography;
 
 namespace crypto.Core.File
 {
-    public enum ReaderWriter
-    {
-        Reader,
-        Writer
-    }
-    
     public class ItemHeaderWriter
     {
         private readonly ItemHeader _underlying;

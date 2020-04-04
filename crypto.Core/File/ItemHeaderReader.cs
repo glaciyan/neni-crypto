@@ -4,7 +4,7 @@ using crypto.Core.Cryptography;
 
 namespace crypto.Core.File
 {
-    public class ItemHeaderReader
+    public static class ItemHeaderReader
     {
         public static ItemHeader ReadFrom(Stream source)
         {
