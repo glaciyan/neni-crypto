@@ -61,11 +61,11 @@ namespace crypto.Core.Tests
             var key = CryptoRNG.GetRandomBytes(AesSizes.Key);
 
             var vaultFile = ItemHeader.Create(mockFileName);
-            var writer = new ItemHeaderWriter(vaultFile, key);
+            var writer = new ItemHeaderWriter(vaultFile);
 
             using (var stream = new FileStream(targetFile, FileMode.Create, FileAccess.Write))
             {
-                writer.WriteTo(stream);
+                writer.WriteTo(stream, key);
             }
 
             ItemHeader readItemHeader;
@@ -81,6 +81,29 @@ namespace crypto.Core.Tests
             
             Assert.AreEqual(vaultFile.IsUnlocked, readItemHeader.IsUnlocked);
             Assert.AreEqual(vaultFile.SecuredPlainName.GetName(), readItemHeader.SecuredPlainName.GetName(key));
+        }
+
+        [Test]
+        public void WriterReaderVaultHeader()
+        {
+            const string targetPath = testFolderPath + "WriterReaderVaultHeader.td";
+            var key = CryptoRNG.GetRandomBytes(AesSizes.Key);
+            
+            var header = VaultHeader.Create();
+
+            using (var stream = new FileStream(targetPath, FileMode.Create, FileAccess.Write))
+            {
+                var writer = new VaultHeaderWriter(header);
+                writer.WriteTo(stream, key);
+            }
+
+            VaultHeader readHeader;
+            using (var stream = new FileStream(targetPath, FileMode.Open, FileAccess.Read))
+            {
+                readHeader = VaultHeaderReader.ReadFrom(stream);
+            }
+            
+            Assert.IsTrue(readHeader.MasterPassword.GetDecryptedPassword(key).Item1);
         }
     }
 }
