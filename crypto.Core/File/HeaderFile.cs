@@ -3,11 +3,11 @@ using crypto.Core.Cryptography;
 
 namespace crypto.Core.File
 {
-    public class VaultFile
+    public class HeaderFile
     {
         private const int CipherTextNameLength = 16;
 
-        private VaultFile(string filePath, string plainTextParentDirPath = "")
+        private HeaderFile(string filePath, string plainTextParentDirPath = "")
         {
             SecuredPlainName = new SecretFileName(plainTextParentDirPath + Path.GetFileName(filePath));
             GenerateCipherFileIV();
@@ -15,18 +15,18 @@ namespace crypto.Core.File
             TargetAuthentication = new byte[32];
         }
 
-        public VaultFile()
+        public HeaderFile()
         {
         }
 
-        public static VaultFile Create(string plainFileName, string pathToPlain = "")
+        public static HeaderFile Create(string plainFileName, string pathToPlain = "")
         {
-            return new VaultFile(plainFileName, pathToPlain);
+            return new HeaderFile(plainFileName, pathToPlain);
         }
 
-        public static VaultFile ReadFrom(Stream source)
+        public static HeaderFile ReadFrom(Stream source)
         {
-            return VaultFileReader.ReadFrom(source);
+            return HeaderFileReader.ReadFrom(source);
         }
 
         public SecretFileName SecuredPlainName { get; set; }

@@ -12,12 +12,12 @@ namespace crypto.Core.File
         Writer
     }
     
-    public class VaultFileWriter
+    public class HeaderFileWriter
     {
-        private readonly VaultFile _underlying;
+        private readonly HeaderFile _underlying;
         private readonly byte[] _key;
         
-        public VaultFileWriter(VaultFile underlying, byte[] key)
+        public HeaderFileWriter(HeaderFile underlying, byte[] key)
         {
             _underlying = underlying;
             _key = key;
