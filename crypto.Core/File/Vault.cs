@@ -1,29 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace crypto.Core.File
 {
-    /// <summary>
-    ///     Class for managing multiple CryptoFiles that pair with their respective config
-    /// </summary>
     public class Vault
     {
-        public Vault(string name)
+        public Vault(string fullPath, MasterPassword masterPassword)
         {
-            Name = name;
+            FullPath = fullPath;
+            MasterPassword = masterPassword;
+        }
+        
+        public static Vault Create(string path, string name, byte[] stretchedKey)
+        {
+            return new Vault(Path.GetFullPath(path + name), new MasterPassword());
         }
 
-        public string Name { get; set; }
-        public List<VaultFile> VaultItems { get; set; } = new List<VaultFile>();
+        // file and parent folder name
+        public string FullPath { get; }
 
-        public void AddFile(string name, string parentFolderPath)
-        {
-            VaultItems.Add(VaultFile.Create(name, parentFolderPath));
-        }
+        public MasterPassword MasterPassword { get; set; }
+        
+        public List<ItemHeader> VaultItems { get; } = new List<ItemHeader>();
 
-        public static Vault Create(string path, string name, byte[] key)
+        public void AddHeader(string name, string parentFolderPath)
         {
-            throw new NotImplementedException();
+            VaultItems.Add(ItemHeader.Create(name, parentFolderPath));
         }
     }
 }
