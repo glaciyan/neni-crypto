@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-
-namespace crypto.Core.File
+﻿namespace crypto.Core.File
 {
     public class VaultHeader
     {
@@ -23,6 +19,6 @@ namespace crypto.Core.File
             return new VaultHeader(new MasterPassword());
         }
 
-        public MasterPassword MasterPassword { get; }
+        public MasterPassword MasterPassword { get; set; }
     }
 }
