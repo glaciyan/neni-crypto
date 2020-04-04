@@ -16,8 +16,8 @@ namespace crypto.Core
 
         private CryptoMode _mode;
         
-        private byte[] PasswordIV { get; set; }
-        public byte[] PasswordAuthentication { get; set; }
+        public byte[] PasswordIV { get; }
+        public byte[] PasswordAuthentication { get; }
         private byte[] Password { get; }
 
         public MasterPassword()
