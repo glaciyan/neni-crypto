@@ -51,6 +51,8 @@ namespace crypto.Core
             return Encoder.GetString(aesDecrypt.DecryptBytes(EncryptedName));
         }
         
+        // TODO: move file
+        
         private void GenerateIV()
         {
             IV = CryptoRNG.GetRandomBytes(AesSizes.IV);
