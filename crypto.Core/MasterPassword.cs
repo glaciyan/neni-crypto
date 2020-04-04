@@ -16,22 +16,22 @@ namespace crypto.Core
 
         private CryptoMode _mode;
         
-        public byte[] PasswordIV { get; }
-        public byte[] PasswordAuthentication { get; }
+        public byte[] IV { get; }
+        public byte[] AuthenticationHash { get; }
         private byte[] Password { get; }
 
         public MasterPassword()
         {
-            PasswordIV = CryptoRNG.GetRandomBytes(AesSizes.IV);
+            IV = CryptoRNG.GetRandomBytes(AesSizes.IV);
             Password = CryptoRNG.GetRandomBytes(AesSizes.Key);
-            PasswordAuthentication = GeneratePasswordHash(Password);
+            AuthenticationHash = GeneratePasswordHash(Password);
             _mode = CryptoMode.Encryption;
         }
 
-        public MasterPassword(byte[] passwordIV, byte[] passwordAuthentication, byte[] encryptedPassword)
+        public MasterPassword(byte[] iv, byte[] authenticationHash, byte[] encryptedPassword)
         {
-            PasswordIV = passwordIV;
-            PasswordAuthentication = passwordAuthentication;
+            IV = iv;
+            AuthenticationHash = authenticationHash;
             Password = encryptedPassword;
             _mode = CryptoMode.Decryption;
         }
@@ -41,7 +41,7 @@ namespace crypto.Core
             if (_mode == CryptoMode.Decryption)
                 throw new InvalidOperationException("Password can't be encrypted when constructed for decryption");
 
-            using var aes = new AesBytes(key, PasswordIV);
+            using var aes = new AesBytes(key, IV);
 
             return aes.EncryptBytes(Password);
         }
@@ -51,12 +51,12 @@ namespace crypto.Core
             if (_mode == CryptoMode.Encryption)
                 throw new InvalidOperationException("Password can't be decrypted when constructed for encryption");
             
-            using var aes = new AesBytes(key, PasswordIV);
+            using var aes = new AesBytes(key, IV);
 
             var decryptedPass = aes.DecryptBytes(Password);
             var hash = GeneratePasswordHash(decryptedPass);
             
-            if (hash.ContentEqualTo(PasswordAuthentication))
+            if (hash.ContentEqualTo(AuthenticationHash))
             {
                 return (true, decryptedPass);
             }
