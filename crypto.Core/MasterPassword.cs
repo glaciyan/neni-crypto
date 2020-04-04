@@ -23,8 +23,8 @@ namespace crypto.Core
         public MasterPassword()
         {
             IV = CryptoRNG.GetRandomBytes(AesSizes.IV);
-            AuthenticationHash = GeneratePasswordHash(Password);
             Password = CryptoRNG.GetRandomBytes(AesSizes.Key);
+            AuthenticationHash = GeneratePasswordHash(Password);
             _mode = CryptoMode.Encryption;
         }
 
