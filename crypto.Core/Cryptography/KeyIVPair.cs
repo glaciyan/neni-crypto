@@ -24,7 +24,7 @@ namespace crypto.Core.Cryptography
         {
             return
                 new KeyIVPair(
-                    password.ToByteArraySHA256(),
+                    password.ApplySHA256(),
                     iv ?? CryptoRNG.GetRandomBytes(AesSizes.IV)
                 );
         }
