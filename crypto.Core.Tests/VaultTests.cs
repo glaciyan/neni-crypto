@@ -60,27 +60,27 @@ namespace crypto.Core.Tests
 
             var key = CryptoRNG.GetRandomBytes(AesSizes.Key);
 
-            var vaultFile = HeaderFile.Create(mockFileName);
-            var writer = new HeaderFileWriter(vaultFile, key);
+            var vaultFile = ItemHeader.Create(mockFileName);
+            var writer = new ItemHeaderWriter(vaultFile, key);
 
             using (var stream = new FileStream(targetFile, FileMode.Create, FileAccess.Write))
             {
                 writer.WriteTo(stream);
             }
 
-            HeaderFile readHeaderFile;
+            ItemHeader readItemHeader;
 
             using (var stream = new FileStream(targetFile, FileMode.Open, FileAccess.Read))
             {
-                readHeaderFile = HeaderFileReader.ReadFrom(stream);
+                readItemHeader = ItemHeaderReader.ReadFrom(stream);
             }
             
-            Assert.AreEqual(vaultFile.TargetPath, readHeaderFile.TargetPath);
-            Assert.AreEqual(vaultFile.TargetCipherIV, readHeaderFile.TargetCipherIV);
-            Assert.AreEqual(vaultFile.TargetAuthentication, readHeaderFile.TargetAuthentication);
+            Assert.AreEqual(vaultFile.TargetPath, readItemHeader.TargetPath);
+            Assert.AreEqual(vaultFile.TargetCipherIV, readItemHeader.TargetCipherIV);
+            Assert.AreEqual(vaultFile.TargetAuthentication, readItemHeader.TargetAuthentication);
             
-            Assert.AreEqual(vaultFile.IsUnlocked, readHeaderFile.IsUnlocked);
-            Assert.AreEqual(vaultFile.SecuredPlainName.GetName(), readHeaderFile.SecuredPlainName.GetName(key));
+            Assert.AreEqual(vaultFile.IsUnlocked, readItemHeader.IsUnlocked);
+            Assert.AreEqual(vaultFile.SecuredPlainName.GetName(), readItemHeader.SecuredPlainName.GetName(key));
         }
     }
 }
