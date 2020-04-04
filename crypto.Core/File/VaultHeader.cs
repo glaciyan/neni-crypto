@@ -24,12 +24,5 @@ namespace crypto.Core.File
         public string FullPath { get; }
 
         public MasterPassword MasterPassword { get; set; }
-        
-        public List<ItemHeader> VaultItems { get; } = new List<ItemHeader>();
-
-        public void AddHeader(string name, string parentFolderPath)
-        {
-            VaultItems.Add(ItemHeader.Create(name, parentFolderPath));
-        }
     }
 }
