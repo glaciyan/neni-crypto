@@ -8,21 +8,21 @@ namespace crypto.Core.File
     {
         public static readonly byte[] MagicNumber = {0x6e, 0x76, 0x66};
         public static readonly int MagicNumberLength = MagicNumber.Length;
-        
-        public VaultHeader(string fullPath, MasterPassword masterPassword)
+
+        private VaultHeader(MasterPassword masterPassword)
         {
-            FullPath = fullPath;
             MasterPassword = masterPassword;
         }
-        
-        public static VaultHeader Create(string path, string name, byte[] stretchedKey)
+
+        public VaultHeader()
         {
-            return new VaultHeader(Path.GetFullPath(path + name), new MasterPassword());
         }
 
-        // file and parent folder name
-        public string FullPath { get; }
+        public static VaultHeader Create()
+        {
+            return new VaultHeader(new MasterPassword());
+        }
 
-        public MasterPassword MasterPassword { get; set; }
+        public MasterPassword MasterPassword { get; }
     }
 }
