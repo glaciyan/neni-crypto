@@ -20,9 +20,9 @@ namespace crypto.Core.File
         public void WriteTo(Stream destination, byte[] key)
         {
             using var binWriter = new BinaryWriter(destination, Encoding.Unicode, true);
-            
+
             binWriter.Write(VaultHeader.MagicNumber);
-            
+
             binWriter.Write(_underlying.MasterPassword.IV);
             binWriter.Write(_underlying.MasterPassword.AuthenticationHash);
             binWriter.Write(_underlying.MasterPassword.GetEncryptedPassword(key));

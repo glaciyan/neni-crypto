@@ -9,16 +9,12 @@ namespace crypto.Core
         Encryption,
         Decryption
     }
-    
+
     public class MasterPassword : IDisposable
     {
         private const int Rounds = 65536;
 
-        private CryptoMode _mode;
-        
-        public byte[] IV { get; set; }
-        public byte[] AuthenticationHash { get; set; }
-        private byte[] Password { get; }
+        private readonly CryptoMode _mode;
 
         public MasterPassword()
         {
@@ -36,6 +32,15 @@ namespace crypto.Core
             _mode = CryptoMode.Decryption;
         }
 
+        public byte[] IV { get; set; }
+        public byte[] AuthenticationHash { get; set; }
+        private byte[] Password { get; }
+
+        public void Dispose()
+        {
+            for (var i = 0; i < Password.Length; i++) Password[i] = 0;
+        }
+
         public byte[] GetEncryptedPassword(byte[] key)
         {
             if (_mode == CryptoMode.Decryption)
@@ -50,17 +55,14 @@ namespace crypto.Core
         {
             if (_mode == CryptoMode.Encryption)
                 throw new InvalidOperationException("Password can't be decrypted when constructed for encryption");
-            
+
             using var aes = new AesBytes(key, IV);
 
             var decryptedPass = aes.DecryptBytes(Password);
             var hash = GeneratePasswordHash(decryptedPass);
-            
-            if (hash.ContentEqualTo(AuthenticationHash))
-            {
-                return (true, decryptedPass);
-            }
-            
+
+            if (hash.ContentEqualTo(AuthenticationHash)) return (true, decryptedPass);
+
             throw new CryptographicException("Couldn't verify master password");
         }
 
@@ -69,20 +71,9 @@ namespace crypto.Core
             using var sha256 = SHA256.Create();
 
             var hash = new byte[0];
-            for (var i = 0; i < Rounds; i++)
-            {
-                hash = sha256.ComputeHash(password);
-            }
+            for (var i = 0; i < Rounds; i++) hash = sha256.ComputeHash(password);
 
             return hash;
-        }
-
-        public void Dispose()
-        {
-            for (var i = 0; i < Password.Length; i++)
-            {
-                Password[i] = 0;
-            }
         }
     }
 }

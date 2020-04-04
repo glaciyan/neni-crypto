@@ -1,4 +1,3 @@
-using System.IO;
 using System.Text;
 using crypto.Core.Cryptography;
 
@@ -11,13 +10,9 @@ namespace crypto.Core
             PlainName = plainName;
 
             if (iv == null)
-            {
                 GenerateIV();
-            }
             else
-            {
-                this.IV = iv;
-            }
+                IV = iv;
         }
 
         public SecretFileName(byte[] encryptedName, byte[] iv)
@@ -25,11 +20,11 @@ namespace crypto.Core
             IV = iv;
             EncryptedName = encryptedName;
         }
-        
+
         public byte[] IV { get; private set; }
-        private string PlainName { get; set; }
+        private string PlainName { get; }
         private byte[] EncryptedName { get; }
-        
+
         private static Encoding Encoder { get; } = Encoding.Unicode;
 
         public byte[] GetEncryptedName(byte[] key)
@@ -42,17 +37,14 @@ namespace crypto.Core
 
         public string GetName(byte[] key = null)
         {
-            if (EncryptedName == null || key == null)
-            {
-                return PlainName;
-            }
-            
+            if (EncryptedName == null || key == null) return PlainName;
+
             using var aesDecrypt = new AesBytes(key, IV);
             return Encoder.GetString(aesDecrypt.DecryptBytes(EncryptedName));
         }
-        
+
         // TODO: move file
-        
+
         private void GenerateIV()
         {
             IV = CryptoRNG.GetRandomBytes(AesSizes.IV);

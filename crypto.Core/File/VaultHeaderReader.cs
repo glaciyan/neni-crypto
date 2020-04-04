@@ -15,13 +15,13 @@ namespace crypto.Core.File
 
             if (!magicNumber.ContentEqualTo(VaultHeader.MagicNumber))
                 throw new FormatException("Magic number doesn't match");
-            
+
             var result = new VaultHeader();
 
             var mpIV = binReader.ReadBytes(AesSizes.IV);
             var mpAuthentication = binReader.ReadBytes(AesSizes.Auth);
             var encryptedMp = binReader.ReadBytes(AesSizes.PaddedKey);
-                
+
             result.MasterPassword = new MasterPassword(mpIV, mpAuthentication, encryptedMp);
 
             return result;

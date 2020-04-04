@@ -19,6 +19,15 @@ namespace crypto.Core.File
         {
         }
 
+        public SecretFileName SecuredPlainName { get; set; }
+
+        public byte[] TargetCipherIV { get; set; }
+        public byte[] TargetAuthentication { get; set; } = new byte[AesSizes.Auth];
+        public string TargetPath { get; set; }
+
+        public bool IsUnlocked => UnlockedFilePath != null;
+        public SecretFileName UnlockedFilePath { get; set; }
+
         public static ItemHeader Create(string plainFileName, string pathToPlain = "")
         {
             return new ItemHeader(plainFileName, pathToPlain);
@@ -28,15 +37,6 @@ namespace crypto.Core.File
         {
             return ItemHeaderReader.ReadFrom(source);
         }
-
-        public SecretFileName SecuredPlainName { get; set; }
-        
-        public byte[] TargetCipherIV { get; set; }
-        public byte[] TargetAuthentication { get; set; } = new byte[AesSizes.Auth];
-        public string TargetPath { get; set; }
-
-        public bool IsUnlocked => UnlockedFilePath != null;
-        public SecretFileName UnlockedFilePath { get; set; }
 
         public void GenerateCipherFileIV()
         {

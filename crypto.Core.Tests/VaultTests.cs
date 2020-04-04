@@ -1,5 +1,4 @@
 using System.IO;
-using System.Threading.Tasks;
 using crypto.Core.Cryptography;
 using crypto.Core.File;
 using NUnit.Framework;
@@ -15,7 +14,6 @@ namespace crypto.Core.Tests
         [OneTimeSetUp]
         public void Set_Up()
         {
-            
             Directory.CreateDirectory(testFolderPath);
         }
 
@@ -74,11 +72,11 @@ namespace crypto.Core.Tests
             {
                 readItemHeader = ItemHeaderReader.ReadFrom(stream);
             }
-            
+
             Assert.AreEqual(vaultFile.TargetPath, readItemHeader.TargetPath);
             Assert.AreEqual(vaultFile.TargetCipherIV, readItemHeader.TargetCipherIV);
             Assert.AreEqual(vaultFile.TargetAuthentication, readItemHeader.TargetAuthentication);
-            
+
             Assert.AreEqual(vaultFile.IsUnlocked, readItemHeader.IsUnlocked);
             Assert.AreEqual(vaultFile.SecuredPlainName.GetName(), readItemHeader.SecuredPlainName.GetName(key));
         }
@@ -88,7 +86,7 @@ namespace crypto.Core.Tests
         {
             const string targetPath = testFolderPath + "WriterReaderVaultHeader.td";
             var key = CryptoRNG.GetRandomBytes(AesSizes.Key);
-            
+
             var header = VaultHeader.Create();
 
             using (var stream = new FileStream(targetPath, FileMode.Create, FileAccess.Write))
@@ -102,7 +100,7 @@ namespace crypto.Core.Tests
             {
                 readHeader = VaultHeaderReader.ReadFrom(stream);
             }
-            
+
             Assert.IsTrue(readHeader.MasterPassword.GetDecryptedPassword(key).Item1);
         }
     }

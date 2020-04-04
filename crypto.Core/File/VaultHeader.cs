@@ -14,11 +14,11 @@
         {
         }
 
+        public MasterPassword MasterPassword { get; set; }
+
         public static VaultHeader Create()
         {
             return new VaultHeader(new MasterPassword());
         }
-
-        public MasterPassword MasterPassword { get; set; }
     }
 }

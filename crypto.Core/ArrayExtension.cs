@@ -21,7 +21,7 @@ namespace crypto.Core
         }
 
         /// <summary>
-        /// Calls T.Equals(T) for every element
+        ///     Calls T.Equals(T) for every element
         /// </summary>
         /// <param name="source"></param>
         /// <param name="comparer"></param>
