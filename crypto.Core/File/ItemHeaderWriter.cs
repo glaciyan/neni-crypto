@@ -9,22 +9,20 @@ namespace crypto.Core.File
     public class ItemHeaderWriter
     {
         private readonly ItemHeader _underlying;
-        private readonly byte[] _key;
         
-        public ItemHeaderWriter(ItemHeader underlying, byte[] key)
+        public ItemHeaderWriter(ItemHeader underlying)
         {
             _underlying = underlying;
-            _key = key;
         }
         
-        public void WriteTo(Stream destination)
+        public void WriteTo(Stream destination, byte[] key)
         {
             using var binWriter = new BinaryWriter(destination, Encoding.Unicode, true);
             
             // info from plaintext
             binWriter.Write(_underlying.SecuredPlainName.IV);
             // secret decrypted name
-            var encryptedName = _underlying.SecuredPlainName.GetEncryptedName(_key);
+            var encryptedName = _underlying.SecuredPlainName.GetEncryptedName(key);
             binWriter.Write(encryptedName.Length);
             binWriter.Write(encryptedName);
             
@@ -39,7 +37,7 @@ namespace crypto.Core.File
             {
                 binWriter.Write(_underlying.UnlockedFilePath.IV);
 
-                var secretUnlockedFilePath = _underlying.UnlockedFilePath.GetEncryptedName(_key);
+                var secretUnlockedFilePath = _underlying.UnlockedFilePath.GetEncryptedName(key);
                 binWriter.Write(secretUnlockedFilePath.Length);
                 binWriter.Write(secretUnlockedFilePath);
             }
