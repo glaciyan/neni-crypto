@@ -7,7 +7,7 @@ namespace crypto.Core.File
 {
     public static class VaultHeaderReader
     {
-        public static VaultHeader ReadFrom(Stream source, byte[] key)
+        public static VaultHeader ReadFrom(Stream source)
         {
             using var binReader = new BinaryReader(source, Encoding.Unicode, true);
 
@@ -20,7 +20,7 @@ namespace crypto.Core.File
 
             var mpIV = binReader.ReadBytes(AesSizes.IV);
             var mpAuthentication = binReader.ReadBytes(AesSizes.Auth);
-            var encryptedMp = binReader.ReadBytes(AesSizes.Key);
+            var encryptedMp = binReader.ReadBytes(AesSizes.PaddedKey);
                 
             result.MasterPassword = new MasterPassword(mpIV, mpAuthentication, encryptedMp);
 
