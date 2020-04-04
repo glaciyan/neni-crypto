@@ -27,7 +27,7 @@ namespace crypto.Core.Tests
         [Test]
         public void TwoBlockString()
         {
-            const string data = "12345678901234567890123";
+            const string data = "12345678901234567890123123123123";
             Data_Gets_Encrypted_Decrypted_Correctly(data);
         }
 
