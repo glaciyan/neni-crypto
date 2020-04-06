@@ -28,14 +28,11 @@ namespace crypto.Core.File
         public bool IsUnlocked => UnlockedFilePath != null;
         public SecretFileName UnlockedFilePath { get; set; }
 
+        public string FilePath => UnlockedFilePath.PlainName;
+
         public static ItemHeader Create(string plainFileName, string pathToPlain = "")
         {
             return new ItemHeader(plainFileName, pathToPlain);
-        }
-
-        public static ItemHeader ReadFrom(Stream source)
-        {
-            return ItemHeaderReader.ReadFrom(source);
         }
 
         public void GenerateCipherFileIV()
