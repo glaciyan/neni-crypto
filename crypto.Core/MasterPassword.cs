@@ -28,13 +28,14 @@ namespace crypto.Core
         {
             IV = iv;
             AuthenticationHash = authenticationHash;
-            Password = encryptedPassword;
+            EncryptedPassword = encryptedPassword;
             _mode = CryptoMode.Decryption;
         }
 
-        public byte[] IV { get; set; }
-        public byte[] AuthenticationHash { get; set; }
-        private byte[] Password { get; }
+        public byte[] IV { get; }
+        public byte[] AuthenticationHash { get; }
+        public byte[] Password { get; set; }
+        private byte[] EncryptedPassword { get; }
 
         public void Dispose()
         {
@@ -58,12 +59,16 @@ namespace crypto.Core
 
             using var aes = new AesBytes(key, IV);
 
-            var decryptedPass = aes.DecryptBytes(Password);
+            var decryptedPass = aes.DecryptBytes(EncryptedPassword);
             var hash = GeneratePasswordHash(decryptedPass);
 
-            if (hash.ContentEqualTo(AuthenticationHash)) return (true, decryptedPass);
+            if (hash.ContentEqualTo(AuthenticationHash))
+            {
+                Password = decryptedPass;
+                return (true, decryptedPass);
+            }
 
-            throw new CryptographicException("Couldn't verify master password");
+            return (false, new byte[0]);
         }
 
         private static byte[] GeneratePasswordHash(byte[] password)
