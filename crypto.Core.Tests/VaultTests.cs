@@ -1,6 +1,6 @@
 using System.IO;
 using crypto.Core.Cryptography;
-using crypto.Core.File;
+using crypto.Core.Header;
 using NUnit.Framework;
 
 namespace crypto.Core.Tests

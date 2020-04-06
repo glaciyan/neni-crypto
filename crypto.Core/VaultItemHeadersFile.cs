@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Security.Cryptography;
-using crypto.Core.File;
 using crypto.Core.Header;
 
 namespace crypto.Core

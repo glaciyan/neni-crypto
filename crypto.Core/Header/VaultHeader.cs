@@ -1,4 +1,4 @@
-﻿namespace crypto.Core.File
+﻿namespace crypto.Core.Header
 {
     public class VaultHeader
     {

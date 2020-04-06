@@ -1,7 +1,7 @@
 using System.IO;
 using System.Text;
 
-namespace crypto.Core.File
+namespace crypto.Core.Header
 {
     public class VaultHeaderWriter
     {

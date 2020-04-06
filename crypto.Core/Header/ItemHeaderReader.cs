@@ -2,7 +2,7 @@ using System.IO;
 using System.Text;
 using crypto.Core.Cryptography;
 
-namespace crypto.Core.File
+namespace crypto.Core.Header
 {
     public static class ItemHeaderReader
     {
