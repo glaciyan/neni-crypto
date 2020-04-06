@@ -9,21 +9,21 @@ namespace crypto.Core.Header
     {
         private const int CipherTextNameLength = 16;
 
-        private ItemHeader(string filePath, string plainTextParentDirPath = "")
-        {
-            SecuredPlainName = new SecretFileName(plainTextParentDirPath + Path.GetFileName(filePath));
-            GenerateCipherFileIV();
-            TargetPath = RandomGenerator.RandomFileName(CipherTextNameLength);
-            TargetAuthentication = new byte[32];
-        }
-
         public ItemHeader()
         {
         }
-        
+
         public static ItemHeader Create(string plainFileName, string pathToPlain = "")
         {
             return new ItemHeader(plainFileName, pathToPlain);
+        }
+
+        private ItemHeader(string fileName, string plainTextParentDirPath = "")
+        {
+            SecuredPlainName = new SecretFileName(plainTextParentDirPath.Replace('\\', '/') + Path.GetFileName(fileName));
+            GenerateCipherFileIV();
+            TargetPath = RandomGenerator.RandomFileName(CipherTextNameLength);
+            TargetAuthentication = new byte[32];
         }
 
         public SecretFileName SecuredPlainName { get; set; }
@@ -44,7 +44,7 @@ namespace crypto.Core.Header
 
         private static string RemoveRelativePathParts(string path)
         {
-            var splitPath = path.Split(Path.PathSeparator, StringSplitOptions.RemoveEmptyEntries);
+            var splitPath = path.Replace('\\', '/').Split('/', StringSplitOptions.RemoveEmptyEntries);
 
             var outputPath = new StringBuilder();
 
