@@ -24,9 +24,25 @@ namespace crypto.Core
             Name = name;
         }
 
-        public static VaultItemHeadersFile Create(string name, byte[] key)
+        public static VaultItemHeadersFile Create(string name, byte[] key) => Create(name, "", key);
+        
+        public static VaultItemHeadersFile Create(string name, string path, byte[] key)
         {
-            return new VaultItemHeadersFile(name, key) {Header = VaultHeader.Create()};
+            var output = new VaultItemHeadersFile(name, key)
+            {
+                Header = VaultHeader.Create(),
+                VaultPath = Path.GetFullPath(path) + "/"
+            };
+
+            PrepareVault(output);
+
+            return output;
+        }
+
+        private static void PrepareVault(VaultItemHeadersFile vaultFile)
+        {
+            Directory.CreateDirectory(vaultFile.VaultPath);
+            File.Create(vaultFile.VaultPath + vaultFile.Name).Dispose();
         }
 
         public void AddFile(string path, string directory = "")
@@ -45,7 +61,7 @@ namespace crypto.Core
 
         public void WriteTo(string folderPath)
         {
-            using var fileStream = new FileStream(folderPath + Name + FileExtension, FileMode.Create);
+            using var fileStream = new FileStream(folderPath + Name + FileExtension, FileMode.Open);
             
             WriteHeader(fileStream);
             
