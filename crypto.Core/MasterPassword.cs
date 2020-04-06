@@ -14,7 +14,7 @@ namespace crypto.Core
     {
         private const int Rounds = 65536;
 
-        private readonly CryptoMode _mode;
+        private CryptoMode _mode;
 
         public MasterPassword()
         {
@@ -64,6 +64,7 @@ namespace crypto.Core
 
             if (hash.ContentEqualTo(AuthenticationHash))
             {
+                _mode = CryptoMode.Encryption;
                 Password = decryptedPass;
                 return (true, decryptedPass);
             }

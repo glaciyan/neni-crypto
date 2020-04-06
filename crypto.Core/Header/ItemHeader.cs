@@ -35,8 +35,6 @@ namespace crypto.Core.Header
         public bool IsUnlocked => UnlockedFilePath != null;
         public SecretFileName UnlockedFilePath { get; set; }
 
-        public string FilePath => UnlockedFilePath.PlainName;
-
         public void Move(string destination)
         {
             SecuredPlainName.PlainName = RemoveRelativePathParts(destination);
