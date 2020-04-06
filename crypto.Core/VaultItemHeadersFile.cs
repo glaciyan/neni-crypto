@@ -33,7 +33,7 @@ namespace crypto.Core
             var header = ItemHeader.Create(path, directory);
             
             // write the UserData and set the auth key
-            
+            throw new NotImplementedException();
             ItemHeaders.Add(header);
         }
         
