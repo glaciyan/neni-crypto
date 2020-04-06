@@ -6,7 +6,7 @@ namespace crypto.Core.File
 {
     public static class ItemHeaderReader
     {
-        public static ItemHeader ReadFrom(Stream source)
+        public static ItemHeader ReadFrom(Stream source, byte[] key)
         {
             using var binReader = new BinaryReader(source, Encoding.Unicode, true);
             var result = new ItemHeader();
@@ -16,7 +16,7 @@ namespace crypto.Core.File
             var plainNameLength = binReader.ReadInt32();
             var encryptedPlainName = binReader.ReadBytes(plainNameLength);
 
-            result.SecuredPlainName = new SecretFileName(encryptedPlainName, plainIV);
+            result.SecuredPlainName = new SecretFileName(encryptedPlainName, plainIV, key);
 
             result.TargetCipherIV = binReader.ReadBytes(AesSizes.IV);
             result.TargetAuthentication = binReader.ReadBytes(AesSizes.Auth);
@@ -30,7 +30,7 @@ namespace crypto.Core.File
                 var length = binReader.ReadInt32();
                 var secretUnlockedFilePath = binReader.ReadBytes(length);
 
-                result.UnlockedFilePath = new SecretFileName(secretUnlockedFilePath, unlockedFilePathIV);
+                result.UnlockedFilePath = new SecretFileName(secretUnlockedFilePath, unlockedFilePathIV, key);
             }
 
             return result;

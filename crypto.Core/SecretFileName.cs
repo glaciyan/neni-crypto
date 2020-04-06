@@ -15,15 +15,14 @@ namespace crypto.Core
                 IV = iv;
         }
 
-        public SecretFileName(byte[] encryptedName, byte[] iv)
+        public SecretFileName(byte[] encryptedName, byte[] iv, byte[] key)
         {
             IV = iv;
-            EncryptedName = encryptedName;
+            SetName(encryptedName, key);
         }
 
         public byte[] IV { get; private set; }
-        private string PlainName { get; }
-        private byte[] EncryptedName { get; }
+        public string PlainName { get; set; }
 
         private static Encoding Encoder { get; } = Encoding.Unicode;
 
@@ -35,12 +34,11 @@ namespace crypto.Core
             return aesEncrypt.EncryptBytes(plainTextPathBytes);
         }
 
-        public string GetName(byte[] key = null)
+        private void SetName(byte[] encryptedName, byte[] key)
         {
-            if (EncryptedName == null || key == null) return PlainName;
-
             using var aesDecrypt = new AesBytes(key, IV);
-            return Encoder.GetString(aesDecrypt.DecryptBytes(EncryptedName));
+            var name = Encoder.GetString(aesDecrypt.DecryptBytes(encryptedName));
+            PlainName = name;
         }
 
         // TODO: move file
