@@ -8,13 +8,14 @@ namespace crypto.Core.Tests
     [TestFixture]
     public class VaultTests
     {
-        private const string testFolderPath = "../testData/";
+        private const string TestFolderPath = "../testData/";
         private const string FilePath = "../test/mock/testFile.txt";
+        private const string TestFile = "../../../testdata/data.dat";
 
         [OneTimeSetUp]
         public void Set_Up()
         {
-            Directory.CreateDirectory(testFolderPath);
+            Directory.CreateDirectory(TestFolderPath);
         }
 
         // [Test]
@@ -53,7 +54,7 @@ namespace crypto.Core.Tests
         [Test]
         public void CreateCryptoConfigNoPrefixPath()
         {
-            const string targetFile = testFolderPath + "CreateCryptoConfigNoPrefixPath.td";
+            const string targetFile = TestFolderPath + "CreateCryptoConfigNoPrefixPath.td";
             const string mockFileName = "importantData.txt";
 
             var key = CryptoRNG.GetRandomBytes(AesSizes.Key);
@@ -70,7 +71,7 @@ namespace crypto.Core.Tests
 
             using (var stream = new FileStream(targetFile, FileMode.Open, FileAccess.Read))
             {
-                readItemHeader = ItemHeaderReader.ReadFrom(stream);
+                readItemHeader = ItemHeaderReader.ReadFrom(stream, key);
             }
 
             Assert.AreEqual(vaultFile.TargetPath, readItemHeader.TargetPath);
@@ -78,13 +79,13 @@ namespace crypto.Core.Tests
             Assert.AreEqual(vaultFile.TargetAuthentication, readItemHeader.TargetAuthentication);
 
             Assert.AreEqual(vaultFile.IsUnlocked, readItemHeader.IsUnlocked);
-            Assert.AreEqual(vaultFile.SecuredPlainName.GetName(), readItemHeader.SecuredPlainName.GetName(key));
+            Assert.AreEqual(vaultFile.SecuredPlainName.PlainName, readItemHeader.SecuredPlainName.PlainName);
         }
 
         [Test]
         public void WriterReaderVaultHeader()
         {
-            const string targetPath = testFolderPath + "WriterReaderVaultHeader.td";
+            const string targetPath = TestFolderPath + "WriterReaderVaultHeader.td";
             var key = CryptoRNG.GetRandomBytes(AesSizes.Key);
 
             var header = VaultHeader.Create();
@@ -102,6 +103,19 @@ namespace crypto.Core.Tests
             }
 
             Assert.IsTrue(readHeader.MasterPassword.GetDecryptedPassword(key).Item1);
+        }
+
+        [Test]
+        public void VaultItemHeadersFileWriteRead()
+        {
+            var key = "passphrase".ApplySHA256();
+            using var file = VaultItemHeadersFile.Create("TestVault", key);
+            
+            file.AddFile(TestFile);
+            
+            file.WriteTo(TestFolderPath);
+
+            using var readFile = VaultItemHeadersFile.ReadFrom(TestFolderPath + "TestVault.vlt", key);
         }
     }
 }
