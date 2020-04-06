@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Security.Cryptography;
 using crypto.Core.File;
+using crypto.Core.Header;
 
 namespace crypto.Core
 {
@@ -16,6 +17,7 @@ namespace crypto.Core
         private string Name { get; }
         private VaultHeader Header { get; set; }
         public List<ItemHeader> ItemHeaders { get; } = new List<ItemHeader>();
+        public string VaultPath { get; private set; }
 
         private VaultItemHeadersFile(string name, byte[] key)
         {
@@ -52,7 +54,7 @@ namespace crypto.Core
             
             foreach (var itemHeader in ItemHeaders)
             {
-                WriteItemHeader(fileStream, itemHeader, binWriter);
+                WriteItemHeader(fileStream, itemHeader);
             }
         }
 
@@ -62,22 +64,10 @@ namespace crypto.Core
             headerWriter.WriteTo(fileStream, _key);
         }
 
-        private void WriteItemHeader(Stream fileStream, ItemHeader itemHeader, BinaryWriter binWriter)
+        private void WriteItemHeader(Stream fileStream, ItemHeader itemHeader)
         {
-            // // save position start position
-            // var startPos = fileStream.Position;
-            //
-            // // make space for writing the end position
-            // fileStream.Position += sizeof(long);
-
-            // write the header and then save the position
             var itemHeaderWriter = new ItemHeaderWriter(itemHeader);
             itemHeaderWriter.WriteTo(fileStream, Header.MasterPassword.Password);
-            // var endPos = fileStream.Position;
-            //
-            // fileStream.Position = startPos;
-            // binWriter.Write(endPos);
-            // fileStream.Position = endPos;
         }
 
         public static VaultItemHeadersFile ReadFrom(string source, byte[] key)
