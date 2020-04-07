@@ -92,11 +92,11 @@ namespace crypto.Core.Tests
             key = "passphrase".ApplySHA256();
             
             using (var readFile = VaultItemHeadersFile.ReadFrom($"{TestFolderPath}/{FolderPath}", key))
-                await readFile.AddFileAsync(TestFile);
+                await readFile.AddFileAsync(TestFile, "others");
             
             key = "passphrase".ApplySHA256();
 
-            var readFile2 = VaultItemHeadersFile.ReadFrom($"{TestFolderPath}/{FolderPath}", key);
+            using var readFile2 = VaultItemHeadersFile.ReadFrom($"{TestFolderPath}/{FolderPath}", key);
         }
     }
 }
