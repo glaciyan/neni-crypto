@@ -20,7 +20,7 @@ namespace crypto.Core.Header
 
             var mpIV = binReader.ReadBytes(AesSizes.IV);
             var mpAuthentication = binReader.ReadBytes(AesSizes.Auth);
-            var encryptedMp = binReader.ReadBytes(AesSizes.PaddedKey);
+            var encryptedMp = binReader.ReadBytes(AesSizes.Key);
 
             result.MasterPassword = new MasterPassword(mpIV, mpAuthentication, encryptedMp);
 

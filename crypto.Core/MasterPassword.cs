@@ -47,9 +47,7 @@ namespace crypto.Core
             if (_mode == CryptoMode.Decryption)
                 throw new InvalidOperationException("Password can't be encrypted when constructed for decryption");
 
-            using var aes = new AesBytes(key, IV);
-
-            return aes.EncryptBytes(Password);
+            return key.Xor(Password);
         }
 
         public (bool, byte[]) GetDecryptedPassword(byte[] key)
@@ -57,9 +55,7 @@ namespace crypto.Core
             if (_mode == CryptoMode.Encryption)
                 throw new InvalidOperationException("Password can't be decrypted when constructed for encryption");
 
-            using var aes = new AesBytes(key, IV);
-
-            var decryptedPass = aes.DecryptBytes(EncryptedPassword);
+            var decryptedPass = key.Xor(EncryptedPassword);
             var hash = GeneratePasswordHash(decryptedPass);
 
             if (hash.ContentEqualTo(AuthenticationHash))
