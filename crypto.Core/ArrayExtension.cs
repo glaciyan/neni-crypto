@@ -40,5 +40,31 @@ namespace crypto.Core
 
             return equal;
         }
+
+        public static unsafe byte[] Xor(this byte[] a, byte[] b)
+        {
+            if (a.Length != b.Length) throw new NotEqualLengthException();
+            if (a.Length % sizeof(int) != 0) throw new ArgumentException("Length of a must be a multiplicative of 4");
+            if (a.Length == 0) return new byte[0];
+
+            var rounds = a.Length / sizeof(int);
+
+            var result = new byte[a.Length];
+            
+            fixed (byte* aPointer = a, bPointer = b, resultPointer = result)
+            {
+                var intA = (int*) aPointer;
+                var intB = (int*) bPointer;
+                var intResult = (int*) resultPointer;
+
+                for (var i = 0; i < rounds; i++)
+                {
+                    var xorVal = *(intA + i) ^ *(intB + i);
+                    *(intResult + i) = xorVal;
+                }
+            }
+
+            return result;
+        }
     }
 }
