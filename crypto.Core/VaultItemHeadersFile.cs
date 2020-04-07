@@ -19,6 +19,7 @@ namespace crypto.Core
         private VaultHeader Header { get; set; }
         public List<ItemHeader> ItemHeaders { get; } = new List<ItemHeader>();
         public string VaultPath { get; private set; }
+        public string EncryptedFolderPath => Path.Combine(VaultPath, "Encrypted");
         public string VaultFilePath => GetVaultFilePath(VaultPath, Name);
 
         private VaultItemHeadersFile(string name, byte[] key)
@@ -48,27 +49,46 @@ namespace crypto.Core
         private static void PrepareVault(VaultItemHeadersFile vaultFile)
         {
             Directory.CreateDirectory(vaultFile.VaultPath);
+            Directory.CreateDirectory(vaultFile.EncryptedFolderPath);
             File.Create(vaultFile.VaultFilePath).Dispose();
         }
 
         public async Task AddFileAsync(string sourcePath, string path = "")
         {
+            Debug.Assert(sourcePath != null, nameof(sourcePath) + " != null");
+            
             var name = Path.GetFileName(sourcePath);
-            var header = ItemHeader.Create(name, path);
+            var itemHeader = ItemHeader.Create(name, path);
+            
+            var hash = await WriteUserDataFile(sourcePath, itemHeader);
 
-            // TODO: encrypt file
-            await using var sourceFileStream = new FileStream(sourcePath, FileMode.Open, FileAccess.Read);
-            await using var targetFileStream = new FileStream(GetTargetPath(header), FileMode.Create, FileAccess.Write);
-            var hash = await sourceFileStream.CopyToCreateHashAsync(targetFileStream);
+            itemHeader.TargetAuthentication = hash;
 
-            header.TargetAuthentication = hash;
-
-            ItemHeaders.Add(header);
+            ItemHeaders.Add(itemHeader);
         }
 
-        private string GetTargetPath(ItemHeader header)
+        private async Task<byte[]> WriteUserDataFile(string sourcePath, ItemHeader itemHeader)
         {
-            return VaultPath + "/" + header.TargetPath;
+            await using var sourceFileStream = new FileStream(sourcePath, FileMode.Open, FileAccess.Read);
+            await using var targetFileStream = new FileStream(Path.Combine(EncryptedFolderPath, itemHeader.TargetPath), FileMode.Create, FileAccess.Write);
+
+            using var decryptor = CreateEncryptor(itemHeader);
+            await using var targetFileCryptoStream = new CryptoStream(targetFileStream, decryptor, CryptoStreamMode.Write);
+
+            var hash = await sourceFileStream.CopyToCreateHashAsync(targetFileCryptoStream);
+            return hash;
+        }
+
+        private ICryptoTransform CreateEncryptor(ItemHeader itemHeader)
+        {
+            using var aes = Aes.Create();
+            aes.KeySize = 256;
+            aes.BlockSize = 128;
+            aes.Key = Header.MasterPassword.Password;
+            aes.IV = itemHeader.TargetCipherIV;
+            aes.Padding = PaddingMode.PKCS7;
+            var decryptor = aes.CreateEncryptor();
+            return decryptor;
         }
 
         public bool ExtractFile(ItemHeader header, string folderPath)
