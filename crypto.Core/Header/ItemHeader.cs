@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using crypto.Core.Cryptography;
@@ -20,7 +21,9 @@ namespace crypto.Core.Header
 
         private ItemHeader(string fileName, string plainTextParentDirPath = "")
         {
-            SecuredPlainName = new SecretFileName(plainTextParentDirPath.Replace('\\', '/') + Path.GetFileName(fileName));
+            Debug.Assert(fileName != null, nameof(fileName) + " != null");
+            var plainPath = Path.Combine(plainTextParentDirPath.Replace('\\', '/'), Path.GetFileName(fileName));
+            SecuredPlainName = new SecretFileName(plainPath);
             GenerateCipherFileIV();
             TargetPath = RandomGenerator.RandomFileName(CipherTextNameLength);
             TargetAuthentication = new byte[32];
