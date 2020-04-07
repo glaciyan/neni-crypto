@@ -20,6 +20,7 @@ namespace crypto.Core
         public List<ItemHeader> ItemHeaders { get; } = new List<ItemHeader>();
         public string VaultPath { get; private set; }
         public string EncryptedFolderPath => Path.Combine(VaultPath, "Encrypted");
+        public string UnlockedFolderPath => Path.Combine(VaultPath, "Unlocked");
         public string VaultFilePath => GetVaultFilePath(VaultPath, Name);
 
         private VaultItemHeadersFile(string name, byte[] key)
