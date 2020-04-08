@@ -15,5 +15,16 @@ namespace crypto.Core.Tests
 
             Assert.AreEqual(expected, result);
         }
+
+        [Test]
+        public void RemoveRelativeParts()
+        {
+            const string testPath = "../test/./other/stuff/file.txt";
+            const string expected = "test/other/stuff/file.txt";
+
+            var result = NPath.RemoveRelativeParts(testPath);
+            
+            Assert.AreEqual(expected, result);
+        }
     }
 }
