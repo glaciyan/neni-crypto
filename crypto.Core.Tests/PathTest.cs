@@ -12,7 +12,7 @@ namespace crypto.Core.Tests
             const string expected = "other/more/stuff/test/mock";
 
             var result = NDirectory.GetPathToFile(testPath);
-            
+
             Assert.AreEqual(expected, result);
         }
     }

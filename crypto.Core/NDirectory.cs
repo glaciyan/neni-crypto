@@ -15,7 +15,7 @@ namespace crypto.Core
                 dirInfo.Delete();
                 return;
             }
-            
+
             RecursiveCleanUp(dirInfo);
         }
 
@@ -27,12 +27,10 @@ namespace crypto.Core
 
                 if (dirs.Length == 0) directoryInfo.Delete();
                 else
-                {
                     RecursiveCleanUp(directoryInfo);
-                }
             }
         }
-        
+
         public static string GetPathToFile(string filePath)
         {
             var split = filePath.Split('/', StringSplitOptions.RemoveEmptyEntries);
@@ -41,11 +39,8 @@ namespace crypto.Core
             for (var i = 0; i < split.Length - 1; i++)
             {
                 output.Append(split[i]);
-                
-                if (i < split.Length - 2)
-                {
-                    output.Append('/');
-                }
+
+                if (i < split.Length - 2) output.Append('/');
             }
 
             return output.ToString();

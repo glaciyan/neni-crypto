@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Threading.Tasks;
 using crypto.Core.Extension;
 using crypto.Core.Header;
@@ -91,10 +90,10 @@ namespace crypto.Core
         {
             // delete the file, set isUnlocked to false, and clean directories empty in unlocked
             var plainTextPath = header.UnlockedFilePath.PlainName;
-            
+
             await NFile.Purge(Path.Combine(UnlockedFolderPath, plainTextPath));
             header.IsUnlocked = false;
-            
+
             NDirectory.CleanEmptyDirectories(Path.Combine(UnlockedFolderPath, NDirectory.GetPathToFile(plainTextPath)));
         }
     }

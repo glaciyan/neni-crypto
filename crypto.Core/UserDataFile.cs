@@ -11,7 +11,7 @@ namespace crypto.Core
             byte[] iv)
         {
             Directory.CreateDirectory(NDirectory.GetPathToFile(destinationPath));
-            
+
             await using var src = new FileStream(sourcePath, FileMode.Open, FileAccess.Read);
             await using var dest = new FileStream(destinationPath, FileMode.Create, FileAccess.Write);
 

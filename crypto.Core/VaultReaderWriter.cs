@@ -1,4 +1,3 @@
-using System;
 using System.Diagnostics;
 using System.IO;
 using System.Security.Cryptography;
@@ -11,7 +10,7 @@ namespace crypto.Core
         //++++++++++++++++++++++++++++
         //        Writing
         //++++++++++++++++++++++++++++
-        
+
         public static Vault ReadFromConfig(string folderPath, byte[] key)
         {
             Debug.Assert(folderPath != null, nameof(folderPath) + " != null");
@@ -39,15 +38,15 @@ namespace crypto.Core
             var folderName = Path.GetFileNameWithoutExtension(fullPath);
             var vaultFilePath = Vault.GetVaultFilePath(fullPath, folderName);
 
-            if (System.IO.File.Exists(vaultFilePath)) return (fullPath, folderName, vaultFilePath);
+            if (File.Exists(vaultFilePath)) return (fullPath, folderName, vaultFilePath);
 
             throw new FileNotFoundException("Couldn't find vault file for path: " + path);
         }
-        
+
         //++++++++++++++++++++++++++++
         //        Reading
         //++++++++++++++++++++++++++++
-        
+
         public static void WriteConfig(Vault underlying, byte[] key)
         {
             using var fileStream = new FileStream(underlying.VaultFilePath, FileMode.Open);
