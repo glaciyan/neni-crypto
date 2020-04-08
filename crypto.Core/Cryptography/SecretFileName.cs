@@ -40,8 +40,6 @@ namespace crypto.Core.Cryptography
             PlainName = name;
         }
 
-        // TODO: move file
-
         private void GenerateIV()
         {
             IV = CryptoRNG.GetRandomBytes(AesSizes.IV);
