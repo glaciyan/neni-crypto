@@ -3,7 +3,7 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 using crypto.Core.Cryptography;
 
-namespace crypto.Core.Vault
+namespace crypto.Core
 {
     public static class UserDataFile
     {

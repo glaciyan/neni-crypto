@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using crypto.Core.ExtensionUtilities;
 using crypto.Core.Header;
 
-namespace crypto.Core.Vault
+namespace crypto.Core
 {
     public class Vault
     {

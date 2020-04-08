@@ -4,7 +4,7 @@ using System.Security.Cryptography;
 using crypto.Core.ExtensionUtilities;
 using crypto.Core.Header;
 
-namespace crypto.Core.Vault
+namespace crypto.Core
 {
     public static class VaultReader
     {

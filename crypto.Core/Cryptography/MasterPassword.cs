@@ -1,9 +1,8 @@
 using System;
 using System.Security.Cryptography;
-using crypto.Core.Cryptography;
 using crypto.Core.ExtensionUtilities;
 
-namespace crypto.Core
+namespace crypto.Core.Cryptography
 {
     public enum CryptoMode
     {

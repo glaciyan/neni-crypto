@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 
-namespace crypto.Core.ExtensionUtilities
+namespace crypto.Core
 {
     public static class RandomGenerator
     {
