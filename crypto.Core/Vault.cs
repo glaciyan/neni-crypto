@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 using crypto.Core.Extension;
 using crypto.Core.Header;
@@ -79,6 +80,30 @@ namespace crypto.Core
             header.IsUnlocked = true;
 
             return hash.ContentEqualTo(header.TargetAuthentication);
+        }
+
+        public async Task EliminateExtracted(ItemHeader header)
+        {
+            // delete the file, set isUnlocked to false, and clean directories empty in unlocked
+            var plainTextPath = header.UnlockedFilePath.PlainName;
+            
+            await NFile.Purge(Path.Combine(UnlockedFolderPath, plainTextPath));
+            header.IsUnlocked = false;
+            
+            NDirectory.CleanEmptyDirectories(Path.Combine(UnlockedFolderPath, GetPathToFile(plainTextPath)));
+        }
+        
+        private static string GetPathToFile(string filePath)
+        {
+            var split = filePath.Split('/', StringSplitOptions.RemoveEmptyEntries);
+            var output = new StringBuilder();
+
+            for (var i = 0; i < split.Length - 1; i++)
+            {
+                output.Append(split[i]);
+            }
+
+            return output.ToString();
         }
     }
 }

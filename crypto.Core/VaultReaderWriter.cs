@@ -39,7 +39,7 @@ namespace crypto.Core
             var folderName = Path.GetFileNameWithoutExtension(fullPath);
             var vaultFilePath = Vault.GetVaultFilePath(fullPath, folderName);
 
-            if (File.Exists(vaultFilePath)) return (fullPath, folderName, vaultFilePath);
+            if (System.IO.File.Exists(vaultFilePath)) return (fullPath, folderName, vaultFilePath);
 
             throw new FileNotFoundException("Couldn't find vault file for path: " + path);
         }
