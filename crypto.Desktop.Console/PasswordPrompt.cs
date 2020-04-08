@@ -5,7 +5,7 @@ namespace crypto.Desktop.Cnsl
 {
     public static class PasswordPrompt
     {
-        public static string PromptPassword(string promptMessage = null)
+        public static string PromptPassword(string? promptMessage = null)
         {
             Console.Write(promptMessage ?? "Enter Password: ");
 
