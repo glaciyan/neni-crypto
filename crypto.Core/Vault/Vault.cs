@@ -11,11 +11,8 @@ namespace crypto.Core.Vault
     {
         private const string FileExtension = ".vlt";
 
-        private readonly byte[] _key;
-
-        internal Vault(string name, byte[] key)
+        internal Vault(string name)
         {
-            _key = key;
             Name = name;
         }
 
@@ -32,21 +29,15 @@ namespace crypto.Core.Vault
             return vaultPath + "/" + name + FileExtension;
         }
 
-        public static Vault Create(string name, byte[] key)
+        public static Vault Create(string name, string path = null)
         {
-            return Create(name, null, key);
-        }
-
-        public static Vault Create(string name, string path, byte[] key)
-        {
-            var output = new Vault(name, key)
+            var output = new Vault(name)
             {
-                Header = VaultHeader.Create()
+                Header = VaultHeader.Create(),
+                VaultPath = path == null
+                    ? Path.Combine(Environment.CurrentDirectory, name)
+                    : Path.GetFullPath(path + "/" + name)
             };
-
-            output.VaultPath = path == null
-                ? Path.Combine(Environment.CurrentDirectory, name)
-                : Path.GetFullPath(path + "/" + name);
 
             PrepareVault(output);
 

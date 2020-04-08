@@ -5,7 +5,7 @@ using crypto.Core.Cryptography;
 
 namespace crypto.Core.Vault
 {
-    public class UserDataFile
+    public static class UserDataFile
     {
         public static async Task<byte[]> ExtractUserDataFile(string sourcePath, string destinationPath, byte[] key,
             byte[] iv)

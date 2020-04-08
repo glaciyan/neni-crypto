@@ -64,22 +64,22 @@ namespace crypto.Core.Tests
         {
             var key = "passphrase".ApplySHA256();
 
-            var file = Vault.Vault.Create(FolderPath, TestFolderPath, key);
+            var file = Vault.Vault.Create(FolderPath, TestFolderPath);
             await file.AddFileAsync(TestFile);
 
             using (var writer = new VaultConfigWriter(file, key))
             {
-                writer.Write();
+                writer.WriteConfig();
             }
 
             key = "passphrase".ApplySHA256();
 
-            var readFile = VaultReader.ReadFrom($"{TestFolderPath}/{FolderPath}", key);
+            var readFile = VaultReader.ReadFromConfig($"{TestFolderPath}/{FolderPath}", key);
             await readFile.AddFileAsync(TestFile, "others");
 
             key = "passphrase".ApplySHA256();
 
-            var readFile2 = VaultReader.ReadFrom($"{TestFolderPath}/{FolderPath}", key);
+            var readFile2 = VaultReader.ReadFromConfig($"{TestFolderPath}/{FolderPath}", key);
         }
 
         [Test]

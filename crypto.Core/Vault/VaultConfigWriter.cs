@@ -21,7 +21,7 @@ namespace crypto.Core.Vault
             _key.Zeros();
         }
 
-        public void Write()
+        public void WriteConfig()
         {
             using var fileStream = new FileStream(_underlying.VaultFilePath, FileMode.Open);
 

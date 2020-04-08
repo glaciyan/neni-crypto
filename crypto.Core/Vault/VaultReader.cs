@@ -8,12 +8,12 @@ namespace crypto.Core.Vault
 {
     public static class VaultReader
     {
-        public static Vault ReadFrom(string folderPath, byte[] key)
+        public static Vault ReadFromConfig(string folderPath, byte[] key)
         {
             Debug.Assert(folderPath != null, nameof(folderPath) + " != null");
 
             var (fullFolderPath, folderName, vaultFilePath) = VerifyPathAndGetNames(folderPath);
-            var result = new Vault(folderName, key) {VaultPath = fullFolderPath};
+            var result = new Vault(folderName) {VaultPath = fullFolderPath};
 
             using var vaultFile = new FileStream(vaultFilePath, FileMode.Open, FileAccess.Read);
 
