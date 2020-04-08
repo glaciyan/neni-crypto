@@ -7,7 +7,8 @@ namespace crypto.Core.Vault
 {
     public class UserDataFile
     {
-        public static async Task<byte[]> ExtractUserDataFile(string sourcePath, string destinationPath, byte[] key, byte[] iv)
+        public static async Task<byte[]> ExtractUserDataFile(string sourcePath, string destinationPath, byte[] key,
+            byte[] iv)
         {
             await using var src = new FileStream(sourcePath, FileMode.Open, FileAccess.Read);
             await using var dest = new FileStream(destinationPath, FileMode.Create, FileAccess.Write);
@@ -19,7 +20,8 @@ namespace crypto.Core.Vault
             return hash;
         }
 
-        public static async Task<byte[]> WriteUserDataFile(string sourcePath, string destinationPath, byte[] key, byte[] iv)
+        public static async Task<byte[]> WriteUserDataFile(string sourcePath, string destinationPath, byte[] key,
+            byte[] iv)
         {
             await using var src = new FileStream(sourcePath, FileMode.Open, FileAccess.Read);
             await using var dest = new FileStream(destinationPath, FileMode.Create, FileAccess.Write);

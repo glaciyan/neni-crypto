@@ -51,7 +51,7 @@ namespace crypto.Core.ExtensionUtilities
             var rounds = a.Length / sizeof(int);
 
             var result = new byte[a.Length];
-            
+
             fixed (byte* aPointer = a, bPointer = b, resultPointer = result)
             {
                 var intA = (int*) aPointer;
@@ -67,13 +67,10 @@ namespace crypto.Core.ExtensionUtilities
 
             return result;
         }
-        
+
         public static void Zeros(this byte[] ba)
         {
-            for (var i = 0; i < ba.Length; i++)
-            {
-                ba[i] = 0;
-            }
+            for (var i = 0; i < ba.Length; i++) ba[i] = 0;
         }
     }
 }

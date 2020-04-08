@@ -15,11 +15,6 @@ namespace crypto.Core.Header
         {
         }
 
-        public static ItemHeader Create(string plainFileName, string pathToPlain = "")
-        {
-            return new ItemHeader(plainFileName, pathToPlain);
-        }
-
         private ItemHeader(string fileName, string plainTextParentDirPath = "")
         {
             Debug.Assert(fileName != null, nameof(fileName) + " != null");
@@ -39,6 +34,11 @@ namespace crypto.Core.Header
         public bool IsUnlocked => UnlockedFilePath != null;
         public SecretFileName UnlockedFilePath { get; set; }
 
+        public static ItemHeader Create(string plainFileName, string pathToPlain = "")
+        {
+            return new ItemHeader(plainFileName, pathToPlain);
+        }
+
         public void Move(string destination)
         {
             SecuredPlainName.PlainName = RemoveRelativePathParts(destination);
@@ -51,9 +51,8 @@ namespace crypto.Core.Header
             var outputPath = new StringBuilder();
 
             foreach (var part in splitPath)
-            {
-                if (part != ".." && part != ".") outputPath.Append(part);
-            }
+                if (part != ".." && part != ".")
+                    outputPath.Append(part);
 
             return outputPath.ToString();
         }

@@ -5,7 +5,6 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 using crypto.Core.Cryptography;
 using NUnit.Framework;
-using NUnit.Framework.Internal;
 
 namespace crypto.Core.Tests
 {
@@ -13,7 +12,7 @@ namespace crypto.Core.Tests
     public class StreamTests
     {
         private const string TestFile = "../../../../testdata/data2.dat";
-        
+
         [Test]
         public async Task HashIsCorrect()
         {
@@ -21,7 +20,7 @@ namespace crypto.Core.Tests
 
             await using var sourceStream = new FileStream(TestFile, FileMode.Open, FileAccess.Read);
             await using var outputStream = new FileStream("HashIsCorrect.td", FileMode.Create, FileAccess.Write);
-            
+
             using var sha = SHA256.Create();
 
             var hashFromCompute = sha.ComputeHash(sourceStream);
@@ -29,7 +28,7 @@ namespace crypto.Core.Tests
             var hashFromCopy = await sourceStream.CopyToCreateHashAsync(outputStream);
 
             Console.WriteLine(timer.ElapsedMilliseconds + "ms");
-            
+
             Assert.AreEqual(hashFromCompute, hashFromCopy);
         }
     }

@@ -1,5 +1,5 @@
 using System.Security.Cryptography;
-using crypto.Core.Header;
+
 // ReSharper disable PossibleNullReferenceException
 
 namespace crypto.Core.Cryptography

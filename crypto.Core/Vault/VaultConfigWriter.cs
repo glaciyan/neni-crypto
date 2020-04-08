@@ -7,8 +7,8 @@ namespace crypto.Core.Vault
 {
     public class VaultConfigWriter : IDisposable
     {
-        private readonly Vault _underlying;
         private readonly byte[] _key;
+        private readonly Vault _underlying;
 
         public VaultConfigWriter(Vault underlying, byte[] key)
         {
@@ -16,18 +16,20 @@ namespace crypto.Core.Vault
             _key = key;
         }
 
+        public void Dispose()
+        {
+            _key.Zeros();
+        }
+
         public void Write()
         {
             using var fileStream = new FileStream(_underlying.VaultFilePath, FileMode.Open);
-            
+
             WriteHeader(fileStream);
-            
+
             using var binWriter = new BinaryWriter(fileStream);
-            
-            foreach (var itemHeader in _underlying.ItemHeaders)
-            {
-                WriteItemHeader(fileStream, itemHeader);
-            }
+
+            foreach (var itemHeader in _underlying.ItemHeaders) WriteItemHeader(fileStream, itemHeader);
         }
 
         private void WriteHeader(Stream fileStream)
@@ -40,11 +42,6 @@ namespace crypto.Core.Vault
         {
             var itemHeaderWriter = new ItemHeaderWriter(itemHeader);
             itemHeaderWriter.WriteTo(fileStream, _underlying.Header.MasterPassword.Password);
-        }
-
-        public void Dispose()
-        {
-            _key.Zeros();
         }
     }
 }

@@ -15,7 +15,7 @@ namespace crypto.Core.Tests
 
             var encryptedData = key.Xor(data);
             var decryptedData = key.Xor(encryptedData);
-            
+
             Assert.AreEqual(data, decryptedData);
         }
     }
