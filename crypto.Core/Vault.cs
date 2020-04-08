@@ -9,7 +9,7 @@ using crypto.Core.Header;
 
 namespace crypto.Core
 {
-    public class VaultItemHeadersFile : IDisposable
+    public class Vault : IDisposable
     {
         private const string FileExtension = ".vlt";
         
@@ -23,17 +23,17 @@ namespace crypto.Core
         public string UnlockedFolderPath => Path.Combine(VaultPath, "Unlocked");
         public string VaultFilePath => GetVaultFilePath(VaultPath, Name);
 
-        private VaultItemHeadersFile(string name, byte[] key)
+        private Vault(string name, byte[] key)
         {
             _key = key;
             Name = name;
         }
 
-        public static VaultItemHeadersFile Create(string name, byte[] key) => Create(name, null, key);
+        public static Vault Create(string name, byte[] key) => Create(name, null, key);
         
-        public static VaultItemHeadersFile Create(string name, string path, byte[] key)
+        public static Vault Create(string name, string path, byte[] key)
         {
-            var output = new VaultItemHeadersFile(name, key)
+            var output = new Vault(name, key)
             {
                 Header = VaultHeader.Create()
             };
@@ -47,7 +47,7 @@ namespace crypto.Core
             return output;
         }
 
-        private static void PrepareVault(VaultItemHeadersFile vaultFile)
+        private static void PrepareVault(Vault vaultFile)
         {
             Directory.CreateDirectory(vaultFile.VaultPath);
             Directory.CreateDirectory(vaultFile.EncryptedFolderPath);
@@ -123,12 +123,12 @@ namespace crypto.Core
             itemHeaderWriter.WriteTo(fileStream, Header.MasterPassword.Password);
         }
 
-        public static VaultItemHeadersFile ReadFrom(string folderPath, byte[] key)
+        public static Vault ReadFrom(string folderPath, byte[] key)
         {
             Debug.Assert(folderPath != null, nameof(folderPath) + " != null");
             
             var (fullFolderPath, folderName, vaultFilePath) = VerifyPathAndGetName(folderPath);
-            var result = new VaultItemHeadersFile(folderName, key);
+            var result = new Vault(folderName, key);
             result.VaultPath = fullFolderPath;
 
             using var vaultFile = new FileStream(vaultFilePath, FileMode.Open, FileAccess.Read);

@@ -86,17 +86,17 @@ namespace crypto.Core.Tests
         {
             var key = "passphrase".ApplySHA256();
             
-            using (var file = VaultItemHeadersFile.Create(FolderPath, TestFolderPath, key))
+            using (var file = Vault.Create(FolderPath, TestFolderPath, key))
                 await file.AddFileAsync(TestFile);
             
             key = "passphrase".ApplySHA256();
             
-            using (var readFile = VaultItemHeadersFile.ReadFrom($"{TestFolderPath}/{FolderPath}", key))
+            using (var readFile = Vault.ReadFrom($"{TestFolderPath}/{FolderPath}", key))
                 await readFile.AddFileAsync(TestFile, "others");
             
             key = "passphrase".ApplySHA256();
 
-            using var readFile2 = VaultItemHeadersFile.ReadFrom($"{TestFolderPath}/{FolderPath}", key);
+            using var readFile2 = Vault.ReadFrom($"{TestFolderPath}/{FolderPath}", key);
         }
     }
 }
