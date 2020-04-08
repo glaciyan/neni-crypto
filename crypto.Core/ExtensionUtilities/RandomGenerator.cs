@@ -3,7 +3,7 @@ using System.Text;
 
 namespace crypto.Core.ExtensionUtilities
 {
-    public class RandomGenerator
+    public static class RandomGenerator
     {
         public static string RandomFileName(int length)
         {
