@@ -145,7 +145,7 @@ namespace crypto.Core.Tests
             var readFile = VaultReaderWriter.ReadFromConfig($"{TestFolderPath}/{vaultName}", key);
             await readFile.AddFileAsync(testFile, "others");
 
-            var readFile2 = VaultReaderWriter.ReadFromConfig($"{TestFolderPath}/{vaultName}", key);
+            var unused = VaultReaderWriter.ReadFromConfig($"{TestFolderPath}/{vaultName}", key);
         }
 
         [Test]
