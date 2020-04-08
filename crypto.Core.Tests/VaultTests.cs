@@ -85,18 +85,21 @@ namespace crypto.Core.Tests
         public async Task VaultItemHeadersFileWriteRead()
         {
             var key = "passphrase".ApplySHA256();
-            
-            using (var file = Vault.Create(FolderPath, TestFolderPath, key))
-                await file.AddFileAsync(TestFile);
-            
-            key = "passphrase".ApplySHA256();
-            
-            using (var readFile = Vault.ReadFrom($"{TestFolderPath}/{FolderPath}", key))
-                await readFile.AddFileAsync(TestFile, "others");
-            
+
+            var file = Vault.Create(FolderPath, TestFolderPath, key);
+            await file.AddFileAsync(TestFile);
+
+            using (var writer = new VaultConfigWriter(file, key))
+                writer.Write();
+
             key = "passphrase".ApplySHA256();
 
-            using var readFile2 = Vault.ReadFrom($"{TestFolderPath}/{FolderPath}", key);
+            var readFile = VaultConfigReader.ReadFrom($"{TestFolderPath}/{FolderPath}", key);
+            await readFile.AddFileAsync(TestFile, "others");
+
+            key = "passphrase".ApplySHA256();
+
+            var readFile2 = VaultConfigReader.ReadFrom($"{TestFolderPath}/{FolderPath}", key);
         }
     }
 }
