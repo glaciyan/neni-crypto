@@ -15,6 +15,11 @@ namespace crypto.Desktop.Cnsl
         {
             PrintColor(message, ConsoleColor.Yellow);
         }
+        
+        public static void Success(string message)
+        {
+            PrintColor(message, ConsoleColor.Green);
+        }
 
         private static void PrintColor(string m, ConsoleColor col)
         {
