@@ -25,12 +25,15 @@ namespace crypto.Desktop.Cnsl
             return new string(password.ToArray());
         }
 
-        public static string? PromptPasswordWithConfirmation()
+        public static string PromptPasswordWithConfirmation()
         {
             var pw = PromptPassword();
             var pwRe = PromptPassword("Confirm Password: ");
 
-            return pw != pwRe ? null : pw;
+            if (pw != pwRe)
+                throw new PasswordException("Password didn't match up");
+
+            return pw;
         }
     }
 }
