@@ -5,9 +5,9 @@ namespace crypto.Desktop.Cnsl
 {
     public static class PasswordPrompt
     {
-        public static string PromptPassword()
+        public static string PromptPassword(string promptMessage = null)
         {
-            Console.Write("Enter Password: ");
+            Console.Write(promptMessage ?? "Enter Password: ");
 
             var password = new List<char>();
             ConsoleKeyInfo pressedKey;
@@ -28,8 +28,7 @@ namespace crypto.Desktop.Cnsl
         public static string? PromptPasswordWithConfirmation()
         {
             var pw = PromptPassword();
-            Console.Write(@"(Confirm Password: ) ");
-            var pwRe = PromptPassword();
+            var pwRe = PromptPassword("Confirm Password: ");
 
             return pw != pwRe ? null : pw;
         }
