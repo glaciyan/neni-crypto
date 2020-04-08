@@ -39,20 +39,7 @@ namespace crypto.Core.Header
 
         public void Move(string destination)
         {
-            SecuredPlainName.PlainName = RemoveRelativePathParts(destination);
-        }
-
-        private static string RemoveRelativePathParts(string path)
-        {
-            var splitPath = path.Replace('\\', '/').Split('/', StringSplitOptions.RemoveEmptyEntries);
-
-            var outputPath = new StringBuilder();
-
-            foreach (var part in splitPath)
-                if (part != ".." && part != ".")
-                    outputPath.Append(part);
-
-            return outputPath.ToString();
+            SecuredPlainName.PlainName = NPath.RemoveRelativeParts(destination);
         }
 
         private void GenerateCipherFileIV()
