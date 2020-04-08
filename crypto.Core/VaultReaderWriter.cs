@@ -8,7 +8,7 @@ namespace crypto.Core
     public static class VaultReaderWriter
     {
         //++++++++++++++++++++++++++++
-        //        Writing
+        //        Reading
         //++++++++++++++++++++++++++++
 
         public static Vault ReadFromConfig(string folderPath, byte[] key)
@@ -16,7 +16,7 @@ namespace crypto.Core
             Debug.Assert(folderPath != null, nameof(folderPath) + " != null");
 
             var (fullFolderPath, folderName, vaultFilePath) = VerifyPathAndGetNames(folderPath);
-            var result = new Vault(folderName) {VaultPath = fullFolderPath};
+            var result = new Vault(folderName, key) {VaultPath = fullFolderPath};
 
             using var vaultFile = new FileStream(vaultFilePath, FileMode.Open, FileAccess.Read);
 
@@ -44,7 +44,7 @@ namespace crypto.Core
         }
 
         //++++++++++++++++++++++++++++
-        //        Reading
+        //        Writing
         //++++++++++++++++++++++++++++
 
         public static void WriteConfig(Vault underlying, byte[] key)
@@ -56,6 +56,8 @@ namespace crypto.Core
             using var binWriter = new BinaryWriter(fileStream);
 
             foreach (var itemHeader in underlying.ItemHeaders) WriteItemHeader(fileStream, underlying, itemHeader);
+
+            underlying.Written = true;
         }
 
         private static void WriteHeader(Stream fileStream, Vault underlying, byte[] key)
