@@ -66,5 +66,13 @@ namespace crypto.Core
 
             return result;
         }
+        
+        public static void Zeros(this byte[] ba)
+        {
+            for (var i = 0; i < ba.Length; i++)
+            {
+                ba[i] = 0;
+            }
+        }
     }
 }
