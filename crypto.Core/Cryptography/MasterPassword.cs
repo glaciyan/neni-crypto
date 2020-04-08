@@ -1,6 +1,7 @@
 using System;
 using System.Security.Cryptography;
 using crypto.Core.Cryptography;
+using crypto.Core.ExtensionUtilities;
 
 namespace crypto.Core
 {
