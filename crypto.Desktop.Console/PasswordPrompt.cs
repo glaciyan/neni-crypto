@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace crypto.Desktop.Cnsl
 {
-    public static class PasswordPromt
+    public static class PasswordPrompt
     {
-        public static string PromtPassword()
+        public static string PromptPassword()
         {
             Console.Write("Enter Password: ");
 
@@ -25,11 +25,11 @@ namespace crypto.Desktop.Cnsl
             return new string(password.ToArray());
         }
 
-        public static string PromtPasswordWithConfirmation()
+        public static string? PromptPasswordWithConfirmation()
         {
-            var pw = PromtPassword();
+            var pw = PromptPassword();
             Console.Write(@"(Confirm Password: ) ");
-            var pwRe = PromtPassword();
+            var pwRe = PromptPassword();
 
             return pw != pwRe ? null : pw;
         }
