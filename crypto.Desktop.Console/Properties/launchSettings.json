@@ -3,7 +3,7 @@
     "crypto.Desktop.Console": {
       "commandName": "Project",
       "commandLineArgs":
-        "new"
+        "new TestProject"
     }
   }
 }
