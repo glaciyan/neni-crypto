@@ -2,20 +2,24 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using crypto.Core.Exceptions;
 using crypto.Core.Extension;
 using crypto.Core.Header;
 
 namespace crypto.Core
 {
-    public class Vault
+    public class Vault : IDisposable
     {
+        private byte[] _key;
+        public bool Written { get; internal set; }
         private const string FileExtension = ".vlt";
         private const string UnlockedFolderName = "Unlocked";
         private const string EncryptedFolderName = "Encrypted";
 
-        internal Vault(string name)
+        internal Vault(string name, byte[] key)
         {
             Name = name;
+            _key = key;
         }
 
         private string Name { get; }
@@ -31,9 +35,9 @@ namespace crypto.Core
             return vaultPath + "/" + name + FileExtension;
         }
 
-        public static Vault Create(string name, string path = null)
+        public static Vault Create(string name, byte[] key, string path = null)
         {
-            var output = new Vault(name)
+            var output = new Vault(name, key)
             {
                 Header = VaultHeader.Create(),
                 VaultPath = path == null
@@ -73,8 +77,19 @@ namespace crypto.Core
         public async Task RemoveFile(ItemHeader header)
         {
             File.Delete(Path.Combine(EncryptedFolderPath, header.TargetPath));
-            await EliminateExtracted(header);
+            if (header.IsUnlocked) await EliminateExtracted(header);
             ItemHeaders.Remove(header);
+        }
+        
+        public async Task MoveFile(ItemHeader header, string destination)
+        {
+            var wasUnlocked = header.IsUnlocked;
+            
+            if (wasUnlocked) await EliminateExtracted(header);
+
+            header.Move(destination);
+
+            if (wasUnlocked) await ExtractFile(header);
         }
 
         public async Task<bool> ExtractFile(ItemHeader header)
@@ -92,14 +107,29 @@ namespace crypto.Core
 
         public async Task EliminateExtracted(ItemHeader header)
         {
-            // delete the file, set isUnlocked to false, and clean directories empty in unlocked
+            if (!header.IsUnlocked) throw new FileNotUnlockedException();
             var plainTextPath = header.SecuredPlainName.PlainName;
 
-            await NFile.Purge(Path.Combine(UnlockedFolderPath, plainTextPath));
+            var path = Path.Combine(UnlockedFolderPath, plainTextPath);
+            
+            // TODO: try to search for the file in Unlocked and if found move it (careful with isUnlocked bool)
+            if (!File.Exists(path))
+            {
+                header.IsUnlocked = false;
+                throw new FileNotFoundException("Decrypted file was not found", plainTextPath);
+            }
+                
+            await NFile.Purge(path);
             header.IsUnlocked = false;
 
             var parentDir = Path.Combine(UnlockedFolderPath, NDirectory.GetPathParentDir(plainTextPath));
             NDirectory.DeleteDirIfEmpty(parentDir, UnlockedFolderName);
+        }
+        
+        public void Dispose()
+        {
+            if (!Written)
+                VaultReaderWriter.WriteConfig(this, _key);
         }
     }
 }
