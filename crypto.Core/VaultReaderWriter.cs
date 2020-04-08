@@ -13,8 +13,6 @@ namespace crypto.Core
 
         public static Vault ReadFromConfig(string folderPath, byte[] key)
         {
-            Debug.Assert(folderPath != null, nameof(folderPath) + " != null");
-
             var (fullFolderPath, folderName, vaultFilePath) = VerifyPathAndGetNames(folderPath);
             var result = new Vault(folderName, key) {VaultPath = fullFolderPath};
 
@@ -40,7 +38,7 @@ namespace crypto.Core
 
             if (File.Exists(vaultFilePath)) return (fullPath, folderName, vaultFilePath);
 
-            throw new FileNotFoundException("Couldn't find vault file for path: " + path);
+            throw new FileNotFoundException("Couldn't find vault file for path" + path);
         }
 
         //++++++++++++++++++++++++++++
