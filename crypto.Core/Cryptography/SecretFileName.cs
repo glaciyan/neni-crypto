@@ -28,14 +28,14 @@ namespace crypto.Core.Cryptography
         public byte[] GetEncryptedName(byte[] key)
         {
             var plainTextPathBytes = Encoder.GetBytes(PlainName);
-            using var aesEncrypt = new AesBytes(key, IV);
+            using var aesEncrypt = new AesQuickCrypto(key, IV);
 
             return aesEncrypt.EncryptBytes(plainTextPathBytes);
         }
 
         private void SetName(byte[] encryptedName, byte[] key)
         {
-            using var aesDecrypt = new AesBytes(key, IV);
+            using var aesDecrypt = new AesQuickCrypto(key, IV);
             var name = Encoder.GetString(aesDecrypt.DecryptBytes(encryptedName));
             PlainName = name;
         }

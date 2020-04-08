@@ -4,7 +4,7 @@ using System.Security.Cryptography;
 
 namespace crypto.Core.Cryptography
 {
-    public class QuickAes
+    public static class QuickAesTransform
     {
         public static ICryptoTransform CreateEncryptor(byte[] key, byte[] iv)
         {

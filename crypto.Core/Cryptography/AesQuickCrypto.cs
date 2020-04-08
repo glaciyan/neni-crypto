@@ -4,25 +4,23 @@ using System.Security.Cryptography;
 
 namespace crypto.Core.Cryptography
 {
-    public class AesBytes : IDisposable
+    public class AesQuickCrypto : IDisposable
     {
-        private const int AesBlockSize = 16;
         private readonly Aes _aes;
-        private readonly KeyIVPair _keyIvPair;
 
-        public AesBytes(KeyIVPair keyIvPair)
+        public AesQuickCrypto(KeyIVPair keyIvPair)
         {
-            _keyIvPair = keyIvPair;
+            var keyIvPair1 = keyIvPair;
 
             // create aes with preferred settings
             _aes = Aes.Create();
             _aes.KeySize = 256;
-            _aes.Key = _keyIvPair.Key;
-            _aes.IV = _keyIvPair.IV;
+            _aes.Key = keyIvPair1.Key;
+            _aes.IV = keyIvPair1.IV;
             _aes.Padding = PaddingMode.PKCS7;
         }
 
-        public AesBytes(byte[] key, byte[] iv) : this(new KeyIVPair(key, iv))
+        public AesQuickCrypto(byte[] key, byte[] iv) : this(new KeyIVPair(key, iv))
         {
         }
 

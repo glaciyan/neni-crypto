@@ -13,7 +13,7 @@ namespace crypto.Core.Vault
             await using var src = new FileStream(sourcePath, FileMode.Open, FileAccess.Read);
             await using var dest = new FileStream(destinationPath, FileMode.Create, FileAccess.Write);
 
-            using var decryptor = QuickAes.CreateDecryptor(key, iv);
+            using var decryptor = QuickAesTransform.CreateDecryptor(key, iv);
             await using var srcCrypto = new CryptoStream(src, decryptor, CryptoStreamMode.Read);
 
             var hash = await srcCrypto.CopyToCreateHashAsync(dest);
@@ -26,7 +26,7 @@ namespace crypto.Core.Vault
             await using var src = new FileStream(sourcePath, FileMode.Open, FileAccess.Read);
             await using var dest = new FileStream(destinationPath, FileMode.Create, FileAccess.Write);
 
-            using var encryptor = QuickAes.CreateEncryptor(key, iv);
+            using var encryptor = QuickAesTransform.CreateEncryptor(key, iv);
             await using var destCrypto = new CryptoStream(dest, encryptor, CryptoStreamMode.Write);
 
             var hash = await src.CopyToCreateHashAsync(destCrypto);
