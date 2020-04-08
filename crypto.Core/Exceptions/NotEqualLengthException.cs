@@ -1,6 +1,6 @@
 using System;
 
-namespace crypto.Core
+namespace crypto.Core.Exceptions
 {
     public class NotEqualLengthException : Exception
     {

@@ -2,7 +2,9 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using crypto.Core.Cryptography;
+using crypto.Core.ExtensionUtilities;
 using crypto.Core.Header;
+using crypto.Core.Vault;
 using NUnit.Framework;
 
 namespace crypto.Core.Tests
@@ -86,7 +88,7 @@ namespace crypto.Core.Tests
         {
             var key = "passphrase".ApplySHA256();
 
-            var file = Vault.Create(FolderPath, TestFolderPath, key);
+            var file = Vault.Vault.Create(FolderPath, TestFolderPath, key);
             await file.AddFileAsync(TestFile);
 
             using (var writer = new VaultConfigWriter(file, key))

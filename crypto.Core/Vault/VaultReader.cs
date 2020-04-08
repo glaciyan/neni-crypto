@@ -1,9 +1,10 @@
 using System.Diagnostics;
 using System.IO;
 using System.Security.Cryptography;
+using crypto.Core.ExtensionUtilities;
 using crypto.Core.Header;
 
-namespace crypto.Core
+namespace crypto.Core.Vault
 {
     public static class VaultReader
     {

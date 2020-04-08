@@ -1,7 +1,6 @@
 using System.Text;
-using crypto.Core.Cryptography;
 
-namespace crypto.Core
+namespace crypto.Core.Cryptography
 {
     public class SecretFileName
     {

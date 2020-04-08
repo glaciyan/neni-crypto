@@ -1,7 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 
-namespace crypto.Core
+namespace crypto.Core.ExtensionUtilities
 {
     public static class StringExtension
     {

@@ -1,8 +1,9 @@
 using System;
 using System.IO;
+using crypto.Core.ExtensionUtilities;
 using crypto.Core.Header;
 
-namespace crypto.Core
+namespace crypto.Core.Vault
 {
     public class VaultConfigWriter : IDisposable
     {

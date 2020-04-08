@@ -1,6 +1,7 @@
 using System;
+using crypto.Core.Exceptions;
 
-namespace crypto.Core
+namespace crypto.Core.ExtensionUtilities
 {
     public static class ArrayExtension
     {

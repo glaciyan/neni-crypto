@@ -1,4 +1,6 @@
-﻿namespace crypto.Core.Header
+﻿using crypto.Core.Cryptography;
+
+namespace crypto.Core.Header
 {
     public class VaultHeader
     {
