@@ -1,6 +1,6 @@
 using System;
 
-namespace crypto.Desktop.Cnsl
+namespace crypto.Desktop.Cnsl.Commands
 {
     public class NoConsoleArgumentException : Exception
     {

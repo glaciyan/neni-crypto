@@ -1,4 +1,5 @@
 ﻿using System;
+using crypto.Desktop.Cnsl.Commands;
 using Serilog;
 
 namespace crypto.Desktop.Cnsl

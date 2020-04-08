@@ -1,6 +1,6 @@
 ﻿using Serilog;
 
-namespace crypto.Desktop.Cnsl
+namespace crypto.Desktop.Cnsl.Commands
 {
     public class NewCommand : Command
     {
