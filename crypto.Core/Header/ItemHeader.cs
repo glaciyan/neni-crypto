@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using crypto.Core.Cryptography;
-using crypto.Core.ExtensionUtilities;
 
 namespace crypto.Core.Header
 {

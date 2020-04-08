@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using System.Text;
 using crypto.Core.Cryptography;
-using crypto.Core.ExtensionUtilities;
+using crypto.Core.Extension;
 
 namespace crypto.Core.Header
 {

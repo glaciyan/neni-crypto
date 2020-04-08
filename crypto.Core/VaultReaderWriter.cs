@@ -2,7 +2,6 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Security.Cryptography;
-using crypto.Core.ExtensionUtilities;
 using crypto.Core.Header;
 
 namespace crypto.Core
@@ -25,7 +24,6 @@ namespace crypto.Core
             result.Header = VaultHeaderReader.ReadFrom(vaultFile);
 
             var (keyWasCorrect, password) = result.Header.MasterPassword.GetDecryptedPassword(key);
-            key.Zeros();
 
             if (!keyWasCorrect) throw new CryptographicException("Password wasn't able to be verified");
 

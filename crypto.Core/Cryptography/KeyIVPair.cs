@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using crypto.Core.ExtensionUtilities;
+using crypto.Core.Extension;
 
 namespace crypto.Core.Cryptography
 {

@@ -1,5 +1,5 @@
 using crypto.Core.Cryptography;
-using crypto.Core.ExtensionUtilities;
+using crypto.Core.Extension;
 using NUnit.Framework;
 
 namespace crypto.Core.Tests

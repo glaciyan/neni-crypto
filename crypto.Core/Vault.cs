@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using crypto.Core.ExtensionUtilities;
+using crypto.Core.Extension;
 using crypto.Core.Header;
 
 namespace crypto.Core
