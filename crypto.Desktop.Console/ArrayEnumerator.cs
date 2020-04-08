@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 
-#nullable enable
-
 namespace crypto.Desktop.Cnsl
 {
     public class ArrayEnumerator<T> : IEnumerator<T>, IEnumerable<T> where T : class
@@ -45,9 +43,7 @@ namespace crypto.Desktop.Cnsl
 
         public T? NextOrNull()
         {
-            if (MoveNext()) return Current;
-
-            return null;
+            return MoveNext() ? Current : null;
         }
     }
 }
