@@ -5,7 +5,7 @@ using crypto.Core.Header;
 
 namespace crypto.Core
 {
-    public class VaultConfigReader
+    public static class VaultReader
     {
         public static Vault ReadFrom(string folderPath, byte[] key)
         {

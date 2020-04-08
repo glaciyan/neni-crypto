@@ -94,12 +94,12 @@ namespace crypto.Core.Tests
 
             key = "passphrase".ApplySHA256();
 
-            var readFile = VaultConfigReader.ReadFrom($"{TestFolderPath}/{FolderPath}", key);
+            var readFile = VaultReader.ReadFrom($"{TestFolderPath}/{FolderPath}", key);
             await readFile.AddFileAsync(TestFile, "others");
 
             key = "passphrase".ApplySHA256();
 
-            var readFile2 = VaultConfigReader.ReadFrom($"{TestFolderPath}/{FolderPath}", key);
+            var readFile2 = VaultReader.ReadFrom($"{TestFolderPath}/{FolderPath}", key);
         }
     }
 }
