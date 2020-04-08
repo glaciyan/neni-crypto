@@ -1,9 +1,9 @@
 using System.IO;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using crypto.Core.Cryptography;
-using crypto.Core.ExtensionUtilities;
+using crypto.Core.Extension;
 using crypto.Core.Header;
-using crypto.Core.Vault;
 using NUnit.Framework;
 
 namespace crypto.Core.Tests
@@ -11,10 +11,8 @@ namespace crypto.Core.Tests
     [TestFixture]
     public class VaultTests
     {
-        private const string FolderPath = "TestVault";
-        private const string TestFolderPath = "../testData/";
-        private const string FilePath = "../test/mock/testFile.txt";
-        private const string TestFile = "../../../../testdata/data.dat";
+        private const string TestFolderPath = "../temptestdata/";
+        private const string TestDataPath = "../../../../testdata/";
 
         [OneTimeSetUp]
         public void Set_Up()
@@ -62,24 +60,18 @@ namespace crypto.Core.Tests
         [Test]
         public async Task VaultItemHeadersFileWriteRead()
         {
+            const string vaultName = "TestVault";
+            const string testFile = TestDataPath + "data.dat";
             var key = "passphrase".ApplySHA256();
 
-            var file = Vault.Vault.Create(FolderPath, TestFolderPath);
-            await file.AddFileAsync(TestFile);
-
-            using (var writer = new VaultConfigWriter(file, key))
-            {
-                writer.WriteConfig();
-            }
-
-            key = "passphrase".ApplySHA256();
-
-            var readFile = VaultReader.ReadFromConfig($"{TestFolderPath}/{FolderPath}", key);
-            await readFile.AddFileAsync(TestFile, "others");
-
-            key = "passphrase".ApplySHA256();
-
-            var readFile2 = VaultReader.ReadFromConfig($"{TestFolderPath}/{FolderPath}", key);
+            var file = Vault.Create(vaultName, TestFolderPath);
+            await file.AddFileAsync(testFile);
+            VaultReaderWriter.WriteConfig(file, key);
+            
+            var readFile = VaultReaderWriter.ReadFromConfig($"{TestFolderPath}/{vaultName}", key);
+            await readFile.AddFileAsync(testFile, "others");
+            
+            var readFile2 = VaultReaderWriter.ReadFromConfig($"{TestFolderPath}/{vaultName}", key);
         }
 
         [Test]
@@ -103,6 +95,46 @@ namespace crypto.Core.Tests
             }
 
             Assert.IsTrue(readHeader.MasterPassword.GetDecryptedPassword(key).Item1);
+        }
+
+        [Test]
+        public async Task DecryptingFile()
+        {
+            const string vaultName = "DFile";
+            const string testFile = TestDataPath + "DecryptingFile.dat";
+            var unlockedPath = $"{TestFolderPath}{vaultName}/Unlocked/DecryptingFile.dat";
+            var key = CryptoRNG.GetRandomBytes(AesSizes.Key);
+
+            var originalHash = GetFileHash(testFile);
+            
+            // create an encrypted file
+            {
+                var vault = Vault.Create(vaultName, TestFolderPath);
+                await vault.AddFileAsync(testFile);
+                
+                VaultReaderWriter.WriteConfig(vault, key);
+            }
+            
+            // decrypt the file
+            {
+                var vault = VaultReaderWriter.ReadFromConfig($"{TestFolderPath}{vaultName}", key);
+                var hashMatches = await vault.ExtractFile(vault.ItemHeaders[0]);
+                Assert.IsTrue(hashMatches);
+                
+                Assert.IsTrue(vault.ItemHeaders[0].IsUnlocked);
+            }
+
+            var decryptedHash = GetFileHash(unlockedPath);
+            
+            Assert.AreEqual(originalHash, decryptedHash);
+        }
+        
+        private byte[] GetFileHash(string path)
+        {
+            using var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read);
+            using var sha256 = SHA256.Create();
+
+            return sha256.ComputeHash(fileStream);
         }
     }
 }
