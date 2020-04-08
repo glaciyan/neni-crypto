@@ -90,20 +90,7 @@ namespace crypto.Core
             await NFile.Purge(Path.Combine(UnlockedFolderPath, plainTextPath));
             header.IsUnlocked = false;
             
-            NDirectory.CleanEmptyDirectories(Path.Combine(UnlockedFolderPath, GetPathToFile(plainTextPath)));
-        }
-        
-        private static string GetPathToFile(string filePath)
-        {
-            var split = filePath.Split('/', StringSplitOptions.RemoveEmptyEntries);
-            var output = new StringBuilder();
-
-            for (var i = 0; i < split.Length - 1; i++)
-            {
-                output.Append(split[i]);
-            }
-
-            return output.ToString();
+            NDirectory.CleanEmptyDirectories(Path.Combine(UnlockedFolderPath, NDirectory.GetPathToFile(plainTextPath)));
         }
     }
 }

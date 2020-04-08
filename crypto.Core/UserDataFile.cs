@@ -10,6 +10,8 @@ namespace crypto.Core
         public static async Task<byte[]> ExtractUserDataFile(string sourcePath, string destinationPath, byte[] key,
             byte[] iv)
         {
+            Directory.CreateDirectory(NDirectory.GetPathToFile(destinationPath));
+            
             await using var src = new FileStream(sourcePath, FileMode.Open, FileAccess.Read);
             await using var dest = new FileStream(destinationPath, FileMode.Create, FileAccess.Write);
 

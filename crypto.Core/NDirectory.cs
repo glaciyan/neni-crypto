@@ -1,4 +1,6 @@
+using System;
 using System.IO;
+using System.Text;
 
 namespace crypto.Core
 {
@@ -29,6 +31,19 @@ namespace crypto.Core
                     RecursiveCleanUp(directoryInfo);
                 }
             }
+        }
+        
+        public static string GetPathToFile(string filePath)
+        {
+            var split = filePath.Split('/', StringSplitOptions.RemoveEmptyEntries);
+            var output = new StringBuilder();
+
+            for (var i = 0; i < split.Length - 1; i++)
+            {
+                output.Append(split[i]);
+            }
+
+            return output.ToString();
         }
     }
 }
