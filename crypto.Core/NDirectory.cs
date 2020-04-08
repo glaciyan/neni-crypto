@@ -6,41 +6,35 @@ namespace crypto.Core
 {
     public static class NDirectory
     {
-        public static void CleanEmptyDirectories(string root)
+        public static void DeleteDirIfEmpty(string directory, string excludedName)
         {
-            var dirInfo = new DirectoryInfo(root);
-
-            if (dirInfo.GetDirectories().Length == 0)
+            while (true)
             {
-                dirInfo.Delete();
-                return;
-            }
+                var dirInfo = new DirectoryInfo(directory);
 
-            RecursiveCleanUp(dirInfo);
-        }
+                if (dirInfo.GetDirectories().Length == 0 && dirInfo.GetFiles().Length == 0 && excludedName != dirInfo.Name)
+                {
+                    dirInfo.Delete();
+                    if (dirInfo.Parent != null)
+                    {
+                        directory = dirInfo.Parent.FullName;
+                        continue;
+                    }
+                }
 
-        private static void RecursiveCleanUp(DirectoryInfo dirInfo)
-        {
-            foreach (var directoryInfo in dirInfo.EnumerateDirectories())
-            {
-                var dirs = directoryInfo.GetDirectories();
-
-                if (dirs.Length == 0) directoryInfo.Delete();
-                else
-                    RecursiveCleanUp(directoryInfo);
+                break;
             }
         }
 
-        public static string GetPathToFile(string filePath)
+        public static string GetPathParentDir(string path)
         {
-            var split = filePath.Split('/', StringSplitOptions.RemoveEmptyEntries);
+            var split = path.Split('/', StringSplitOptions.RemoveEmptyEntries);
             var output = new StringBuilder();
-
+            if (path[0] == '/') output.Append('/'); 
+            
             for (var i = 0; i < split.Length - 1; i++)
             {
-                output.Append(split[i]);
-
-                if (i < split.Length - 2) output.Append('/');
+                output.Append(split[i] + '/');
             }
 
             return output.ToString();

@@ -9,9 +9,9 @@ namespace crypto.Core.Tests
         public void GetPathToFileGivesCorrectPath()
         {
             const string testPath = "other/more/stuff/test/mock/file.txt";
-            const string expected = "other/more/stuff/test/mock";
+            const string expected = "other/more/stuff/test/mock/";
 
-            var result = NDirectory.GetPathToFile(testPath);
+            var result = NDirectory.GetPathParentDir(testPath);
 
             Assert.AreEqual(expected, result);
         }

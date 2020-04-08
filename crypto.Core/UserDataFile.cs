@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
@@ -10,7 +11,8 @@ namespace crypto.Core
         public static async Task<byte[]> ExtractUserDataFile(string sourcePath, string destinationPath, byte[] key,
             byte[] iv)
         {
-            Directory.CreateDirectory(NDirectory.GetPathToFile(destinationPath));
+            var dirInfo = new DirectoryInfo(NDirectory.GetPathParentDir(destinationPath));
+            if (!dirInfo.Exists) dirInfo.Create();
 
             await using var src = new FileStream(sourcePath, FileMode.Open, FileAccess.Read);
             await using var dest = new FileStream(destinationPath, FileMode.Create, FileAccess.Write);

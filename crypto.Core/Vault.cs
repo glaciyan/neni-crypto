@@ -10,6 +10,8 @@ namespace crypto.Core
     public class Vault
     {
         private const string FileExtension = ".vlt";
+        private const string UnlockedFolderName = "Unlocked";
+        private const string EncryptedFolderName = "Encrypted";
 
         internal Vault(string name)
         {
@@ -20,8 +22,8 @@ namespace crypto.Core
         public VaultHeader Header { get; set; }
         public List<ItemHeader> ItemHeaders { get; } = new List<ItemHeader>();
         public string VaultPath { get; set; }
-        public string EncryptedFolderPath => Path.Combine(VaultPath, "Encrypted");
-        public string UnlockedFolderPath => Path.Combine(VaultPath, "Unlocked");
+        public string EncryptedFolderPath => Path.Combine(VaultPath, EncryptedFolderName);
+        public string UnlockedFolderPath => Path.Combine(VaultPath, UnlockedFolderName);
         public string VaultFilePath => GetVaultFilePath(VaultPath, Name);
 
         internal static string GetVaultFilePath(string vaultPath, string name)
@@ -68,8 +70,10 @@ namespace crypto.Core
             ItemHeaders.Add(itemHeader);
         }
 
-        public void RemoveFile(ItemHeader header)
+        public async Task RemoveFile(ItemHeader header)
         {
+            File.Delete(Path.Combine(EncryptedFolderPath, header.TargetPath));
+            await EliminateExtracted(header);
             ItemHeaders.Remove(header);
         }
 
@@ -89,12 +93,13 @@ namespace crypto.Core
         public async Task EliminateExtracted(ItemHeader header)
         {
             // delete the file, set isUnlocked to false, and clean directories empty in unlocked
-            var plainTextPath = header.UnlockedFilePath.PlainName;
+            var plainTextPath = header.SecuredPlainName.PlainName;
 
             await NFile.Purge(Path.Combine(UnlockedFolderPath, plainTextPath));
             header.IsUnlocked = false;
 
-            NDirectory.CleanEmptyDirectories(Path.Combine(UnlockedFolderPath, NDirectory.GetPathToFile(plainTextPath)));
+            var parentDir = Path.Combine(UnlockedFolderPath, NDirectory.GetPathParentDir(plainTextPath));
+            NDirectory.DeleteDirIfEmpty(parentDir, UnlockedFolderName);
         }
     }
 }

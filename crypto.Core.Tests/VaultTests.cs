@@ -90,6 +90,12 @@ namespace crypto.Core.Tests
                 Assert.IsTrue(hashMatches);
 
                 Assert.IsTrue(vault.ItemHeaders[0].IsUnlocked);
+
+                await vault.EliminateExtracted(vault.ItemHeaders[0]);
+                Assert.IsFalse(vault.ItemHeaders[0].IsUnlocked);
+                
+                await vault.ExtractFile(vault.ItemHeaders[0]);
+                Assert.IsTrue(vault.ItemHeaders[0].IsUnlocked);
             }
 
             var decryptedHash = GetFileHash(unlockedPath);

@@ -32,8 +32,6 @@ namespace crypto.Core.Header
 
         public bool IsUnlocked { get; set; }
 
-        public SecretFileName UnlockedFilePath { get; set; }
-
         public static ItemHeader Create(string plainFileName, string pathToPlain = "")
         {
             return new ItemHeader(plainFileName, pathToPlain);
