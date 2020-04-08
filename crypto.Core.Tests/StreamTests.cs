@@ -11,7 +11,7 @@ namespace crypto.Core.Tests
     [TestFixture]
     public class StreamTests
     {
-        private const string TestFile = "../../../../testdata/data2.dat";
+        private const string TestFile = "../../../testdata/data2.dat";
 
         [Test]
         public async Task HashIsCorrect()

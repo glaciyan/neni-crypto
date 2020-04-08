@@ -12,7 +12,7 @@ namespace crypto.Core.Tests
     public class VaultTests
     {
         private const string TestFolderPath = "../temptestdata/";
-        private const string TestDataPath = "../../../../testdata/";
+        private const string TestDataPath = "../../../testdata/";
 
         [OneTimeSetUp]
         public void Set_Up()
