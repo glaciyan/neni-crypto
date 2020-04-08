@@ -30,7 +30,8 @@ namespace crypto.Core.Header
         public byte[] TargetAuthentication { get; set; } = new byte[AesSizes.Auth];
         public string TargetPath { get; set; }
 
-        public bool IsUnlocked => UnlockedFilePath != null;
+        public bool IsUnlocked { get; set; }
+
         public SecretFileName UnlockedFilePath { get; set; }
 
         public static ItemHeader Create(string plainFileName, string pathToPlain = "")

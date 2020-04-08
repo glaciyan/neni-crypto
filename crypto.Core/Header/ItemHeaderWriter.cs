@@ -28,16 +28,6 @@ namespace crypto.Core.Header
             binWriter.Write(_underlying.TargetPath);
 
             binWriter.Write(_underlying.IsUnlocked);
-
-            // write the path when unlocked
-            if (_underlying.IsUnlocked)
-            {
-                binWriter.Write(_underlying.UnlockedFilePath.IV);
-
-                var secretUnlockedFilePath = _underlying.UnlockedFilePath.GetEncryptedName(key);
-                binWriter.Write(secretUnlockedFilePath.Length);
-                binWriter.Write(secretUnlockedFilePath);
-            }
         }
     }
 }

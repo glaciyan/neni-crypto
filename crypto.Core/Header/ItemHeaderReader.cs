@@ -22,16 +22,7 @@ namespace crypto.Core.Header
             result.TargetAuthentication = binReader.ReadBytes(AesSizes.Auth);
             result.TargetPath = binReader.ReadString();
 
-            var isUnlocked = binReader.ReadBoolean();
-
-            if (isUnlocked)
-            {
-                var unlockedFilePathIV = binReader.ReadBytes(AesSizes.IV);
-                var length = binReader.ReadInt32();
-                var secretUnlockedFilePath = binReader.ReadBytes(length);
-
-                result.UnlockedFilePath = new SecretFileName(secretUnlockedFilePath, unlockedFilePathIV, key);
-            }
+            result.IsUnlocked = binReader.ReadBoolean();
 
             return result;
         }

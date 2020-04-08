@@ -76,6 +76,8 @@ namespace crypto.Core
             var hash = await UserDataFile.ExtractUserDataFile(encryptedSourcePath, unlockedTarget,
                 Header.MasterPassword.Password, header.TargetCipherIV);
 
+            header.IsUnlocked = true;
+
             return hash.ContentEqualTo(header.TargetAuthentication);
         }
     }
