@@ -41,6 +41,11 @@ namespace crypto.Core
             for (var i = 0; i < split.Length - 1; i++)
             {
                 output.Append(split[i]);
+                
+                if (i < split.Length - 2)
+                {
+                    output.Append('/');
+                }
             }
 
             return output.ToString();
