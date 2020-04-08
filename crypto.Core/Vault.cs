@@ -69,6 +69,11 @@ namespace crypto.Core
             ItemHeaders.Add(itemHeader);
         }
 
+        public void RemoveFile(ItemHeader header)
+        {
+            ItemHeaders.Remove(header);
+        }
+
         public async Task<bool> ExtractFile(ItemHeader header)
         {
             var encryptedSourcePath = Path.Combine(EncryptedFolderPath, header.TargetPath);
