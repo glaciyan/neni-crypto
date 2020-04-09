@@ -5,7 +5,7 @@ using Serilog;
 
 namespace crypto.Desktop.Cnsl
 {
-    internal class Program
+    internal static class Program
     {
         private static async Task Main(string[] args)
         {
@@ -28,14 +28,6 @@ namespace crypto.Desktop.Cnsl
                 Log.Error(e.ToString());
                 Notifier.Error($"Something went wrong: {e.Message}");
             }
-
-            // new argument
-            // open argument
-
-            // app config
-            // all classes should be extensible
-
-            // encrypt/decrypt
         }
     }
 }
