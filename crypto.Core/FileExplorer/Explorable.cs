@@ -1,6 +1,6 @@
 namespace crypto.Core.FileExplorer
 {
-    public class Explorable
+    public class Explorer
     {
         
     }

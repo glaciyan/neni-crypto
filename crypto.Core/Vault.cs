@@ -24,7 +24,7 @@ namespace crypto.Core
 
         private string Name { get; }
         public VaultHeader Header { get; set; }
-        public BlockingCollection<ItemHeader> ItemHeaders { get; } = new BlockingCollection<ItemHeader>();
+        public ConcurrentBag<ItemHeader> ItemHeaders { get; } = new ConcurrentBag<ItemHeader>();
         public string VaultPath { get; set; }
         public string EncryptedFolderPath => Path.Combine(VaultPath, EncryptedFolderName);
         public string UnlockedFolderPath => Path.Combine(VaultPath, UnlockedFolderName);
@@ -71,12 +71,25 @@ namespace crypto.Core
             var itemHeader = ItemHeader.Create(name, path);
             var destinationPath = Path.Combine(EncryptedFolderPath, itemHeader.TargetPath);
 
+            CheckIfPlainNameAlreadyExists(itemHeader);
+
             var hash = await UserDataFile.WriteUserDataFile(sourcePath, destinationPath,
                 Header.MasterPassword.Password, itemHeader.TargetCipherIV);
 
             itemHeader.TargetAuthentication = hash;
 
             ItemHeaders.Add(itemHeader);
+        }
+
+        private void CheckIfPlainNameAlreadyExists(ItemHeader itemHeader)
+        {
+            foreach (var header in ItemHeaders)
+            {
+                if (header.SecuredPlainName.PlainName == itemHeader.SecuredPlainName.PlainName)
+                {
+                    throw new FileAlreadyExistsException("File is already in the vault");
+                }
+            }
         }
 
         public async Task RemoveFile(ItemHeader header)
