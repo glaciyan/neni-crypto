@@ -8,18 +8,20 @@ namespace crypto.Desktop.Cnsl.Commands
 {
     public class NewCommand : Command
     {
+        private string? Name { get; }
+        private string? Path { get; }
+        
+        /* new -> uses current directory
+         * new name -> creates a new directory with that name and uses that
+         * new name path -> goes to that path and creates a new directory with the given name and uses that
+         */
+        
         public NewCommand(string? name, string? path)
         {
             Name = name;
             Path = path;
         }
-        // new -> uses current directory
-        // new name -> creates a new directory with that name and uses that
-        // new name path -> goes to that path and creates a new directory with the given name and uses that
-
-        private string? Name { get; }
-        private string? Path { get; }
-
+        
         public override void Run()
         {
             Log.Debug("Running NewProject with " +
