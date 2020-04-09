@@ -133,17 +133,25 @@ namespace crypto.Core
 
         public void CheckAndCorrectAllItemHeaders()
         {
-            throw new NotImplementedException();
+            foreach (var itemHeader in ItemHeaders)
+            {
+                CorrectItemHeaderForUnlockedFile(itemHeader);
+            }
         }
         
-        public void CorrectUnlockedFile(ItemHeader header)
+        public void CorrectItemHeaderForUnlockedFile(ItemHeader header)
         {
-            throw new NotImplementedException();
+            if (ItemHeaderMissingUnlockedFile(header))
+            {
+                header.IsUnlocked = false;
+            }
         }
-        
-        public bool CheckUnlockedFile(ItemHeader header)
+
+        private bool ItemHeaderMissingUnlockedFile(ItemHeader header)
         {
-            throw new NotImplementedException();
+            if (!header.IsUnlocked) return true;
+
+            return !File.Exists(Path.Combine(UnlockedFolderPath, header.SecuredPlainName.PlainName));
         }
 
         public static bool Exists(string vaultPath)
