@@ -26,6 +26,8 @@ namespace crypto.Core
             while (vaultFile.Position < vaultFile.Length)
                 result.ItemHeaders.Add(ItemHeaderReader.ReadFrom(vaultFile, password));
 
+            // TODO: if a file is unlocked check if the unlocked file exists in method from vault
+            
             return result;
         }
 

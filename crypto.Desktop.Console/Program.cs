@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using crypto.Desktop.Cnsl.Commands;
 using Serilog;
 
@@ -6,7 +7,7 @@ namespace crypto.Desktop.Cnsl
 {
     internal class Program
     {
-        private static void Main(string[] args)
+        private static async Task Main(string[] args)
         {
             // logger setup
 #if DEBUG
@@ -16,7 +17,7 @@ namespace crypto.Desktop.Cnsl
             //parse arguments
             try
             {
-                CommandLineArgumentParser.ParseConfig(args).Run();
+                await CommandLineArgumentParser.ParseConfig(args).Run();
             }
             catch (NoConsoleArgumentException)
             {

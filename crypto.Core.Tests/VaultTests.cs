@@ -1,4 +1,5 @@
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using crypto.Core.Cryptography;
@@ -84,16 +85,16 @@ namespace crypto.Core.Tests
             // decrypt the file
             {
                 using var vault = VaultReaderWriter.ReadFromConfig($"{TestFolderPath}{vaultName}", key);
-                var hashMatches = await vault.ExtractFile(vault.ItemHeaders[0]);
+                var hashMatches = await vault.ExtractFile(vault.ItemHeaders.First());
                 Assert.IsTrue(hashMatches);
 
-                Assert.IsTrue(vault.ItemHeaders[0].IsUnlocked);
+                Assert.IsTrue(vault.ItemHeaders.First().IsUnlocked);
 
-                await vault.EliminateExtracted(vault.ItemHeaders[0]);
-                Assert.IsFalse(vault.ItemHeaders[0].IsUnlocked);
+                await vault.EliminateExtracted(vault.ItemHeaders.First());
+                Assert.IsFalse(vault.ItemHeaders.First().IsUnlocked);
                 
-                await vault.ExtractFile(vault.ItemHeaders[0]);
-                Assert.IsTrue(vault.ItemHeaders[0].IsUnlocked);
+                await vault.ExtractFile(vault.ItemHeaders.First());
+                Assert.IsTrue(vault.ItemHeaders.First().IsUnlocked);
             }
 
             var decryptedHash = GetFileHash(unlockedPath);
@@ -111,7 +112,7 @@ namespace crypto.Core.Tests
             using var vault = Vault.Create(vaultName, key, TestFolderPath);
             await vault.AddFileAsync(testFile);
 
-            await vault.RemoveFile(vault.ItemHeaders[0]);
+            await vault.RemoveFile(vault.ItemHeaders.First());
         }
 
         [Test, Order(2)]
@@ -124,9 +125,9 @@ namespace crypto.Core.Tests
             using var vault = Vault.Create(vaultName, key, TestFolderPath);
             await vault.AddFileAsync(testFile);
 
-            await vault.ExtractFile(vault.ItemHeaders[0]);
+            await vault.ExtractFile(vault.ItemHeaders.First());
 
-            await vault.MoveFile(vault.ItemHeaders[0], "other/files/DecryptingFile.dat");
+            await vault.MoveFile(vault.ItemHeaders.First(), "other/files/DecryptingFile.dat");
             
             Assert.IsTrue(File.Exists($"{TestFolderPath}{vaultName}/Unlocked/other/files/DecryptingFile.dat"));
         }

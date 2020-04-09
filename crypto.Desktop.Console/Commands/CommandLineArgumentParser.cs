@@ -15,6 +15,7 @@ namespace crypto.Desktop.Cnsl.Commands
             {
                 // create new project
                 "new" => new NewCommand(arguments.NextOrNull(), arguments.NextOrNull()),
+                "add" => new AddCommand(arguments.NextOrNull(), arguments.NextOrNull()),
 
                 _ => throw new ArgumentException("Argument was not recognized")
             };

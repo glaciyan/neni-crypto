@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.IO;
 using System.Threading.Tasks;
 using crypto.Core.Exceptions;
@@ -24,7 +24,7 @@ namespace crypto.Core
 
         private string Name { get; }
         public VaultHeader Header { get; set; }
-        public List<ItemHeader> ItemHeaders { get; } = new List<ItemHeader>();
+        public BlockingCollection<ItemHeader> ItemHeaders { get; } = new BlockingCollection<ItemHeader>();
         public string VaultPath { get; set; }
         public string EncryptedFolderPath => Path.Combine(VaultPath, EncryptedFolderName);
         public string UnlockedFolderPath => Path.Combine(VaultPath, UnlockedFolderName);
@@ -83,7 +83,7 @@ namespace crypto.Core
         {
             File.Delete(Path.Combine(EncryptedFolderPath, header.TargetPath));
             if (header.IsUnlocked) await EliminateExtracted(header);
-            ItemHeaders.Remove(header);
+            ItemHeaders.TryTake(out header);
         }
         
         public async Task MoveFile(ItemHeader header, string destination)
@@ -129,6 +129,27 @@ namespace crypto.Core
 
             var parentDir = Path.Combine(UnlockedFolderPath, NDirectory.GetPathParentDir(plainTextPath));
             NDirectory.DeleteDirIfEmpty(parentDir, UnlockedFolderName);
+        }
+
+        public void CheckAndCorrectAllItemHeaders()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public void CorrectUnlockedFile(ItemHeader header)
+        {
+            throw new NotImplementedException();
+        }
+        
+        public bool CheckUnlockedFile(ItemHeader header)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static bool Exists(string vaultPath)
+        {
+            // check if folder(go to config and check for same name) or file, check for magic number in file
+            throw new NotImplementedException();
         }
         
         public void Dispose()

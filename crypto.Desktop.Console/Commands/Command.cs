@@ -1,7 +1,9 @@
-﻿namespace crypto.Desktop.Cnsl.Commands
+﻿using System.Threading.Tasks;
+
+namespace crypto.Desktop.Cnsl.Commands
 {
     public abstract class Command
     {
-        public abstract void Run();
+        public abstract Task Run();
     }
 }

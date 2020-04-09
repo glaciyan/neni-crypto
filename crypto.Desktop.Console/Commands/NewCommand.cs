@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading.Tasks;
 using crypto.Core;
 using crypto.Core.Extension;
 using Serilog;
@@ -22,17 +23,35 @@ namespace crypto.Desktop.Cnsl.Commands
             Path = path;
         }
         
-        public override void Run()
+        public override async Task Run()
         {
-            Log.Debug("Running NewProject with " +
-                      $"Name = {Name ?? "null"}, Path = {Path ?? "null"}");
+            await Task.Run(() =>
+            {
+                Log.Debug("Running NewProject with " +
+                          $"Name = {Name ?? "null"}, Path = {Path ?? "null"}");
 
-            var key = PasswordPrompt.PromptPasswordWithConfirmation().ApplySHA256();
+                var vaultName = Name ?? GetCurrentDirectoryName();
+                var vaultPath = GetVaultPath(Path);
 
-            var vaultName = Name ?? GetCurrentDirectoryName();
-            using var vault = Vault.Create(vaultName, key, Path);
+                var key = PasswordPrompt.PromptPasswordWithConfirmation().ApplySHA256();
+
+                using var vault = Vault.Create(vaultName, key, vaultPath);
+
+                Notifier.Success("Created vault " + vaultName);
+            });
+        }
+
+        private static string? GetVaultPath(string? path)
+        {
+            if (string.IsNullOrEmpty(path)) return path;
+            var currDir = new DirectoryInfo(Environment.CurrentDirectory);
+
+            if (currDir.GetDirectories().Length == 0 && currDir.GetFiles().Length == 0)
+            {
+                return currDir.Parent?.FullName ?? currDir.FullName;
+            }
             
-            Notifier.Success("Created vault " + vaultName);
+            throw new DirectoryNotEmptyException("The directory is not empty, can't create vault");
         }
 
         private static string GetCurrentDirectoryName()
