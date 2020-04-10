@@ -2,6 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using crypto.Core;
+using crypto.Core.Exceptions;
 using crypto.Core.Extension;
 using Serilog;
 
@@ -33,11 +34,14 @@ namespace crypto.Desktop.Cnsl.Commands
                 var vaultName = Name ?? GetCurrentDirectoryName();
                 var vaultPath = GetVaultPath(Path);
 
+                if (Vault.Exists($"{vaultPath}/{vaultName}"))
+                    throw new SolutionAlreadyExistsException("Solution was already created");
+                
                 var key = PasswordPrompt.PromptPasswordWithConfirmation().ApplySHA256();
 
                 using var vault = Vault.Create(vaultName, key, vaultPath);
 
-                Notifier.Success("Created vault " + vaultName);
+                Notifier.Success($"Created vault {vaultName}.");
             });
         }
 
