@@ -20,10 +20,10 @@ namespace crypto.Core.FileExplorer
             FilePaths.Add(path.Replace('\\', '/').Split('/', StringSplitOptions.RemoveEmptyEntries));
         }
 
-        public Dictionary<string[], FileFolder> GetFromPath(string position)
+        public Dictionary<string[], (FileFolder, int)> GetFromPath(string position)
         {
             var split = position.Split('/', StringSplitOptions.RemoveEmptyEntries);
-            var matchingFiles = new Dictionary<string[], FileFolder>();
+            var matchingFiles = new Dictionary<string[], (FileFolder, int)>();
 
             foreach (var path in FilePaths)
             {
@@ -36,7 +36,7 @@ namespace crypto.Core.FileExplorer
                 }
 
                 var fileFolder = i == path.Length ? FileFolder.File : FileFolder.Folder;
-                if (matches) matchingFiles.Add(path, fileFolder);
+                if (matches) matchingFiles.Add(path, (fileFolder, i));
             }
 
             return matchingFiles;
