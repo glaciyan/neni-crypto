@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace crypto.Core
@@ -57,6 +58,16 @@ namespace crypto.Core
             }
 
             return allFilePaths;
+        }
+        
+        public static bool IsDirectoryEmpty(string dirPath)
+        {
+            if (dirPath == null) return true;
+            
+            var dirInfo = new DirectoryInfo(dirPath);
+            if (!dirInfo.Exists) return true;
+            
+            return dirInfo.GetDirectories().Length == 0 && dirInfo.GetFiles().Length == 0;
         }
     }
 }
