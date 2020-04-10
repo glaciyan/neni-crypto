@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
@@ -38,6 +39,24 @@ namespace crypto.Core
             }
 
             return output.ToString();
+        }
+
+        public static IEnumerable<string> GetAllFilesRecursive(string path)
+        {
+            var allFilePaths = new List<string>();
+            var dirInfo = new DirectoryInfo(path);
+            
+            foreach (var file in dirInfo.EnumerateFiles())
+            {
+                allFilePaths.Add(file.FullName);
+            }
+
+            foreach (var directory in dirInfo.EnumerateDirectories())
+            {
+                allFilePaths.AddRange(GetAllFilesRecursive(directory.FullName));
+            }
+
+            return allFilePaths;
         }
     }
 }
