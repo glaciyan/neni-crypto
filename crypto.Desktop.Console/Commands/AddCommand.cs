@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using crypto.Core;
 using crypto.Core.Extension;
@@ -27,7 +28,18 @@ namespace crypto.Desktop.Cnsl.Commands
             var key = PasswordPrompt.PromptPassword().ApplySHA256();
             using var vault = VaultPath == null ? Vault.Open(Environment.CurrentDirectory, key) : Vault.Open(VaultPath, key);
 
-            await vault.AddFileAsync(ToAddPath);
+            if (File.Exists(ToAddPath))
+            {
+                await vault.AddFileAsync(ToAddPath);
+            }
+            else if (Directory.Exists(ToAddPath))
+            {
+                foreach (var file in NDirectory.GetAllFilesRecursive(ToAddPath))
+                {
+                    var pathToFile = NPath.GetRelativePathToFile(ToAddPath, file);
+                    await vault.AddFileAsync(file, pathToFile);
+                }
+            }
             
             Log.Debug("Added file to vault");
         }
