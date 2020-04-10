@@ -84,7 +84,8 @@ namespace crypto.Core.Tests
 
             // decrypt the file
             {
-                using var vault = VaultReaderWriter.ReadFromConfig($"{TestFolderPath}{vaultName}", key);
+                var paths = new VaultReadingPaths($"{TestFolderPath}{vaultName}/");
+                using var vault = VaultReaderWriter.ReadFromConfig(paths, key);
                 var hashMatches = await vault.ExtractFile(vault.ItemHeaders.First());
                 Assert.IsTrue(hashMatches);
 
@@ -143,10 +144,11 @@ namespace crypto.Core.Tests
             await file.AddFileAsync(testFile);
             VaultReaderWriter.WriteConfig(file, key);
 
-            var readFile = VaultReaderWriter.ReadFromConfig($"{TestFolderPath}/{vaultName}", key);
+            var paths = new VaultReadingPaths($"{TestFolderPath}/{vaultName}/");
+            var readFile = VaultReaderWriter.ReadFromConfig(paths, key);
             await readFile.AddFileAsync(testFile, "others");
 
-            var unused = VaultReaderWriter.ReadFromConfig($"{TestFolderPath}/{vaultName}", key);
+            var unused = VaultReaderWriter.ReadFromConfig(paths, key);
         }
 
         [Test]

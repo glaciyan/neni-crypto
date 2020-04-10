@@ -50,7 +50,7 @@ namespace crypto.Core
             return output;
         }
 
-        public static Vault Open(string folderPath, byte[] key)
+        public static Vault Open(VaultReadingPaths folderPath, byte[] key)
         {
             return VaultReaderWriter.ReadFromConfig(folderPath, key);
         }

@@ -25,8 +25,18 @@ namespace crypto.Desktop.Cnsl.Commands
 
         public override async Task Run()
         {
+            VaultReadingPaths paths;
+            if (VaultPath == null)
+            {
+                paths = new VaultReadingPaths(Environment.CurrentDirectory);
+            }
+            else
+            {
+                paths = new VaultReadingPaths(VaultPath);
+            }
+            
             var key = PasswordPrompt.PromptPassword().ApplySHA256();
-            using var vault = VaultPath == null ? Vault.Open(Environment.CurrentDirectory, key) : Vault.Open(VaultPath, key);
+            using var vault = Vault.Open(paths, key);
 
             if (File.Exists(ToAddPath))
             {

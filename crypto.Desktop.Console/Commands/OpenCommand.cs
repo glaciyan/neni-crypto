@@ -19,7 +19,8 @@ namespace crypto.Desktop.Cnsl.Commands
             {
                 var key = PasswordPrompt.PromptPassword().ApplySHA256();
                 
-                var vault = Vault.Open(VaultPath, key);
+                var paths = new VaultReadingPaths(VaultPath);
+                var vault = Vault.Open(paths, key);
                 
                 var browser = new VaultBrowser(vault);
                 

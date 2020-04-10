@@ -10,12 +10,11 @@ namespace crypto.Core
         //        Reading
         //++++++++++++++++++++++++++++
 
-        public static Vault ReadFromConfig(string folderPath, byte[] key)
+        public static Vault ReadFromConfig(VaultReadingPaths readingPaths, byte[] key)
         {
-            var (fullFolderPath, folderName, vaultFilePath) = VerifyPathAndGetNames(folderPath);
-            var result = new Vault(folderName, key) {VaultPath = fullFolderPath};
+            var result = new Vault(readingPaths.Name, key) {VaultPath = readingPaths.FullVaultFolderPath};
 
-            using var vaultFile = new FileStream(vaultFilePath, FileMode.Open, FileAccess.Read);
+            using var vaultFile = new FileStream(readingPaths.VaultFilePath, FileMode.Open, FileAccess.Read);
 
             result.Header = VaultHeaderReader.ReadFrom(vaultFile);
 
@@ -29,17 +28,6 @@ namespace crypto.Core
             result.CheckAndCorrectAllItemHeaders();
             
             return result;
-        }
-
-        private static (string, string, string) VerifyPathAndGetNames(string path)
-        {
-            var fullPath = Path.GetFullPath(path);
-            var folderName = Path.GetFileNameWithoutExtension(fullPath);
-            var vaultFilePath = Vault.GetVaultFilePath(fullPath, folderName);
-
-            if (File.Exists(vaultFilePath)) return (fullPath, folderName, vaultFilePath);
-
-            throw new FileNotFoundException("Couldn't find vault file for path" + path);
         }
 
         //++++++++++++++++++++++++++++
