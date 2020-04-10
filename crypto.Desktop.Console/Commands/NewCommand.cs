@@ -31,11 +31,14 @@ namespace crypto.Desktop.Cnsl.Commands
                 Log.Debug("Running NewProject with " +
                           $"Name = {Name ?? "null"}, Path = {Path ?? "null"}");
 
-                var vaultName = Name ?? GetCurrentDirectoryName();
-                var vaultPath = GetVaultPath(Path);
+                string vaultName = Name ?? GetCurrentDirectoryName();
+                var vaultPath = GetVaultCtorPath(Path);
+                var folderPath = GetFolderPath(vaultName, Path);
 
-                if (Vault.Exists($"{vaultPath}/{vaultName}"))
-                    throw new SolutionAlreadyExistsException("Solution was already created");
+                Log.Debug($"vaultPath: {folderPath}");
+                
+                if (!NDirectory.IsDirectoryEmpty(folderPath))
+                    throw new DirectoryNotEmptyException("The directory with the vault name is not empty");
                 
                 var key = PasswordPrompt.PromptPasswordWithConfirmation().ApplySHA256();
 
@@ -45,7 +48,13 @@ namespace crypto.Desktop.Cnsl.Commands
             });
         }
 
-        private static string? GetVaultPath(string? path)
+        private static string GetFolderPath(string vaultName, string? path)
+        {
+            if (path == null) return System.IO.Path.Combine(Environment.CurrentDirectory, vaultName);
+            return System.IO.Path.Combine(path, vaultName);
+        }
+
+        private static string? GetVaultCtorPath(string? path)
         {
             if (string.IsNullOrEmpty(path)) return path;
             var currDir = new DirectoryInfo(Environment.CurrentDirectory);

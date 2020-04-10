@@ -166,12 +166,6 @@ namespace crypto.Core
 
             return !File.Exists(Path.Combine(UnlockedFolderPath, header.SecuredPlainName.PlainName));
         }
-
-        public static bool Exists(string vaultPath)
-        {
-            // check if folder(go to config and check for same name) or file, check for magic number in file
-            throw new NotImplementedException();
-        }
         
         public void Dispose()
         {
