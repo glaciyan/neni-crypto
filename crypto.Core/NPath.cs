@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Text;
 
 namespace crypto.Core
@@ -23,6 +24,31 @@ namespace crypto.Core
             }
 
             return result.ToString();
+        }
+        
+        public static string CombineArray(string[] arr)
+        {
+            var result = new StringBuilder();
+
+            for (var index = 0; index < arr.Length; index++)
+            {
+                var str = arr[index];
+                result.Append(str);
+
+                if (index < arr.Length - 1)
+                {
+                    result.Append('/');
+                }
+            }
+
+            return result.ToString();
+        }
+        
+        public static string GetRelativePathToFile(string relativeTo, string path)
+        {
+            var relativePath = Path.GetRelativePath(relativeTo + "/..", path);
+
+            return NDirectory.GetPathParentDir(relativePath);
         }
     }
 }
