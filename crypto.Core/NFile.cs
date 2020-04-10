@@ -18,6 +18,7 @@ namespace crypto.Core
             try
             {
                 while (fs.Position < fs.Length) await fs.WriteAsync(zeroBuffer);
+                await fs.DisposeAsync();
 
                 File.Delete(filePath);
             }

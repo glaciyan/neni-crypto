@@ -28,9 +28,9 @@ namespace crypto.Core
 
         public static string GetPathParentDir(string path)
         {
-            var split = path.Split('/', StringSplitOptions.RemoveEmptyEntries);
+            var split = path.Replace(Path.DirectorySeparatorChar, '/').Split('/', StringSplitOptions.RemoveEmptyEntries);
             var output = new StringBuilder();
-            if (path[0] == '/') output.Append('/'); 
+            if (path[0] == '/') output.Append('/');
             
             for (var i = 0; i < split.Length - 1; i++)
             {
