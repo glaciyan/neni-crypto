@@ -36,7 +36,8 @@ namespace crypto.Core.FileExplorer
         public IEnumerable<(ExplorableVaultItemPath, FileFolder, int)> GetFromPath(string[] split)
         {
             var matchingFiles = new List<(ExplorableVaultItemPath, FileFolder, int)>();
-
+            var folders = new List<string>();
+            
             foreach (var item in ItemHeaders)
             {
                 var path = item.SplitPath;
@@ -47,7 +48,7 @@ namespace crypto.Core.FileExplorer
                 }
                 
                 if (split.Length == path.Length)
-                    throw new ArgumentException("path is pointing to file");
+                    throw new ArgumentException("Path is pointing to file");
                 
                 var matches = true;
                 var i = 0;
@@ -59,7 +60,18 @@ namespace crypto.Core.FileExplorer
                 
                 if (matches)
                 {
-                    var fileFolder = i == path.Length ? FileFolder.File : FileFolder.Folder;
+                    var fileFolder = i == path.Length - 1 ? FileFolder.File : FileFolder.Folder;
+                    
+                    if (fileFolder == FileFolder.Folder)
+                    {
+                        if (folders.Contains(item.SplitPath[i]))
+                        {
+                            continue;
+                        }
+                        
+                        folders.Add(item.SplitPath[i]);
+                    }
+                    
                     matchingFiles.Add((item, fileFolder, i));
                 }
             }
