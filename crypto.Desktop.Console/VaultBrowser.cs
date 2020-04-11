@@ -15,7 +15,7 @@ namespace crypto.Desktop.Cnsl
 
             foreach (var header in vault.ItemHeaders)
             {
-                _explorer.AddFile(header.SecuredPlainName.PlainName);
+                _explorer.AddFile(header);
             }
         }
 
@@ -36,7 +36,7 @@ namespace crypto.Desktop.Cnsl
                         throw new ArgumentOutOfRangeException();
                 }
 
-                Console.WriteLine(splitPath[nameIndex]);
+                Console.WriteLine(splitPath.SplitPath[nameIndex]);
             }
         }
 

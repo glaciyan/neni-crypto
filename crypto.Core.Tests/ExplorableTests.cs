@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using crypto.Core.FileExplorer;
+using crypto.Core.Header;
 using NUnit.Framework;
 
 namespace crypto.Core.Tests
@@ -8,11 +9,17 @@ namespace crypto.Core.Tests
     [TestFixture]
     public class ExplorableTests
     {
-        private const string Path1 = "/something/other/pictures/stuff/picture1.png";
-        private const string Path2 = "/something/other/secret/encrypted/secretFile.crp";
-        private const string Path3 = "/file.txt";
+        private readonly ItemHeader _path1 = ItemHeader.Create("picture1.png", "/something/other/pictures/stuff/");
+        private readonly ItemHeader _path2 = ItemHeader.Create("secretFile.crp", "/something/other/secret/encrypted/");
+        private readonly ItemHeader _path3 = ItemHeader.Create("/file.txt");
 
-        private readonly Explorer _explorer = new Explorer(Path1, Path2, Path3);
+        private Explorer _explorer;
+        
+        [OneTimeSetUp]
+        public void SetUpExplorer()
+        {
+            _explorer = new Explorer(_path1, _path2, _path3);
+        }
         
         [Test]
         public void BroadPath()
