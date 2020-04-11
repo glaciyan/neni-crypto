@@ -7,7 +7,7 @@ using Serilog;
 
 namespace crypto.Desktop.Cnsl.Commands
 {
-    public class AddCommand : Command
+    public class AddCommandAsync : CommandAsync
     {
         private string? ToAddPath { get; }
         private string? VaultPath { get; }
@@ -17,7 +17,7 @@ namespace crypto.Desktop.Cnsl.Commands
          * add fileName vaultPath -> look if the given dir is a vault then add it if true
          */
         
-        public AddCommand(string? addPath, string? vaultPath)
+        public AddCommandAsync(string? addPath, string? vaultPath)
         {
             ToAddPath = addPath ?? throw new NullReferenceException("Path to file not given");
             VaultPath = vaultPath;
