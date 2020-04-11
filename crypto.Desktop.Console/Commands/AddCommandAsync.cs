@@ -17,7 +17,7 @@ namespace crypto.Desktop.Cnsl.Commands
          * add fileName vaultPath -> look if the given dir is a vault then add it if true
          */
         
-        public AddCommandAsync(string? addPath, string? vaultPath)
+        public AddCommandAsync(string? vaultPath, string? addPath)
         {
             ToAddPath = addPath ?? throw new NullReferenceException("Path to file not given");
             VaultPath = vaultPath;
@@ -41,6 +41,7 @@ namespace crypto.Desktop.Cnsl.Commands
             if (File.Exists(ToAddPath))
             {
                 await vault.AddFileAsync(ToAddPath);
+                Notifier.Success($"Added file {ToAddPath} to vault");
             }
             else if (Directory.Exists(ToAddPath))
             {
@@ -49,6 +50,7 @@ namespace crypto.Desktop.Cnsl.Commands
                     var pathToFile = NPath.GetRelativePathToFile(ToAddPath, file);
                     await vault.AddFileAsync(file, pathToFile);
                 }
+                Notifier.Success($"Added directory {ToAddPath} to vault");
             }
             
             Log.Debug("Added file to vault");

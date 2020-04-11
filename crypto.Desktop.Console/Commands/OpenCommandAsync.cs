@@ -25,6 +25,7 @@ namespace crypto.Desktop.Cnsl.Commands
                 var browser = new VaultBrowser(vault);
                 
                 browser.Display();
+                browser.WaitForCommand();
             });
         }
     }
