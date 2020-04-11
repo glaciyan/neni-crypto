@@ -36,12 +36,14 @@ namespace crypto.Core.FileExplorer
         public IEnumerable<ExplorableVaultItemTypeIndex> GetFromPath(string[] split)
         {
             var matchingFiles = new List<ExplorableVaultItemTypeIndex>();
+            // TODO: move this into a Printable Format method
             var folders = new List<string>();
             
             foreach (var item in ItemHeaders)
             {
                 var path = item.SplitPath;
-                if (split.Length == 0 && path.Length == 1)
+                
+                if (IsFileInRoot(split, path))
                 {
                     matchingFiles.Add(new ExplorableVaultItemTypeIndex(item, FileFolder.File, 0));
                     continue;
@@ -50,18 +52,13 @@ namespace crypto.Core.FileExplorer
                 if (split.Length == path.Length)
                     throw new ArgumentException("Path is pointing to file");
                 
-                var matches = true;
-                var i = 0;
-                for (;i < split.Length; i++)
-                {
-                    if (!matches) break;
-                    matches = split[i] == path[i];
-                }
-                
+                var (matches, i) = Matches(split, path);
+
                 if (matches)
                 {
                     var fileFolder = i == path.Length - 1 ? FileFolder.File : FileFolder.Folder;
                     
+                    // TODO: move this into a Printable Format method
                     if (fileFolder == FileFolder.Folder)
                     {
                         if (folders.Contains(item.SplitPath[i]))
@@ -79,7 +76,25 @@ namespace crypto.Core.FileExplorer
             return matchingFiles;
         }
 
-/*
+        private static bool IsFileInRoot(string[] split, string[] path)
+        {
+            return split.Length == 0 && path.Length == 1;
+        }
+
+        private static (bool matches, int i) Matches(string[] split, string[] path)
+        {
+            var matches = true;
+            var i = 0;
+            for (; i < split.Length; i++)
+            {
+                if (!matches) break;
+                matches = split[i] == path[i];
+            }
+
+            return (matches, i);
+        }
+
+        /*
         private static IEnumerable<T> CopyList<T>(List<T> list)
         {
             var result = new List<T>(list.Capacity);
