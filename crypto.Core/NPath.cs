@@ -8,7 +8,7 @@ namespace crypto.Core
     {
         public static string RemoveRelativeParts(string path)
         {
-            var split = path.Split('/', StringSplitOptions.RemoveEmptyEntries);
+            var split = SplitPath(path);
             var result = new StringBuilder();
 
             for (var i = 0; i < split.Length; i++)
@@ -49,6 +49,11 @@ namespace crypto.Core
             var relativePath = Path.GetRelativePath(relativeTo + "/..", path);
 
             return NDirectory.GetPathParentDir(relativePath);
+        }
+        
+        public static string[] SplitPath(string path)
+        {
+            return path.Replace('\\', '/').Split('/', StringSplitOptions.RemoveEmptyEntries);
         }
     }
 }

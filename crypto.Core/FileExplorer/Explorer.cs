@@ -29,7 +29,7 @@ namespace crypto.Core.FileExplorer
 
         public IEnumerable<(ExplorableVaultItemPath, FileFolder, int)> GetFromPath(string position)
         {
-            var split = position.Split('/', StringSplitOptions.RemoveEmptyEntries);
+            var split = NPath.SplitPath(position);
             return GetFromPath(split);
         }
         
@@ -67,6 +67,7 @@ namespace crypto.Core.FileExplorer
             return matchingFiles;
         }
 
+/*
         private static IEnumerable<T> CopyList<T>(List<T> list)
         {
             var result = new List<T>(list.Capacity);
@@ -78,5 +79,6 @@ namespace crypto.Core.FileExplorer
 
             return result;
         }
+*/
     }
 }
