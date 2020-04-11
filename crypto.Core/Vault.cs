@@ -10,17 +10,18 @@ namespace crypto.Core
 {
     public class Vault : IDisposable
     {
-        private byte[] _key;
-        public bool Written { get; internal set; }
         private const string FileExtension = ".vlt";
         private const string UnlockedFolderName = "Unlocked";
         private const string EncryptedFolderName = "Encrypted";
+        private readonly byte[] _key;
 
         internal Vault(string name, byte[] key)
         {
             Name = name;
             _key = key;
         }
+
+        public bool Written { get; internal set; }
 
         private string Name { get; }
         public VaultHeader Header { get; set; }
@@ -29,6 +30,12 @@ namespace crypto.Core
         public string EncryptedFolderPath => Path.Combine(VaultPath, EncryptedFolderName);
         public string UnlockedFolderPath => Path.Combine(VaultPath, UnlockedFolderName);
         public string VaultFilePath => GetVaultFilePath(VaultPath, Name);
+
+        public void Dispose()
+        {
+            if (!Written)
+                VaultReaderWriter.WriteConfig(this, _key);
+        }
 
         internal static string GetVaultFilePath(string vaultPath, string name)
         {
@@ -84,12 +91,8 @@ namespace crypto.Core
         private void CheckIfPlainNameAlreadyExists(ItemHeader itemHeader)
         {
             foreach (var header in ItemHeaders)
-            {
                 if (header.SecuredPlainName.PlainName == itemHeader.SecuredPlainName.PlainName)
-                {
                     throw new FileAlreadyExistsException("File is already in the vault");
-                }
-            }
         }
 
         public async Task RemoveFile(ItemHeader header)
@@ -98,11 +101,11 @@ namespace crypto.Core
             if (header.IsUnlocked) await EliminateExtracted(header);
             ItemHeaders.TryTake(out header);
         }
-        
+
         public async Task MoveFile(ItemHeader header, string destination)
         {
             var wasUnlocked = header.IsUnlocked;
-            
+
             if (wasUnlocked) await EliminateExtracted(header);
 
             header.Move(destination);
@@ -129,14 +132,14 @@ namespace crypto.Core
             var plainTextPath = header.SecuredPlainName.PlainName;
 
             var path = Path.Combine(UnlockedFolderPath, plainTextPath);
-            
+
             // TODO: try to search for the file in Unlocked and if found move it (careful with isUnlocked bool)
             if (!File.Exists(path))
             {
                 header.IsUnlocked = false;
                 throw new FileNotFoundException("Decrypted file was not found", plainTextPath);
             }
-                
+
             await NFile.Purge(path);
             header.IsUnlocked = false;
 
@@ -146,18 +149,12 @@ namespace crypto.Core
 
         public void CheckAndCorrectAllItemHeaders()
         {
-            foreach (var itemHeader in ItemHeaders)
-            {
-                CorrectItemHeaderForUnlockedFile(itemHeader);
-            }
+            foreach (var itemHeader in ItemHeaders) CorrectItemHeaderForUnlockedFile(itemHeader);
         }
-        
+
         public void CorrectItemHeaderForUnlockedFile(ItemHeader header)
         {
-            if (ItemHeaderMissingUnlockedFile(header))
-            {
-                header.IsUnlocked = false;
-            }
+            if (ItemHeaderMissingUnlockedFile(header)) header.IsUnlocked = false;
         }
 
         private bool ItemHeaderMissingUnlockedFile(ItemHeader header)
@@ -165,12 +162,6 @@ namespace crypto.Core
             if (!header.IsUnlocked) return true;
 
             return !File.Exists(Path.Combine(UnlockedFolderPath, header.SecuredPlainName.PlainName));
-        }
-        
-        public void Dispose()
-        {
-            if (!Written)
-                VaultReaderWriter.WriteConfig(this, _key);
         }
     }
 }

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using crypto.Core.Header;
 
@@ -9,18 +8,15 @@ namespace crypto.Core.FileExplorer
         File,
         Folder
     }
-    
+
     public class Explorer
     {
-        private List<VaultItemWithSplitPath> ItemHeaders { get; } = new List<VaultItemWithSplitPath>();
-
         public Explorer(params ItemHeader[] headers)
         {
-            foreach (var path in headers)
-            {
-                AddFile(path);
-            }
+            foreach (var path in headers) AddFile(path);
         }
+
+        private List<VaultItemWithSplitPath> ItemHeaders { get; } = new List<VaultItemWithSplitPath>();
 
         public void AddFile(ItemHeader header)
         {
@@ -32,44 +28,41 @@ namespace crypto.Core.FileExplorer
             var split = NPath.SplitPath(position);
             return GetFromPath(split);
         }
-        
+
         public List<ExplorableVaultItem> GetFromPath(string[] split)
         {
             var matchingFiles = new List<ExplorableVaultItem>();
-            
+
             // TODO: move this into a Printable Format method
             var folders = new List<string>();
-            
+
             foreach (var item in ItemHeaders)
             {
                 var path = item.SplitPath;
-                
+
                 if (IsFileInRoot(split, path))
                 {
                     matchingFiles.Add(new ExplorableVaultItem(item, FileFolder.File, 0));
                     continue;
                 }
-                
+
                 if (split.Length == path.Length)
                     continue;
-                
+
                 var (matches, i) = Matches(split, path);
 
                 if (matches)
                 {
                     var fileFolder = i == path.Length - 1 ? FileFolder.File : FileFolder.Folder;
-                    
+
                     // TODO: move this into a Printable Format method
                     if (fileFolder == FileFolder.Folder)
                     {
-                        if (folders.Contains(item.SplitPath[i]))
-                        {
-                            continue;
-                        }
-                        
+                        if (folders.Contains(item.SplitPath[i])) continue;
+
                         folders.Add(item.SplitPath[i]);
                     }
-                    
+
                     matchingFiles.Add(new ExplorableVaultItem(item, fileFolder, i));
                 }
             }

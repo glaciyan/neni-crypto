@@ -12,8 +12,8 @@ namespace crypto.Core.FileExplorer
             SplitPath = ItemHeader.SecuredPlainName.PlainName.Replace('\\', '/')
                 .Split('/', StringSplitOptions.RemoveEmptyEntries);
         }
-        
-        
+
+
         public ItemHeader ItemHeader { get; }
         public string Path { get; }
         public string[] SplitPath { get; }

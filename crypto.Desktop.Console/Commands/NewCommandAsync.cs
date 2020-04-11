@@ -9,20 +9,20 @@ namespace crypto.Desktop.Cnsl.Commands
 {
     public class NewCommandAsync : CommandAsync
     {
-        private string? Name { get; }
-        private string? Path { get; }
-        
         /* new -> uses current directory
          * new name -> creates a new directory with that name and uses that
          * new name path -> goes to that path and creates a new directory with the given name and uses that
          */
-        
+
         public NewCommandAsync(string? name, string? path)
         {
             Name = name;
             Path = path;
         }
-        
+
+        private string? Name { get; }
+        private string? Path { get; }
+
         public override async Task Run()
         {
             await Task.Run(() =>
@@ -30,15 +30,15 @@ namespace crypto.Desktop.Cnsl.Commands
                 Log.Debug("Running NewProject with " +
                           $"Name = {Name ?? "null"}, Path = {Path ?? "null"}");
 
-                string vaultName = Name ?? GetCurrentDirectoryName();
+                var vaultName = Name ?? GetCurrentDirectoryName();
                 var vaultPath = GetVaultCtorPath(Path);
                 var folderPath = GetFolderPath(vaultName, Path);
 
                 Log.Debug($"vaultPath: {folderPath}");
-                
+
                 if (!NDirectory.IsDirectoryEmpty(folderPath))
                     throw new DirectoryNotEmptyException("The directory with the vault name is not empty");
-                
+
                 var key = PasswordPrompt.PromptPasswordWithConfirmation().ApplySHA256();
 
                 using var vault = Vault.Create(vaultName, key, vaultPath);
@@ -59,10 +59,8 @@ namespace crypto.Desktop.Cnsl.Commands
             var currDir = new DirectoryInfo(Environment.CurrentDirectory);
 
             if (currDir.GetDirectories().Length == 0 && currDir.GetFiles().Length == 0)
-            {
                 return currDir.Parent?.FullName ?? currDir.FullName;
-            }
-            
+
             throw new DirectoryNotEmptyException("The directory is not empty, can't create vault");
         }
 

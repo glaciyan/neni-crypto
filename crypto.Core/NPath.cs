@@ -14,18 +14,15 @@ namespace crypto.Core
             for (var i = 0; i < split.Length; i++)
             {
                 if (split[i] == ".." || split[i] == ".") continue;
-                
+
                 result.Append(split[i]);
-               
-                if (i < split.Length - 1)
-                {
-                    result.Append('/');
-                }
+
+                if (i < split.Length - 1) result.Append('/');
             }
 
             return result.ToString();
         }
-        
+
         public static string CombineArray(string[] arr)
         {
             var result = new StringBuilder();
@@ -35,22 +32,19 @@ namespace crypto.Core
                 var str = arr[index];
                 result.Append(str);
 
-                if (index < arr.Length - 1)
-                {
-                    result.Append('/');
-                }
+                if (index < arr.Length - 1) result.Append('/');
             }
 
             return result.ToString();
         }
-        
+
         public static string GetRelativePathToFile(string relativeTo, string path)
         {
             var relativePath = Path.GetRelativePath(relativeTo + "/..", path);
 
             return NDirectory.GetPathParentDir(relativePath);
         }
-        
+
         public static string[] SplitPath(string path)
         {
             return path.Replace('\\', '/').Split('/', StringSplitOptions.RemoveEmptyEntries);

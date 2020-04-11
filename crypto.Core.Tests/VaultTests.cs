@@ -66,7 +66,8 @@ namespace crypto.Core.Tests
             Assert.AreEqual(vaultFile.SecuredPlainName.PlainName, readItemHeader.SecuredPlainName.PlainName);
         }
 
-        [Test, Order(0)]
+        [Test]
+        [Order(0)]
         public async Task DecryptingFile()
         {
             const string vaultName = "DFile";
@@ -93,7 +94,7 @@ namespace crypto.Core.Tests
 
                 await vault.EliminateExtracted(vault.ItemHeaders.First());
                 Assert.IsFalse(vault.ItemHeaders.First().IsUnlocked);
-                
+
                 await vault.ExtractFile(vault.ItemHeaders.First());
                 Assert.IsTrue(vault.ItemHeaders.First().IsUnlocked);
             }
@@ -103,34 +104,36 @@ namespace crypto.Core.Tests
             Assert.AreEqual(originalHash, decryptedHash);
         }
 
-        [Test, Order(1)]
-        public async Task RemoveFileFromVault()
-        {
-            const string vaultName = "RemoveFileFromVault";
-            const string testFile = TestDataPath + "DecryptingFile.dat";
-            var key = CryptoRNG.GetRandomBytes(AesSizes.Key);
-            
-            using var vault = Vault.Create(vaultName, key, TestFolderPath);
-            await vault.AddFileAsync(testFile);
-
-            await vault.RemoveFile(vault.ItemHeaders.First());
-        }
-
-        [Test, Order(2)]
+        [Test]
+        [Order(2)]
         public async Task MoveFileInVault()
         {
             const string vaultName = "MoveFileInVault";
             const string testFile = TestDataPath + "DecryptingFile.dat";
             var key = CryptoRNG.GetRandomBytes(AesSizes.Key);
-            
+
             using var vault = Vault.Create(vaultName, key, TestFolderPath);
             await vault.AddFileAsync(testFile);
 
             await vault.ExtractFile(vault.ItemHeaders.First());
 
             await vault.MoveFile(vault.ItemHeaders.First(), "other/files/DecryptingFile.dat");
-            
+
             Assert.IsTrue(File.Exists($"{TestFolderPath}{vaultName}/Unlocked/other/files/DecryptingFile.dat"));
+        }
+
+        [Test]
+        [Order(1)]
+        public async Task RemoveFileFromVault()
+        {
+            const string vaultName = "RemoveFileFromVault";
+            const string testFile = TestDataPath + "DecryptingFile.dat";
+            var key = CryptoRNG.GetRandomBytes(AesSizes.Key);
+
+            using var vault = Vault.Create(vaultName, key, TestFolderPath);
+            await vault.AddFileAsync(testFile);
+
+            await vault.RemoveFile(vault.ItemHeaders.First());
         }
 
         [Test]

@@ -26,7 +26,7 @@ namespace crypto.Core
                 result.ItemHeaders.Add(ItemHeaderReader.ReadFrom(vaultFile, password));
 
             result.CheckAndCorrectAllItemHeaders();
-            
+
             return result;
         }
 

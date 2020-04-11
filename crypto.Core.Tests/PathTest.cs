@@ -17,17 +17,6 @@ namespace crypto.Core.Tests
         }
 
         [Test]
-        public void RemoveRelativeParts()
-        {
-            const string testPath = "../test/./other/stuff/file.txt";
-            const string expected = "test/other/stuff/file.txt";
-
-            var result = NPath.RemoveRelativeParts(testPath);
-            
-            Assert.AreEqual(expected, result);
-        }
-
-        [Test]
         public void RelativePathToFileTest()
         {
             const string path = "other/more/stuff/test/mock/file.txt";
@@ -35,8 +24,19 @@ namespace crypto.Core.Tests
 
             var resultPath = NPath.GetRelativePathToFile(relativeTo, path);
             const string expected = "stuff/test/mock/";
-            
+
             Assert.AreEqual(expected, resultPath);
+        }
+
+        [Test]
+        public void RemoveRelativeParts()
+        {
+            const string testPath = "../test/./other/stuff/file.txt";
+            const string expected = "test/other/stuff/file.txt";
+
+            var result = NPath.RemoveRelativeParts(testPath);
+
+            Assert.AreEqual(expected, result);
         }
     }
 }
