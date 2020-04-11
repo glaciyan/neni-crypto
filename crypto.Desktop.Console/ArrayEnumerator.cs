@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace crypto.Desktop.Cnsl.Commands
+namespace crypto.Desktop.Cnsl
 {
     public class ArrayEnumerator<T> : IEnumerator<T>, IEnumerable<T> where T : class
     {

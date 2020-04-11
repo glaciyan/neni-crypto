@@ -1,6 +1,7 @@
 ﻿using System;
+using crypto.Desktop.Cnsl.Commands;
 
-namespace crypto.Desktop.Cnsl.Commands
+namespace crypto.Desktop.Cnsl
 {
     public static class CommandLineArgumentParser
     {
