@@ -7,7 +7,7 @@ using Serilog;
 
 namespace crypto.Desktop.Cnsl.Commands
 {
-    public class NewCommand : Command
+    public class NewCommandAsync : CommandAsync
     {
         private string? Name { get; }
         private string? Path { get; }
@@ -17,7 +17,7 @@ namespace crypto.Desktop.Cnsl.Commands
          * new name path -> goes to that path and creates a new directory with the given name and uses that
          */
         
-        public NewCommand(string? name, string? path)
+        public NewCommandAsync(string? name, string? path)
         {
             Name = name;
             Path = path;

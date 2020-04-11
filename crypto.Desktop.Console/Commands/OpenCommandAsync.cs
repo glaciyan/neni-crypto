@@ -4,11 +4,11 @@ using crypto.Core.Extension;
 
 namespace crypto.Desktop.Cnsl.Commands
 {
-    public class OpenCommand : Command
+    public class OpenCommandAsync : CommandAsync
     {
         private string? VaultPath { get; }
 
-        public OpenCommand(string? vaultPath)
+        public OpenCommandAsync(string? vaultPath)
         {
             VaultPath = vaultPath;
         }
@@ -24,7 +24,7 @@ namespace crypto.Desktop.Cnsl.Commands
                 
                 var browser = new VaultBrowser(vault);
                 
-                browser.Display("crypto.Core/Cryptography/");
+                browser.Display();
             });
         }
     }
