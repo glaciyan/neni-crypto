@@ -23,12 +23,12 @@ namespace crypto.Desktop.Cnsl
         }
 
         private string[] CurrentPathArray => CurrentPathStack.Reverse().ToArray();
+        public ExplorableVaultItem[] GetFromPath =>
+            (ExplorableVaultItem[]) _explorer.GetFromPath(CurrentPathArray);
 
-        
-        
         public void Display()
         {
-            var items = _explorer.GetFromPath(CurrentPathArray);
+            var items = GetFromPath;
             foreach (var vaultItem in items)
             {
                 switch (vaultItem.Type)

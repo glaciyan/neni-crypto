@@ -27,15 +27,15 @@ namespace crypto.Core.FileExplorer
             ItemHeaders.Add(new VaultItemWithSplitPath(header));
         }
 
-        public IEnumerable<ExplorableVaultItemTypeIndex> GetFromPath(string position)
+        public IEnumerable<ExplorableVaultItem> GetFromPath(string position)
         {
             var split = NPath.SplitPath(position);
             return GetFromPath(split);
         }
         
-        public IEnumerable<ExplorableVaultItemTypeIndex> GetFromPath(string[] split)
+        public IEnumerable<ExplorableVaultItem> GetFromPath(string[] split)
         {
-            var matchingFiles = new List<ExplorableVaultItemTypeIndex>();
+            var matchingFiles = new List<ExplorableVaultItem>();
             // TODO: move this into a Printable Format method
             var folders = new List<string>();
             
@@ -45,7 +45,7 @@ namespace crypto.Core.FileExplorer
                 
                 if (IsFileInRoot(split, path))
                 {
-                    matchingFiles.Add(new ExplorableVaultItemTypeIndex(item, FileFolder.File, 0));
+                    matchingFiles.Add(new ExplorableVaultItem(item, FileFolder.File, 0));
                     continue;
                 }
                 
@@ -69,7 +69,7 @@ namespace crypto.Core.FileExplorer
                         folders.Add(item.SplitPath[i]);
                     }
                     
-                    matchingFiles.Add(new ExplorableVaultItemTypeIndex(item, fileFolder, i));
+                    matchingFiles.Add(new ExplorableVaultItem(item, fileFolder, i));
                 }
             }
 
