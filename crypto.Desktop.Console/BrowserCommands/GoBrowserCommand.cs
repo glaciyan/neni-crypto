@@ -2,12 +2,12 @@ using System;
 
 namespace crypto.Desktop.Cnsl.BrowserCommands
 {
-    public class GoCommand : Command
+    public class GoBrowserCommand : BrowserCommand
     {
         private readonly VaultBrowser _browser;
         private readonly string? _dest;
 
-        public GoCommand(VaultBrowser browser, string? dest)
+        public GoBrowserCommand(VaultBrowser browser, string? dest)
         {
             _browser = browser;
             _dest = dest;
