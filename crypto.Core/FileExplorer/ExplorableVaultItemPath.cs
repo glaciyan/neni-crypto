@@ -8,12 +8,14 @@ namespace crypto.Core.FileExplorer
         public ExplorableVaultItemPath(ItemHeader itemHeader)
         {
             ItemHeader = itemHeader;
+            Path = itemHeader.SecuredPlainName.PlainName;
             SplitPath = ItemHeader.SecuredPlainName.PlainName.Replace('\\', '/')
                 .Split('/', StringSplitOptions.RemoveEmptyEntries);
         }
-
-        // string[], FileFolder, int
+        
+        
         public ItemHeader ItemHeader { get; }
+        public string Path { get; }
         public string[] SplitPath { get; }
     }
 }
