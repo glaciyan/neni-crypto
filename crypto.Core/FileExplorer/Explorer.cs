@@ -12,7 +12,7 @@ namespace crypto.Core.FileExplorer
     
     public class Explorer
     {
-        private List<ExplorableVaultItemPath> ItemHeaders { get; } = new List<ExplorableVaultItemPath>();
+        private List<VaultItemWithSplitPath> ItemHeaders { get; } = new List<VaultItemWithSplitPath>();
 
         public Explorer(params ItemHeader[] headers)
         {
@@ -24,18 +24,18 @@ namespace crypto.Core.FileExplorer
 
         public void AddFile(ItemHeader header)
         {
-            ItemHeaders.Add(new ExplorableVaultItemPath(header));
+            ItemHeaders.Add(new VaultItemWithSplitPath(header));
         }
 
-        public IEnumerable<(ExplorableVaultItemPath, FileFolder, int)> GetFromPath(string position)
+        public IEnumerable<ExplorableVaultItemTypeIndex> GetFromPath(string position)
         {
             var split = NPath.SplitPath(position);
             return GetFromPath(split);
         }
         
-        public IEnumerable<(ExplorableVaultItemPath, FileFolder, int)> GetFromPath(string[] split)
+        public IEnumerable<ExplorableVaultItemTypeIndex> GetFromPath(string[] split)
         {
-            var matchingFiles = new List<(ExplorableVaultItemPath, FileFolder, int)>();
+            var matchingFiles = new List<ExplorableVaultItemTypeIndex>();
             var folders = new List<string>();
             
             foreach (var item in ItemHeaders)
@@ -43,7 +43,7 @@ namespace crypto.Core.FileExplorer
                 var path = item.SplitPath;
                 if (split.Length == 0 && path.Length == 1)
                 {
-                    matchingFiles.Add((item, FileFolder.File, 0));
+                    matchingFiles.Add(new ExplorableVaultItemTypeIndex(item, FileFolder.File, 0));
                     continue;
                 }
                 
@@ -72,7 +72,7 @@ namespace crypto.Core.FileExplorer
                         folders.Add(item.SplitPath[i]);
                     }
                     
-                    matchingFiles.Add((item, fileFolder, i));
+                    matchingFiles.Add(new ExplorableVaultItemTypeIndex(item, fileFolder, i));
                 }
             }
 

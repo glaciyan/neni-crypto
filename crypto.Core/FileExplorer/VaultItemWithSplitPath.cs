@@ -3,9 +3,9 @@ using crypto.Core.Header;
 
 namespace crypto.Core.FileExplorer
 {
-    public class ExplorableVaultItemPath
+    public class VaultItemWithSplitPath
     {
-        public ExplorableVaultItemPath(ItemHeader itemHeader)
+        public VaultItemWithSplitPath(ItemHeader itemHeader)
         {
             ItemHeader = itemHeader;
             Path = itemHeader.SecuredPlainName.PlainName;

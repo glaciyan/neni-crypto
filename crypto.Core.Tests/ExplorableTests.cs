@@ -27,13 +27,13 @@ namespace crypto.Core.Tests
             var files = _explorer.GetFromPath("/something/other/").ToList();
             Assert.IsTrue(files.Count == 2);
 
-            var (_, fileFolder, index) = files[0];
-            Assert.AreEqual(FileFolder.Folder, fileFolder);
-            Assert.AreEqual(2, index);
+            var vaultItem = files[0];
+            Assert.AreEqual(FileFolder.Folder, vaultItem.Type);
+            Assert.AreEqual(2, vaultItem.Index);
 
-            (_, fileFolder, index) = files[1];
-            Assert.AreEqual(FileFolder.Folder, fileFolder);
-            Assert.AreEqual(2, index);
+            vaultItem = files[1];
+            Assert.AreEqual(FileFolder.Folder, vaultItem.Type);
+            Assert.AreEqual(2, vaultItem.Index);
         }
 
         [Test]
@@ -44,9 +44,9 @@ namespace crypto.Core.Tests
             var files = _explorer.GetFromPath("/something/other/secret").ToList();
             Assert.IsTrue(files.Count == 1);
 
-            (_, fileFolder, index) = files[0];
-            Assert.AreEqual(FileFolder.Folder, fileFolder);
-            Assert.AreEqual(3, index);
+            var vaultItem = files[0];
+            Assert.AreEqual(FileFolder.Folder, vaultItem.Type);
+            Assert.AreEqual(3, vaultItem.Index);
         }
 
         [Test]
@@ -62,11 +62,11 @@ namespace crypto.Core.Tests
         public void Root()
         {
             var files = _explorer.GetFromPath("").ToList();
-            Assert.IsTrue(files.Count == 3);
+            Assert.IsTrue(files.Count == 2);
 
-            var (_, fileFolder, index) = files[2];
-            Assert.AreEqual(FileFolder.File, fileFolder);
-            Assert.AreEqual(0, index);
+            var vaultItem = files[1];
+            Assert.AreEqual(FileFolder.File, vaultItem.Type);
+            Assert.AreEqual(0, vaultItem.Index);
         }
     }
 }

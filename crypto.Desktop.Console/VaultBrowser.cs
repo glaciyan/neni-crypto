@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using crypto.Core;
 using crypto.Core.FileExplorer;
 
@@ -8,7 +10,8 @@ namespace crypto.Desktop.Cnsl
     {
         private readonly Vault _vault;
         private readonly Explorer _explorer = new Explorer();
-
+        public readonly Stack<string> CurrentPathStack = new Stack<string>();
+        
         public VaultBrowser(Vault vault)
         {
             _vault = vault;
@@ -19,12 +22,16 @@ namespace crypto.Desktop.Cnsl
             }
         }
 
-        public void Display(string path)
+        private string[] CurrentPathArray => CurrentPathStack.Reverse().ToArray();
+
+        
+        
+        public void Display()
         {
-            var items = _explorer.GetFromPath(path);
-            foreach (var (splitPath, fileFolder, nameIndex) in items)
+            var items = _explorer.GetFromPath(CurrentPathArray);
+            foreach (var vaultItem in items)
             {
-                switch (fileFolder)
+                switch (vaultItem.Type)
                 {
                     case FileFolder.File:
                         Console.Write("File -> ");
@@ -36,10 +43,14 @@ namespace crypto.Desktop.Cnsl
                         throw new ArgumentOutOfRangeException();
                 }
 
-                Console.WriteLine(splitPath.SplitPath[nameIndex]);
+                Console.WriteLine(vaultItem.VaultItemWithSplitPath.SplitPath[vaultItem.Index]);
             }
         }
 
-        
+        public void WaitForCommand()
+        {
+            Console.Write("> ");
+            var args = Console.ReadLine()?.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        }
     }
 }
