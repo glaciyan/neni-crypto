@@ -43,7 +43,7 @@ namespace crypto.Desktop.Cnsl.Commands
 
                 using var vault = Vault.Create(vaultName, key, vaultPath);
 
-                Notifier.Success($"Created vault {vaultName}.");
+                Notifier.Success($"Created vault {vaultName} as {folderPath}.");
             });
         }
 
