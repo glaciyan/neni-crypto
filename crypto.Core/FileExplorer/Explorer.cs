@@ -30,6 +30,11 @@ namespace crypto.Core.FileExplorer
         public IEnumerable<(ExplorableVaultItemPath, FileFolder, int)> GetFromPath(string position)
         {
             var split = position.Split('/', StringSplitOptions.RemoveEmptyEntries);
+            return GetFromPath(split);
+        }
+        
+        public IEnumerable<(ExplorableVaultItemPath, FileFolder, int)> GetFromPath(string[] split)
+        {
             var matchingFiles = new List<(ExplorableVaultItemPath, FileFolder, int)>();
 
             foreach (var item in ItemHeaders)
