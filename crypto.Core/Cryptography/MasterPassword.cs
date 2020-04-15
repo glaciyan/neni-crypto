@@ -18,21 +18,18 @@ namespace crypto.Core.Cryptography
 
         public MasterPassword()
         {
-            IV = CryptoRNG.GetRandomBytes(AesSizes.IV);
             Password = CryptoRNG.GetRandomBytes(AesSizes.Key);
             AuthenticationHash = GeneratePasswordHash(Password);
             _mode = CryptoMode.Encryption;
         }
 
-        public MasterPassword(byte[] iv, byte[] authenticationHash, byte[] encryptedPassword)
+        public MasterPassword(byte[] authenticationHash, byte[] encryptedPassword)
         {
-            IV = iv;
             AuthenticationHash = authenticationHash;
             EncryptedPassword = encryptedPassword;
             _mode = CryptoMode.Decryption;
         }
 
-        public byte[] IV { get; }
         public byte[] AuthenticationHash { get; }
         public byte[] Password { get; set; }
         private byte[] EncryptedPassword { get; }
