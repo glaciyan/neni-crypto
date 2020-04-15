@@ -77,12 +77,20 @@ namespace crypto.Core
             var name = Path.GetFileName(sourcePath);
             var newFile = new UserDataFile(UserDataHeader.Create(name, path));
 
-            CheckIfPlainNameAlreadyExists(newFile);
+            if (PlainNameAlreadyExists(newFile.Header.SecuredPlainName.PlainName))
+            {
+                FileAlreadyExists();
+            }
 
             var destinationPath = Path.Combine(EncryptedFolderPath, newFile.Header.TargetPath);
             await WriteDecrypted(newFile, sourcePath, destinationPath);
 
             DataFiles.Add(newFile);
+        }
+
+        private static void FileAlreadyExists()
+        {
+            throw new FileAlreadyExistsException("File already exists in Vault");
         }
 
         private async Task WriteDecrypted(UserDataFile file, string sourcePath, string destinationPath)
@@ -93,11 +101,17 @@ namespace crypto.Core
             file.Header.TargetAuthentication = hash;
         }
 
-        private void CheckIfPlainNameAlreadyExists(UserDataFile file)
+        private bool PlainNameAlreadyExists(string plainName)
         {
             foreach (var vltFile in DataFiles)
-                if (vltFile.Header.SecuredPlainName.PlainName == file.Header.SecuredPlainName.PlainName)
-                    throw new FileAlreadyExistsException("File is already in the vault");
+            {
+                if (vltFile.Header.SecuredPlainName.PlainName == plainName)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public async Task RemoveFile(UserDataFile file)
@@ -109,9 +123,23 @@ namespace crypto.Core
 
         public void MoveFile(UserDataFile file, string destination)
         {
-            if (file.Header.IsUnlocked) 
-
-            file.Move(destination);
+            var destSanitized = NPath.RemoveRelativeParts(destination);
+            var prevFileName = file.Header.SecuredPlainName.PlainName;
+            
+            if (PlainNameAlreadyExists(destSanitized))
+            {
+                FileAlreadyExists();
+            }
+            
+            file.Move(destSanitized);
+            
+            if (file.Header.IsUnlocked)
+            {
+                var srcPath = Path.Combine(UnlockedFolderPath, prevFileName);
+                var destPath = Path.Combine(UnlockedFolderPath, file.Header.SecuredPlainName.PlainName);
+                NDirectory.CreateMissingDirs(destPath);
+                File.Move(srcPath, destPath);
+            }
         }
 
         public async Task UpdateFileContent(UserDataFile header, string source)

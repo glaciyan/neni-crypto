@@ -62,5 +62,11 @@ namespace crypto.Core
 
             return dirInfo.GetDirectories().Length == 0 && dirInfo.GetFiles().Length == 0;
         }
+
+        public static void CreateMissingDirs(string destinationPath)
+        {
+            var dirInfo = new DirectoryInfo(NDirectory.GetPathParentDir(destinationPath));
+            if (!dirInfo.Exists) dirInfo.Create();
+        }
     }
 }

@@ -120,6 +120,7 @@ namespace crypto.Core.Tests
             vault.MoveFile(vault.DataFiles.First(), "other/files/DecryptingFile.dat");
 
             Assert.IsTrue(File.Exists($"{TestFolderPath}{vaultName}/Unlocked/other/files/DecryptingFile.dat"));
+            Assert.AreEqual(vault.DataFiles.First().Header.SecuredPlainName.PlainName, "other/files/DecryptingFile.dat");
         }
 
         [Test]
