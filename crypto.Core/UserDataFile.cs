@@ -2,11 +2,24 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using crypto.Core.Cryptography;
+using crypto.Core.Header;
 
 namespace crypto.Core
 {
-    public static class UserDataFile
+    public class UserDataFile
     {
+        public UserDataFile(UserDataHeader header)
+        {
+            Header = header;
+        }
+
+        public UserDataHeader Header { get; }
+        
+        public void Move(string destination)
+        {
+            Header.SecuredPlainName.PlainName = NPath.RemoveRelativeParts(destination);
+        }
+        
         public static async Task<byte[]> ExtractUserDataFile(string sourcePath, string destinationPath, byte[] key,
             byte[] iv)
         {

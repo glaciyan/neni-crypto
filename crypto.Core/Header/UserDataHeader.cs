@@ -35,11 +35,6 @@ namespace crypto.Core.Header
             return new UserDataHeader(plainFileName, pathToPlain);
         }
 
-        public void Move(string destination)
-        {
-            SecuredPlainName.PlainName = NPath.RemoveRelativeParts(destination);
-        }
-
         private void GenerateCipherFileIV()
         {
             TargetCipherIV = CryptoRNG.GetRandomBytes(AesSizes.IV);

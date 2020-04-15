@@ -23,7 +23,7 @@ namespace crypto.Core
             if (!keyWasCorrect) throw new CryptographicException("Password wasn't able to be verified");
 
             while (vaultFile.Position < vaultFile.Length)
-                result.ItemHeaders.Add(UserDataHeaderReader.ReadFrom(vaultFile, password));
+                result.DataFiles.Add(new UserDataFile(UserDataHeaderReader.ReadFrom(vaultFile, password)));
 
             result.CheckAndCorrectAllItemHeaders();
 
@@ -42,7 +42,7 @@ namespace crypto.Core
 
             using var binWriter = new BinaryWriter(fileStream);
 
-            foreach (var itemHeader in underlying.ItemHeaders) WriteItemHeader(fileStream, underlying, itemHeader);
+            foreach (var dataFile in underlying.DataFiles) WriteItemHeader(fileStream, underlying, dataFile.Header);
 
             underlying.Written = true;
         }

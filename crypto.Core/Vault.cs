@@ -25,7 +25,7 @@ namespace crypto.Core
 
         private string Name { get; }
         public VaultHeader Header { get; set; }
-        public ConcurrentBag<UserDataHeader> ItemHeaders { get; } = new ConcurrentBag<UserDataHeader>();
+        public ConcurrentBag<UserDataFile> DataFiles { get; } = new ConcurrentBag<UserDataFile>();
         public string VaultPath { get; set; }
         public string EncryptedFolderPath => Path.Combine(VaultPath, EncryptedFolderName);
         public string UnlockedFolderPath => Path.Combine(VaultPath, UnlockedFolderName);
@@ -75,83 +75,79 @@ namespace crypto.Core
             if (!File.Exists(sourcePath)) throw new FileNotFoundException("File not found", sourcePath);
 
             var name = Path.GetFileName(sourcePath);
-            var itemHeader = UserDataHeader.Create(name, path);
-            var destinationPath = Path.Combine(EncryptedFolderPath, itemHeader.TargetPath);
+            var newFile = new UserDataFile(UserDataHeader.Create(name, path));
 
-            CheckIfPlainNameAlreadyExists(itemHeader);
+            CheckIfPlainNameAlreadyExists(newFile);
 
-            await WriteDecrypted(itemHeader, sourcePath, destinationPath);
+            var destinationPath = Path.Combine(EncryptedFolderPath, newFile.Header.TargetPath);
+            await WriteDecrypted(newFile, sourcePath, destinationPath);
 
-            ItemHeaders.Add(itemHeader);
+            DataFiles.Add(newFile);
         }
 
-        private async Task WriteDecrypted(UserDataHeader userDataHeader, string sourcePath, string destinationPath)
+        private async Task WriteDecrypted(UserDataFile file, string sourcePath, string destinationPath)
         {
             var hash = await UserDataFile.WriteUserDataFile(sourcePath, destinationPath,
-                Header.MasterPassword.Password, userDataHeader.TargetCipherIV);
+                Header.MasterPassword.Password, file.Header.TargetCipherIV);
 
-            userDataHeader.TargetAuthentication = hash;
+            file.Header.TargetAuthentication = hash;
         }
 
-        private void CheckIfPlainNameAlreadyExists(UserDataHeader userDataHeader)
+        private void CheckIfPlainNameAlreadyExists(UserDataFile file)
         {
-            foreach (var header in ItemHeaders)
-                if (header.SecuredPlainName.PlainName == userDataHeader.SecuredPlainName.PlainName)
+            foreach (var vltFile in DataFiles)
+                if (vltFile.Header.SecuredPlainName.PlainName == file.Header.SecuredPlainName.PlainName)
                     throw new FileAlreadyExistsException("File is already in the vault");
         }
 
-        public async Task RemoveFile(UserDataHeader header)
+        public async Task RemoveFile(UserDataFile file)
         {
-            File.Delete(Path.Combine(EncryptedFolderPath, header.TargetPath));
-            if (header.IsUnlocked) await EliminateExtracted(header);
-            ItemHeaders.TryTake(out header);
+            File.Delete(Path.Combine(EncryptedFolderPath, file.Header.TargetPath));
+            if (file.Header.IsUnlocked) await EliminateExtracted(file);
+            DataFiles.TryTake(out file);
         }
 
-        public async Task MoveFile(UserDataHeader header, string destination)
+        public void MoveFile(UserDataFile file, string destination)
         {
-            var wasUnlocked = header.IsUnlocked;
+            if (file.Header.IsUnlocked) 
 
-            if (wasUnlocked) await EliminateExtracted(header);
-
-            header.Move(destination);
-
-            if (wasUnlocked) await ExtractFile(header);
+            file.Move(destination);
         }
 
-        public async Task UpdateFileContent(UserDataHeader header, string source)
+        public async Task UpdateFileContent(UserDataFile header, string source)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<bool> ExtractFile(UserDataHeader header)
+        public async Task<bool> ExtractFile(UserDataFile file)
         {
-            var encryptedSourcePath = Path.Combine(EncryptedFolderPath, header.TargetPath);
-            var unlockedTarget = Path.Combine(UnlockedFolderPath, header.SecuredPlainName.PlainName);
+            var encryptedSourcePath = Path.Combine(EncryptedFolderPath, file.Header.TargetPath);
+            var unlockedTarget = Path.Combine(UnlockedFolderPath, file.Header.SecuredPlainName.PlainName);
 
             var hash = await UserDataFile.ExtractUserDataFile(encryptedSourcePath, unlockedTarget,
-                Header.MasterPassword.Password, header.TargetCipherIV);
+                Header.MasterPassword.Password, file.Header.TargetCipherIV);
 
-            header.IsUnlocked = true;
+            file.Header.IsUnlocked = true;
 
-            return hash.ContentEqualTo(header.TargetAuthentication);
+            return hash.ContentEqualTo(file.Header.TargetAuthentication);
         }
 
-        public async Task EliminateExtracted(UserDataHeader header)
+        public async Task EliminateExtracted(UserDataFile file)
         {
-            if (!header.IsUnlocked) throw new FileNotUnlockedException();
-            var plainTextPath = header.SecuredPlainName.PlainName;
+            if (!file.Header.IsUnlocked) throw new FileNotUnlockedException();
+            var plainTextPath = file.Header.SecuredPlainName.PlainName;
 
             var path = Path.Combine(UnlockedFolderPath, plainTextPath);
 
             // TODO: try to search for the file in Unlocked and if found move it (careful with isUnlocked bool)
             if (!File.Exists(path))
             {
-                header.IsUnlocked = false;
+                file.Header.IsUnlocked = false;
                 throw new FileNotFoundException("Decrypted file was not found", plainTextPath);
             }
 
             await NFile.Purge(path);
-            header.IsUnlocked = false;
+            file.Header.IsUnlocked = false;
 
             var parentDir = Path.Combine(UnlockedFolderPath, NDirectory.GetPathParentDir(plainTextPath));
             NDirectory.DeleteDirIfEmpty(parentDir, UnlockedFolderName);
@@ -159,19 +155,19 @@ namespace crypto.Core
 
         public void CheckAndCorrectAllItemHeaders()
         {
-            foreach (var itemHeader in ItemHeaders) CorrectItemHeaderForUnlockedFile(itemHeader);
+            foreach (var itemHeader in DataFiles) FixItemHeaderForUnlockedFile(itemHeader);
         }
 
-        public void CorrectItemHeaderForUnlockedFile(UserDataHeader header)
+        private void FixItemHeaderForUnlockedFile(UserDataFile file)
         {
-            if (ItemHeaderMissingUnlockedFile(header)) header.IsUnlocked = false;
+            if (ItemHeaderIsMissingUnlockedFile(file)) file.Header.IsUnlocked = false;
         }
 
-        private bool ItemHeaderMissingUnlockedFile(UserDataHeader header)
+        private bool ItemHeaderIsMissingUnlockedFile(UserDataFile item)
         {
-            if (!header.IsUnlocked) return true;
+            if (!item.Header.IsUnlocked) return true;
 
-            return !File.Exists(Path.Combine(UnlockedFolderPath, header.SecuredPlainName.PlainName));
+            return !File.Exists(Path.Combine(UnlockedFolderPath, item.Header.SecuredPlainName.PlainName));
         }
     }
 }

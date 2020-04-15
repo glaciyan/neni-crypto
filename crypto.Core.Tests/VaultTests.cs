@@ -87,16 +87,16 @@ namespace crypto.Core.Tests
             {
                 var paths = new VaultReadingPaths($"{TestFolderPath}{vaultName}/");
                 using var vault = VaultReaderWriter.ReadFromConfig(paths, key);
-                var hashMatches = await vault.ExtractFile(vault.ItemHeaders.First());
+                var hashMatches = await vault.ExtractFile(vault.DataFiles.First());
                 Assert.IsTrue(hashMatches);
 
-                Assert.IsTrue(vault.ItemHeaders.First().IsUnlocked);
+                Assert.IsTrue(vault.DataFiles.First().Header.IsUnlocked);
 
-                await vault.EliminateExtracted(vault.ItemHeaders.First());
-                Assert.IsFalse(vault.ItemHeaders.First().IsUnlocked);
+                await vault.EliminateExtracted(vault.DataFiles.First());
+                Assert.IsFalse(vault.DataFiles.First().Header.IsUnlocked);
 
-                await vault.ExtractFile(vault.ItemHeaders.First());
-                Assert.IsTrue(vault.ItemHeaders.First().IsUnlocked);
+                await vault.ExtractFile(vault.DataFiles.First());
+                Assert.IsTrue(vault.DataFiles.First().Header.IsUnlocked);
             }
 
             var decryptedHash = GetFileHash(unlockedPath);
@@ -115,9 +115,9 @@ namespace crypto.Core.Tests
             using var vault = Vault.Create(vaultName, key, TestFolderPath);
             await vault.AddFileAsync(testFile);
 
-            await vault.ExtractFile(vault.ItemHeaders.First());
+            await vault.ExtractFile(vault.DataFiles.First());
 
-            await vault.MoveFile(vault.ItemHeaders.First(), "other/files/DecryptingFile.dat");
+            vault.MoveFile(vault.DataFiles.First(), "other/files/DecryptingFile.dat");
 
             Assert.IsTrue(File.Exists($"{TestFolderPath}{vaultName}/Unlocked/other/files/DecryptingFile.dat"));
         }
@@ -133,7 +133,7 @@ namespace crypto.Core.Tests
             using var vault = Vault.Create(vaultName, key, TestFolderPath);
             await vault.AddFileAsync(testFile);
 
-            await vault.RemoveFile(vault.ItemHeaders.First());
+            await vault.RemoveFile(vault.DataFiles.First());
         }
 
         [Test]
