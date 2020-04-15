@@ -113,6 +113,11 @@ namespace crypto.Core
             if (wasUnlocked) await ExtractFile(header);
         }
 
+        public async Task UpdateFileContent(ItemHeader header, string destination)
+        {
+            __
+        }
+
         public async Task<bool> ExtractFile(ItemHeader header)
         {
             var encryptedSourcePath = Path.Combine(EncryptedFolderPath, header.TargetPath);
