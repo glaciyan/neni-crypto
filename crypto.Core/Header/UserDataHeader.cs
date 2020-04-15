@@ -4,15 +4,15 @@ using crypto.Core.Cryptography;
 
 namespace crypto.Core.Header
 {
-    public class ItemHeader
+    public class UserDataHeader
     {
         private const int CipherTextNameLength = 16;
 
-        public ItemHeader()
+        public UserDataHeader()
         {
         }
 
-        private ItemHeader(string fileName, string plainTextParentDirPath = "")
+        private UserDataHeader(string fileName, string plainTextParentDirPath = "")
         {
             Debug.Assert(fileName != null, nameof(fileName) + " != null");
             var plainPath = Path.Combine(plainTextParentDirPath.Replace('\\', '/'), Path.GetFileName(fileName));
@@ -30,9 +30,9 @@ namespace crypto.Core.Header
 
         public bool IsUnlocked { get; set; }
 
-        public static ItemHeader Create(string plainFileName, string pathToPlain = "")
+        public static UserDataHeader Create(string plainFileName, string pathToPlain = "")
         {
-            return new ItemHeader(plainFileName, pathToPlain);
+            return new UserDataHeader(plainFileName, pathToPlain);
         }
 
         public void Move(string destination)

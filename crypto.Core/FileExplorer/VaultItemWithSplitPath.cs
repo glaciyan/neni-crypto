@@ -5,16 +5,16 @@ namespace crypto.Core.FileExplorer
 {
     public class VaultItemWithSplitPath
     {
-        public VaultItemWithSplitPath(ItemHeader itemHeader)
+        public VaultItemWithSplitPath(UserDataHeader userDataHeader)
         {
-            ItemHeader = itemHeader;
-            Path = itemHeader.SecuredPlainName.PlainName;
-            SplitPath = ItemHeader.SecuredPlainName.PlainName.Replace('\\', '/')
+            UserDataHeader = userDataHeader;
+            Path = userDataHeader.SecuredPlainName.PlainName;
+            SplitPath = UserDataHeader.SecuredPlainName.PlainName.Replace('\\', '/')
                 .Split('/', StringSplitOptions.RemoveEmptyEntries);
         }
 
 
-        public ItemHeader ItemHeader { get; }
+        public UserDataHeader UserDataHeader { get; }
         public string Path { get; }
         public string[] SplitPath { get; }
     }

@@ -4,12 +4,12 @@ using crypto.Core.Cryptography;
 
 namespace crypto.Core.Header
 {
-    public static class ItemHeaderReader
+    public static class UserDataHeaderReader
     {
-        public static ItemHeader ReadFrom(Stream source, byte[] key)
+        public static UserDataHeader ReadFrom(Stream source, byte[] key)
         {
             using var binReader = new BinaryReader(source, Encoding.Unicode, true);
-            var result = new ItemHeader();
+            var result = new UserDataHeader();
 
             // info from plaintext
             var plainIV = binReader.ReadBytes(AesSizes.IV);

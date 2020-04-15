@@ -23,7 +23,7 @@ namespace crypto.Core
             if (!keyWasCorrect) throw new CryptographicException("Password wasn't able to be verified");
 
             while (vaultFile.Position < vaultFile.Length)
-                result.ItemHeaders.Add(ItemHeaderReader.ReadFrom(vaultFile, password));
+                result.ItemHeaders.Add(UserDataHeaderReader.ReadFrom(vaultFile, password));
 
             result.CheckAndCorrectAllItemHeaders();
 
@@ -53,9 +53,9 @@ namespace crypto.Core
             headerWriter.WriteTo(fileStream, key);
         }
 
-        private static void WriteItemHeader(Stream fileStream, Vault underlying, ItemHeader itemHeader)
+        private static void WriteItemHeader(Stream fileStream, Vault underlying, UserDataHeader userDataHeader)
         {
-            var itemHeaderWriter = new ItemHeaderWriter(itemHeader);
+            var itemHeaderWriter = new UserDataHeaderWriter(userDataHeader);
             itemHeaderWriter.WriteTo(fileStream, underlying.Header.MasterPassword.Password);
         }
     }

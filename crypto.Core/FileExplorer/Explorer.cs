@@ -11,14 +11,14 @@ namespace crypto.Core.FileExplorer
 
     public class Explorer
     {
-        public Explorer(params ItemHeader[] headers)
+        public Explorer(params UserDataHeader[] headers)
         {
             foreach (var path in headers) AddFile(path);
         }
 
         private List<VaultItemWithSplitPath> ItemHeaders { get; } = new List<VaultItemWithSplitPath>();
 
-        public void AddFile(ItemHeader header)
+        public void AddFile(UserDataHeader header)
         {
             ItemHeaders.Add(new VaultItemWithSplitPath(header));
         }

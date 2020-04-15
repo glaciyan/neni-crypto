@@ -3,11 +3,11 @@ using System.Text;
 
 namespace crypto.Core.Header
 {
-    public class ItemHeaderWriter
+    public class UserDataHeaderWriter
     {
-        private readonly ItemHeader _underlying;
+        private readonly UserDataHeader _underlying;
 
-        public ItemHeaderWriter(ItemHeader underlying)
+        public UserDataHeaderWriter(UserDataHeader underlying)
         {
             _underlying = underlying;
         }
