@@ -14,12 +14,12 @@ namespace crypto.Core
         }
 
         public UserDataHeader Header { get; }
-        
+
         public void Move(string destination)
         {
             Header.SecuredPlainName.PlainName = NPath.RemoveRelativeParts(destination);
         }
-        
+
         public static async Task<byte[]> ExtractUserDataFile(string sourcePath, string destinationPath, byte[] key,
             byte[] iv)
         {

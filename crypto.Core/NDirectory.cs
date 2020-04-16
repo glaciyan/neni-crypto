@@ -65,7 +65,7 @@ namespace crypto.Core
 
         public static void CreateMissingDirs(string destinationPath)
         {
-            var dirInfo = new DirectoryInfo(NDirectory.GetPathParentDir(destinationPath));
+            var dirInfo = new DirectoryInfo(GetPathParentDir(destinationPath));
             if (!dirInfo.Exists) dirInfo.Create();
         }
     }

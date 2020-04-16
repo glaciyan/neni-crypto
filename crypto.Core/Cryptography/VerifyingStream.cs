@@ -1,6 +1,5 @@
 using System.Buffers;
 using System.IO;
-using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 
@@ -17,11 +16,11 @@ namespace crypto.Core.Cryptography
 
             var buffer = ArrayPool<byte>.Shared.Rent(BufferSize);
             var currentBufferLength = buffer.Length;
-            
+
             try
             {
                 var lastBufferSize = 0;
-                
+
                 int readBytes;
                 while ((readBytes = await source.ReadAsync(buffer)) != 0)
                 {
@@ -32,7 +31,7 @@ namespace crypto.Core.Cryptography
                     else
                         lastBufferSize = readBytes;
                 }
-                
+
                 sha.TransformFinalBlock(buffer, 0, lastBufferSize);
             }
             finally

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using crypto.Core.Exceptions;
@@ -67,10 +66,7 @@ namespace crypto.Core
             var name = Path.GetFileName(sourcePath);
             var newFile = new UserDataFile(UserDataHeader.Create(name, path));
 
-            if (PlainNameAlreadyExists(newFile.Header.SecuredPlainName.PlainName))
-            {
-                FileAlreadyExists();
-            }
+            if (PlainNameAlreadyExists(newFile.Header.SecuredPlainName.PlainName)) FileAlreadyExists();
 
             var destinationPath = Path.Combine(EncryptedFolderPath, newFile.Header.TargetPath);
             await WriteDecrypted(newFile, sourcePath, destinationPath);
@@ -84,7 +80,7 @@ namespace crypto.Core
             if (file.Header.IsUnlocked) await EliminateExtracted(file);
             UserDataFiles.TryTake(out file);
         }
-        
+
         public void RenameFile(UserDataFile file, string name)
         {
             if (name.Contains("/")) throw new NotANameException("Argument isn't a name");
@@ -96,14 +92,11 @@ namespace crypto.Core
         {
             var relativePath = NPath.RemoveRelativeParts(destination);
             var prevFileName = file.Header.SecuredPlainName.PlainName;
-            
-            if (PlainNameAlreadyExists(relativePath))
-            {
-                FileAlreadyExists();
-            }
-            
+
+            if (PlainNameAlreadyExists(relativePath)) FileAlreadyExists();
+
             file.Move(relativePath);
-            
+
             if (file.Header.IsUnlocked)
             {
                 var srcPath = Path.Combine(UnlockedFolderPath, prevFileName);
@@ -116,22 +109,19 @@ namespace crypto.Core
         public async Task<ExtractStatus> ExtractFile(UserDataFile file)
         {
             FixItemHeaderForUnlockedFile(file);
-            
+
             var encryptedSourcePath = Path.Combine(EncryptedFolderPath, file.Header.TargetPath);
             var unlockedTarget = UserDataPathToUnlocked(file);
 
-            if (file.Header.IsUnlocked)
-            {
-                return ExtractStatus.Duplicate;
-            }
-            
+            if (file.Header.IsUnlocked) return ExtractStatus.Duplicate;
+
             var hash = await UserDataFile.ExtractUserDataFile(encryptedSourcePath, unlockedTarget,
                 Header.MasterPassword.Password, file.Header.TargetCipherIV);
 
             var now = DateTime.Now;
             File.SetLastWriteTime(encryptedSourcePath, now);
             File.SetLastWriteTime(unlockedTarget, now);
-            
+
             file.Header.IsUnlocked = true;
 
             return hash.ContentEqualTo(file.Header.TargetAuthentication) ? ExtractStatus.Ok : ExtractStatus.HashNoMatch;
@@ -162,21 +152,17 @@ namespace crypto.Core
             var parentDir = Path.Combine(UnlockedFolderPath, NDirectory.GetPathParentDir(plainTextPath));
             NDirectory.DeleteDirIfEmpty(parentDir, UnlockedFolderName);
         }
-        
+
         public async Task UpdateFileContent(UserDataFile header)
         {
             throw new NotImplementedException();
         }
-        
+
         public UserDataFile GetFileByPath(string path)
         {
             foreach (var file in UserDataFiles)
-            {
                 if (file.Header.SecuredPlainName.PlainName == path)
-                {
                     return file;
-                }
-            }
 
             return null;
         }
@@ -185,7 +171,7 @@ namespace crypto.Core
         {
             foreach (var itemHeader in UserDataFiles) FixItemHeaderForUnlockedFile(itemHeader);
         }
-        
+
         private static void PrepareVault(Vault vaultFile)
         {
             Directory.CreateDirectory(vaultFile.VaultPath);
@@ -193,7 +179,7 @@ namespace crypto.Core
             Directory.CreateDirectory(vaultFile.UnlockedFolderPath);
             File.Create(vaultFile.VaultFilePath).Dispose();
         }
-        
+
         private static void FileAlreadyExists()
         {
             throw new FileAlreadyExistsException("File already exists in Vault");
@@ -210,12 +196,8 @@ namespace crypto.Core
         private bool PlainNameAlreadyExists(string plainName)
         {
             foreach (var vltFile in UserDataFiles)
-            {
                 if (vltFile.Header.SecuredPlainName.PlainName == plainName)
-                {
                     return true;
-                }
-            }
 
             return false;
         }

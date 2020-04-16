@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 using crypto.Core;
 using crypto.Core.Extension;
@@ -27,28 +26,22 @@ namespace crypto.Desktop.Cnsl.Commands
             var manipulatedFiles = await ExtractAllFiles(vault);
 
             foreach (var manipulatedFile in manipulatedFiles)
-            {
                 Notifier.Error($"File: {manipulatedFile.Header.SecuredPlainName.PlainName} " +
                                "has been altered, be careful with this file");
-            }
-            
+
             Notifier.Success("Vault unlocked.");
         }
 
         private static async Task<List<UserDataFile>> ExtractAllFiles(Vault vlt)
         {
             var manipulatedFiles = new List<UserDataFile>();
-        
+
             foreach (var file in vlt.UserDataFiles)
-            {
                 try
                 {
                     var status = await vlt.ExtractFile(file);
 
-                    if (status == ExtractStatus.HashNoMatch)
-                    {
-                        manipulatedFiles.Add(file);
-                    }
+                    if (status == ExtractStatus.HashNoMatch) manipulatedFiles.Add(file);
                 }
                 catch (Exception e)
                 {
@@ -56,8 +49,7 @@ namespace crypto.Desktop.Cnsl.Commands
                     Log.Error(e.ToString());
                     throw;
                 }
-            }
-        
+
             return manipulatedFiles;
         }
     }

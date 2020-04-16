@@ -43,9 +43,9 @@ namespace crypto.Desktop.Cnsl.Commands
             {
                 foreach (var file in NDirectory.GetAllFilesRecursive(ToAddPath))
                 {
-                    Log.Debug($"Adding file: {file}, with size {(new FileInfo(file)).Length}");
+                    Log.Debug($"Adding file: {file}, with size {new FileInfo(file).Length}");
                     var pathToFile = NPath.GetRelativePathToFile(ToAddPath, file);
-                    
+
                     try
                     {
                         await vault.AddFileAsync(file, pathToFile);
