@@ -2,7 +2,7 @@ using System;
 
 namespace crypto.Desktop.Cnsl
 {
-    public static class FilesProgressBar
+    public static class ProgressBar
     {
         private static readonly object Locker = new object();
         

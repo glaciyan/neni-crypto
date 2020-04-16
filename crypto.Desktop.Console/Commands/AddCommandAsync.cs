@@ -42,7 +42,7 @@ namespace crypto.Desktop.Cnsl.Commands
             else if (Directory.Exists(ToAddPath))
             {
                 var progress = new Progress<ProgressReport>();
-                progress.ProgressChanged += FilesProgressBar.PrintProgressBar;
+                progress.ProgressChanged += ProgressBar.PrintProgressBar;
                 
                 await AddDirectory(vault, progress);
             }

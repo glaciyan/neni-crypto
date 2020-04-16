@@ -21,7 +21,7 @@ namespace crypto.Desktop.Cnsl.Commands
             using var vault = StandardVault.Generate(VaultPath);
 
             var progress = new Progress<ProgressReport>();
-            progress.ProgressChanged += FilesProgressBar.PrintProgressBar;
+            progress.ProgressChanged += ProgressBar.PrintProgressBar;
             
             var manipulatedFiles = await ExtractAllFiles(vault, progress);
 
