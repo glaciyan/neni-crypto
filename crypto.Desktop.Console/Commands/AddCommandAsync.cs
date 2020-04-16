@@ -56,7 +56,6 @@ namespace crypto.Desktop.Cnsl.Commands
 
             await allFiles.ParallelForEachAsync(async file =>
             {
-                Log.Debug($"Adding file: {file}, with size {new FileInfo(file).Length}");
                 var pathToFile = NPath.GetRelativePathToFile(ToAddPath, file);
 
                 try

@@ -10,15 +10,16 @@ namespace crypto.Desktop.Cnsl
         private static async Task Main(string[] args)
         {
             // logger setup
-            #if DEBUG
+            //#if DEBUG
             Log.Logger = new LoggerConfiguration().MinimumLevel.Debug().WriteTo.Console().CreateLogger();
-            #endif
+            //#endif
             //parse arguments
+            
+            Console.CursorVisible = false;
+            
             try
             {
-                Console.CursorVisible = false;
                 await CommandLineArgumentParser.ParseConfig(args).Run();
-                Console.CursorVisible = true;
             }
             catch (NoConsoleArgumentException)
             {
@@ -28,6 +29,10 @@ namespace crypto.Desktop.Cnsl
             {
                 Log.Error(e.ToString());
                 Notifier.Error($"Something went wrong: {e.Message}");
+            }
+            finally
+            {
+                Console.CursorVisible = true;
             }
         }
     }

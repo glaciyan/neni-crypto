@@ -17,6 +17,7 @@ namespace crypto.Core
 
         public void Move(string destination)
         {
+            Header.SecuredPlainName.GenerateIV();
             Header.SecuredPlainName.PlainName = NPath.RemoveRelativeParts(destination);
         }
 

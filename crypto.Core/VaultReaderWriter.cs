@@ -44,6 +44,8 @@ namespace crypto.Core
             using var binWriter = new BinaryWriter(fileStream);
 
             foreach (var dataFile in underlying.UserDataFiles) WriteItemHeader(fileStream, underlying, dataFile.Header);
+
+            fileStream.SetLength(fileStream.Position);
         }
 
         private static void WriteHeader(Stream fileStream, Vault underlying, byte[] key)
