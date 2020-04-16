@@ -12,7 +12,9 @@ namespace crypto.Desktop.Cnsl
             lock (Locker)
             {
                 Console.CursorLeft = 0;
-                Console.Write($"Progress: {e.ModifiedFiles}/{e.TotalFiles} {GetBar(e.ModifiedFiles, e.TotalFiles)} Failed: {e.FailedFiles}");
+                Console.Write($"Progress: {e.ModifiedFiles}/{e.TotalFiles}");
+                if (Console.CursorLeft < 30) Console.CursorLeft = 30;
+                Console.Write($"{GetBar(e.ModifiedFiles, e.TotalFiles)} Failed: {e.FailedFiles}");
             }
         }
 
@@ -33,6 +35,8 @@ namespace crypto.Desktop.Cnsl
                     builder.Append(". ");
                 }
             }
+
+            builder.Append("]");
 
             return builder.ToString();
         }
