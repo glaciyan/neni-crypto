@@ -18,7 +18,7 @@ namespace crypto.Desktop.Cnsl.Commands
 
         public override async Task Run()
         {
-            var key = PasswordPrompt.PromptPassword().ApplySHA256();
+            var key = PasswordPrompt.PromptPasswordAsHash();
 
             var paths = new VaultPaths(VaultPath);
             using var vault = Vault.Open(paths, key);

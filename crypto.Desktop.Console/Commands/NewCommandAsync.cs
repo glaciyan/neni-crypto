@@ -39,7 +39,7 @@ namespace crypto.Desktop.Cnsl.Commands
                 if (!NDirectory.IsDirectoryEmpty(folderPath))
                     throw new DirectoryNotEmptyException("The directory with the vault name is not empty");
 
-                var key = PasswordPrompt.PromptPasswordWithConfirmation().ApplySHA256();
+                var key = PasswordPrompt.PromptPasswordWithConfirmationAsHash();
 
                 using var vault = Vault.Create(vaultName, key, vaultPath);
 

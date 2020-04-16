@@ -31,7 +31,7 @@ namespace crypto.Desktop.Cnsl.Commands
             else
                 paths = new VaultPaths(VaultPath);
 
-            var key = PasswordPrompt.PromptPassword().ApplySHA256();
+            var key = PasswordPrompt.PromptPasswordAsHash();
             using var vault = Vault.Open(paths, key);
 
             if (File.Exists(ToAddPath))

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using crypto.Core.Extension;
 
 namespace crypto.Desktop.Cnsl
 {
@@ -25,6 +26,9 @@ namespace crypto.Desktop.Cnsl
             return new string(password.ToArray());
         }
 
+        public static byte[] PromptPasswordAsHash(string? promptMessage = null) =>
+            PromptPassword(promptMessage).Hash();
+
         public static string PromptPasswordWithConfirmation()
         {
             var pw = PromptPassword();
@@ -35,5 +39,10 @@ namespace crypto.Desktop.Cnsl
 
             return pw;
         }
+
+        public static byte[] PromptPasswordWithConfirmationAsHash() =>
+            PromptPasswordWithConfirmation().Hash();
+
+        private static byte[] Hash(this string s) => s.ApplySHA256();
     }
 }
