@@ -14,8 +14,6 @@ namespace crypto.Desktop.Cnsl
             Log.Logger = new LoggerConfiguration().MinimumLevel.Debug().WriteTo.Console().CreateLogger();
             #endif
             
-            Console.CursorVisible = false;
-            
             try
             {
                 await CommandLineArgumentParser.ParseConfig(args).Run();
@@ -28,10 +26,6 @@ namespace crypto.Desktop.Cnsl
             {
                 Log.Error(e.ToString());
                 Notifier.Error($"Something went wrong: {e.Message}");
-            }
-            finally
-            {
-                Console.CursorVisible = true;
             }
         }
     }
