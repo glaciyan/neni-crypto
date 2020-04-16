@@ -2,9 +2,9 @@ using System.IO;
 
 namespace crypto.Core
 {
-    public class VaultReadingPaths
+    public class VaultPaths
     {
-        public VaultReadingPaths(string folderPath)
+        public VaultPaths(string folderPath)
         {
             FullVaultFolderPath = Path.GetFullPath(folderPath);
             var fullPathDirInfo = new DirectoryInfo(FullVaultFolderPath);
