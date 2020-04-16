@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using crypto.Core;
 using crypto.Core.Extension;
@@ -21,6 +22,7 @@ namespace crypto.Desktop.Cnsl.Commands
 
                 var paths = new VaultReadingPaths(VaultPath);
                 var vault = Vault.Open(paths, key);
+                throw new NotImplementedException();
             });
         }
     }
