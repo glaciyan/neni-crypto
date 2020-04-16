@@ -1,5 +1,6 @@
 using System.Buffers;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 
@@ -15,19 +16,24 @@ namespace crypto.Core.Cryptography
             using var sha = SHA256.Create();
 
             var buffer = ArrayPool<byte>.Shared.Rent(BufferSize);
-
+            var currentBufferLength = buffer.Length;
+            
             try
             {
+                var lastBufferSize = 0;
+                
                 int readBytes;
                 while ((readBytes = await source.ReadAsync(buffer)) != 0)
                 {
                     await destination.WriteAsync(buffer, 0, readBytes);
-                    
-                    if (readBytes >= BufferSize)
+
+                    if (readBytes == currentBufferLength)
                         sha.TransformBlock(buffer, 0, buffer.Length, buffer, 0);
                     else
-                        sha.TransformFinalBlock(buffer, 0, readBytes);
+                        lastBufferSize = readBytes;
                 }
+                
+                sha.TransformFinalBlock(buffer, 0, lastBufferSize);
             }
             finally
             {

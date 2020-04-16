@@ -9,13 +9,29 @@ namespace crypto.Core.Tests
     public class VerifyingStreamTests
     {
         [Test]
-        public async Task WriteBigData()
+        public async Task WriteFittingData()
         {
-            // set own file of 30MB+
-            var serverFile = Path.Combine(Preparations.TestDataPath, "server.jar");
+            await TestFile("gfx.cfg");
+        }
+
+        [Test]
+        public async Task WriteBitData()
+        {
+            await TestFile("server.jar");
+        }
+        
+        [Test]
+        public async Task WriteOtherData()
+        {
+            await TestFile("test.cfg");
+        }
+
+        private static async Task TestFile(string fileName)
+        {
+            var serverFile = Path.Combine(Preparations.TestDataPath, fileName);
             await using var sourceFs = new FileStream(serverFile, FileMode.Open, FileAccess.Read);
 
-            var dest = Path.Combine(Preparations.TestFolderPath, "server.jar");
+            var dest = Path.Combine(Preparations.TestFolderPath, fileName);
             await using var destFs = new FileStream(dest, FileMode.Create, FileAccess.Write);
 
             await sourceFs.CopyToCreateHashAsync(destFs);
