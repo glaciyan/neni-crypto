@@ -10,11 +10,11 @@ namespace crypto.Core
         //        Reading
         //++++++++++++++++++++++++++++
 
-        public static Vault ReadFromConfig(VaultReadingPaths readingPaths, byte[] key)
+        public static Vault ReadFromConfig(VaultPaths paths, byte[] key)
         {
-            var result = new Vault(readingPaths.Name, key) {VaultPath = readingPaths.FullVaultFolderPath};
+            var result = new Vault(paths.Name, key) {VaultPath = paths.FullVaultFolderPath};
 
-            using var vaultFile = new FileStream(readingPaths.VaultFilePath, FileMode.Open, FileAccess.Read);
+            using var vaultFile = new FileStream(paths.VaultFilePath, FileMode.Open, FileAccess.Read);
 
             result.Header = VaultHeaderReader.ReadFrom(vaultFile);
 
@@ -23,7 +23,7 @@ namespace crypto.Core
             if (!keyWasCorrect) throw new CryptographicException("Password wasn't able to be verified");
 
             while (vaultFile.Position < vaultFile.Length)
-                result.DataFiles.Add(new UserDataFile(UserDataHeaderReader.ReadFrom(vaultFile, password)));
+                result.UserDataFiles.Add(new UserDataFile(UserDataHeaderReader.ReadFrom(vaultFile, password)));
 
             result.CheckAndCorrectAllItemHeaders();
 
@@ -42,9 +42,7 @@ namespace crypto.Core
 
             using var binWriter = new BinaryWriter(fileStream);
 
-            foreach (var dataFile in underlying.DataFiles) WriteItemHeader(fileStream, underlying, dataFile.Header);
-
-            underlying.Written = true;
+            foreach (var dataFile in underlying.UserDataFiles) WriteItemHeader(fileStream, underlying, dataFile.Header);
         }
 
         private static void WriteHeader(Stream fileStream, Vault underlying, byte[] key)

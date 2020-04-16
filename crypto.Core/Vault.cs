@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using crypto.Core.Exceptions;
@@ -20,8 +21,6 @@ namespace crypto.Core
             Name = name;
             _key = key;
         }
-
-        public bool Written { get; internal set; }
 
         private string Name { get; }
         public VaultHeader Header { get; set; }
