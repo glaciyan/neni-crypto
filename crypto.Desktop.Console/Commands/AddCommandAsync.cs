@@ -25,11 +25,11 @@ namespace crypto.Desktop.Cnsl.Commands
 
         public override async Task Run()
         {
-            VaultReadingPaths paths;
+            VaultPaths paths;
             if (VaultPath == null)
-                paths = new VaultReadingPaths(Environment.CurrentDirectory);
+                paths = new VaultPaths(Environment.CurrentDirectory);
             else
-                paths = new VaultReadingPaths(VaultPath);
+                paths = new VaultPaths(VaultPath);
 
             var key = PasswordPrompt.PromptPassword().ApplySHA256();
             using var vault = Vault.Open(paths, key);
@@ -43,8 +43,17 @@ namespace crypto.Desktop.Cnsl.Commands
             {
                 foreach (var file in NDirectory.GetAllFilesRecursive(ToAddPath))
                 {
+                    Log.Debug($"Adding file: {file}, with size {(new FileInfo(file)).Length}");
                     var pathToFile = NPath.GetRelativePathToFile(ToAddPath, file);
-                    await vault.AddFileAsync(file, pathToFile);
+                    
+                    try
+                    {
+                        await vault.AddFileAsync(file, pathToFile);
+                    }
+                    catch (Exception e)
+                    {
+                        Notifier.Error($"Error with file {file}: {e.Message}");
+                    }
                 }
 
                 Notifier.Success($"Added directory {ToAddPath} to vault");
