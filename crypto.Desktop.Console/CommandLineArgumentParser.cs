@@ -24,6 +24,10 @@ namespace crypto.Desktop.Cnsl
                 case "-pw":
                     PasswordPrompt.ArgumentPw = arguments.NextOrNull();
                     break;
+
+                    default:
+                        arguments.CurrentIndex--;
+                        break;
             }
 
             var command = arguments.NextOrNull();
