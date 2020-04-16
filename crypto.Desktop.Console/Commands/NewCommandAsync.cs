@@ -2,7 +2,6 @@
 using System.IO;
 using System.Threading.Tasks;
 using crypto.Core;
-using crypto.Core.Extension;
 using Serilog;
 
 namespace crypto.Desktop.Cnsl.Commands

@@ -26,6 +26,7 @@ namespace crypto.Core
                 result.UserDataFiles.Add(new UserDataFile(UserDataHeaderReader.ReadFrom(vaultFile, password)));
 
             result.CheckAndCorrectAllItemHeaders();
+            // TODO: check if cipher files exists, if not remove that file
 
             return result;
         }

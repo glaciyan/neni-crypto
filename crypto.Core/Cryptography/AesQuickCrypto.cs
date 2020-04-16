@@ -14,7 +14,7 @@ namespace crypto.Core.Cryptography
 
             // create aes with preferred settings
             _aes = Aes.Create();
-            _aes.KeySize = 256;
+            _aes!.KeySize = 256;
             _aes.Key = keyIvPair1.Key;
             _aes.IV = keyIvPair1.IV;
             _aes.Padding = PaddingMode.PKCS7;
