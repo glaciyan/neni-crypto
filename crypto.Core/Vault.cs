@@ -60,14 +60,6 @@ namespace crypto.Core
             return VaultReaderWriter.ReadFromConfig(folderPath, key);
         }
 
-        private static void PrepareVault(Vault vaultFile)
-        {
-            Directory.CreateDirectory(vaultFile.VaultPath);
-            Directory.CreateDirectory(vaultFile.EncryptedFolderPath);
-            Directory.CreateDirectory(vaultFile.UnlockedFolderPath);
-            File.Create(vaultFile.VaultFilePath).Dispose();
-        }
-
         public async Task AddFileAsync(string sourcePath, string path = "")
         {
             if (!File.Exists(sourcePath)) throw new FileNotFoundException("File not found", sourcePath);
@@ -84,32 +76,6 @@ namespace crypto.Core
             await WriteDecrypted(newFile, sourcePath, destinationPath);
 
             UserDataFiles.Add(newFile);
-        }
-
-        private static void FileAlreadyExists()
-        {
-            throw new FileAlreadyExistsException("File already exists in Vault");
-        }
-
-        private async Task WriteDecrypted(UserDataFile file, string sourcePath, string destinationPath)
-        {
-            var hash = await UserDataFile.WriteUserDataFile(sourcePath, destinationPath,
-                Header.MasterPassword.Password, file.Header.TargetCipherIV);
-
-            file.Header.TargetAuthentication = hash;
-        }
-
-        private bool PlainNameAlreadyExists(string plainName)
-        {
-            foreach (var vltFile in UserDataFiles)
-            {
-                if (vltFile.Header.SecuredPlainName.PlainName == plainName)
-                {
-                    return true;
-                }
-            }
-
-            return false;
         }
 
         public async Task RemoveFile(UserDataFile file)
@@ -197,7 +163,7 @@ namespace crypto.Core
             NDirectory.DeleteDirIfEmpty(parentDir, UnlockedFolderName);
         }
         
-        public async Task UpdateFileContent(UserDataFile header, string source)
+        public async Task UpdateFileContent(UserDataFile header)
         {
             throw new NotImplementedException();
         }
@@ -218,6 +184,40 @@ namespace crypto.Core
         public void CheckAndCorrectAllItemHeaders()
         {
             foreach (var itemHeader in UserDataFiles) FixItemHeaderForUnlockedFile(itemHeader);
+        }
+        
+        private static void PrepareVault(Vault vaultFile)
+        {
+            Directory.CreateDirectory(vaultFile.VaultPath);
+            Directory.CreateDirectory(vaultFile.EncryptedFolderPath);
+            Directory.CreateDirectory(vaultFile.UnlockedFolderPath);
+            File.Create(vaultFile.VaultFilePath).Dispose();
+        }
+        
+        private static void FileAlreadyExists()
+        {
+            throw new FileAlreadyExistsException("File already exists in Vault");
+        }
+
+        private async Task WriteDecrypted(UserDataFile file, string sourcePath, string destinationPath)
+        {
+            var hash = await UserDataFile.WriteUserDataFile(sourcePath, destinationPath,
+                Header.MasterPassword.Password, file.Header.TargetCipherIV);
+
+            file.Header.TargetAuthentication = hash;
+        }
+
+        private bool PlainNameAlreadyExists(string plainName)
+        {
+            foreach (var vltFile in UserDataFiles)
+            {
+                if (vltFile.Header.SecuredPlainName.PlainName == plainName)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private void FixItemHeaderForUnlockedFile(UserDataFile file)
