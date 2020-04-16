@@ -22,7 +22,7 @@ namespace crypto.Desktop.Cnsl.Commands
             var key = PasswordPrompt.PromptPassword().ApplySHA256();
 
             var paths = new VaultPaths(VaultPath);
-            var vault = Vault.Open(paths, key);
+            using var vault = Vault.Open(paths, key);
 
             var manipulatedFiles = await ExtractAllFiles(vault);
 
@@ -41,21 +41,21 @@ namespace crypto.Desktop.Cnsl.Commands
         
             foreach (var file in vlt.UserDataFiles)
             {
-                // try
-                // {
-                var hashMatches = await vlt.ExtractFile(file);
-            
-                if (!hashMatches)
+                try
                 {
-                    manipulatedFiles.Add(file);
+                    var hashMatches = await vlt.ExtractFile(file);
+            
+                    if (!hashMatches ?? false)
+                    {
+                        manipulatedFiles.Add(file);
+                    }
                 }
-                // }
-                // catch (Exception e)
-                // {
-                //     Notifier.Error($"Error unlocking file {file.Header.SecuredPlainName.PlainName}: {e.Message}");
-                //     Log.Error(e.ToString());
-                //     throw;
-                // }
+                catch (Exception e)
+                {
+                    Notifier.Error($"Error unlocking file {file.Header.SecuredPlainName.PlainName}: {e.Message}");
+                    Log.Error(e.ToString());
+                    throw;
+                }
             }
         
             return manipulatedFiles;

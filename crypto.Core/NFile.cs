@@ -1,5 +1,6 @@
 using System.Buffers;
 using System.IO;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using crypto.Core.Cryptography;
 using crypto.Core.Extension;
@@ -26,6 +27,14 @@ namespace crypto.Core
             {
                 ArrayPool<byte>.Shared.Return(zeroBuffer);
             }
+        }
+
+        public static byte[] GetHash(string path)
+        {
+            using var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read);
+            using var sha256 = SHA256.Create();
+
+            return sha256.ComputeHash(fileStream);
         }
     }
 }

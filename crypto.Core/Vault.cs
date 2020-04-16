@@ -147,11 +147,18 @@ namespace crypto.Core
             }
         }
 
-        public async Task<bool> ExtractFile(UserDataFile file)
+        public async Task<bool?> ExtractFile(UserDataFile file)
         {
+            FixItemHeaderForUnlockedFile(file);
+            
             var encryptedSourcePath = Path.Combine(EncryptedFolderPath, file.Header.TargetPath);
-            var unlockedTarget = Path.Combine(UnlockedFolderPath, file.Header.SecuredPlainName.PlainName);
+            var unlockedTarget = UserDataPathToUnlocked(file);
 
+            if (file.Header.IsUnlocked)
+            {
+                return null;
+            }
+            
             var hash = await UserDataFile.ExtractUserDataFile(encryptedSourcePath, unlockedTarget,
                 Header.MasterPassword.Password, file.Header.TargetCipherIV);
 
@@ -162,6 +169,11 @@ namespace crypto.Core
             file.Header.IsUnlocked = true;
 
             return hash.ContentEqualTo(file.Header.TargetAuthentication);
+        }
+
+        private string UserDataPathToUnlocked(UserDataFile file)
+        {
+            return Path.Combine(UnlockedFolderPath, file.Header.SecuredPlainName.PlainName);
         }
 
         public async Task EliminateExtracted(UserDataFile file)
