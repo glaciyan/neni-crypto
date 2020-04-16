@@ -35,7 +35,7 @@ namespace crypto.Core
             return hash;
         }
 
-        public static async Task<byte[]> WriteUserDataFile(string sourcePath, string destinationPath, byte[] key,
+        public static async Task<byte[]> WriteUserDataFileAsync(string sourcePath, string destinationPath, byte[] key,
             byte[] iv)
         {
             await using var src = new FileStream(sourcePath, FileMode.Open, FileAccess.Read);

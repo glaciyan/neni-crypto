@@ -69,7 +69,7 @@ namespace crypto.Core
             if (PlainNameAlreadyExists(newFile.Header.SecuredPlainName.PlainName)) FileAlreadyExists();
 
             var destinationPath = Path.Combine(EncryptedFolderPath, newFile.Header.TargetPath);
-            await WriteDecrypted(newFile, sourcePath, destinationPath);
+            await WriteDecryptedAsync(newFile, sourcePath, destinationPath);
 
             UserDataFiles.Add(newFile);
         }
@@ -127,9 +127,14 @@ namespace crypto.Core
             return hash.ContentEqualTo(file.Header.TargetAuthentication) ? ExtractStatus.Ok : ExtractStatus.HashNoMatch;
         }
 
-        private string UserDataPathToUnlocked(UserDataFile file)
+        public string UserDataPathToUnlocked(UserDataFile file)
         {
             return Path.Combine(UnlockedFolderPath, file.Header.SecuredPlainName.PlainName);
+        }
+        
+        public string UserDataPathToEncrypted(UserDataFile file)
+        {
+            return Path.Combine(EncryptedFolderPath, file.Header.TargetPath);
         }
 
         public async Task EliminateExtracted(UserDataFile file)
@@ -139,7 +144,6 @@ namespace crypto.Core
 
             var path = Path.Combine(UnlockedFolderPath, plainTextPath);
 
-            // TODO: try to search for the file in Unlocked and if found move it (careful with isUnlocked bool)
             if (!File.Exists(path))
             {
                 file.Header.IsUnlocked = false;
@@ -151,11 +155,6 @@ namespace crypto.Core
 
             var parentDir = Path.Combine(UnlockedFolderPath, NDirectory.GetPathParentDir(plainTextPath));
             NDirectory.DeleteDirIfEmpty(parentDir, UnlockedFolderName);
-        }
-
-        public async Task UpdateFileContent(UserDataFile header)
-        {
-            throw new NotImplementedException();
         }
 
         public UserDataFile GetFileByPath(string path)
@@ -185,9 +184,9 @@ namespace crypto.Core
             throw new FileAlreadyExistsException("File already exists in Vault");
         }
 
-        private async Task WriteDecrypted(UserDataFile file, string sourcePath, string destinationPath)
+        public async Task WriteDecryptedAsync(UserDataFile file, string sourcePath, string destinationPath)
         {
-            var hash = await UserDataFile.WriteUserDataFile(sourcePath, destinationPath,
+            var hash = await UserDataFile.WriteUserDataFileAsync(sourcePath, destinationPath,
                 Header.MasterPassword.Password, file.Header.TargetCipherIV);
 
             file.Header.TargetAuthentication = hash;

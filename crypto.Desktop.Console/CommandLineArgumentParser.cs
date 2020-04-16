@@ -18,6 +18,7 @@ namespace crypto.Desktop.Cnsl
                 "new" => new NewCommandAsync(arguments.NextOrNull(), arguments.NextOrNull()),
                 "add" => new AddCommandAsync(arguments.NextOrNull(), arguments.NextOrNull()),
                 "unlock" => new UnlockCommandAsync(arguments.NextOrNull()),
+                "lock" => new LockCommand(arguments.NextOrNull()),
 
                 _ => throw new ArgumentException("Argument was not recognized")
             };
