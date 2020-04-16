@@ -12,21 +12,6 @@ namespace crypto.Core.Tests
     [TestFixture]
     public class VaultTests
     {
-        private const string TestFolderPath = "../temptestdata/";
-        private const string TestDataPath = "../../../testdata/";
-
-        [OneTimeSetUp]
-        public void Set_Up()
-        {
-            Directory.CreateDirectory(TestFolderPath);
-        }
-
-        [OneTimeTearDown]
-        public void TearDown()
-        {
-            Directory.Delete(TestFolderPath, true);
-        }
-
         private byte[] GetFileHash(string path)
         {
             using var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read);
@@ -38,7 +23,7 @@ namespace crypto.Core.Tests
         [Test]
         public void CreateCryptoConfigNoPrefixPath()
         {
-            const string targetFile = TestFolderPath + "CreateCryptoConfigNoPrefixPath.td";
+            const string targetFile = Preparations.TestFolderPath + "CreateCryptoConfigNoPrefixPath.td";
             const string mockFileName = "importantData.txt";
 
             var key = CryptoRNG.GetRandomBytes(AesSizes.Key);
@@ -71,32 +56,32 @@ namespace crypto.Core.Tests
         public async Task DecryptingFile()
         {
             const string vaultName = "DFile";
-            const string testFile = TestDataPath + "DecryptingFile.dat";
-            var unlockedPath = $"{TestFolderPath}{vaultName}/Unlocked/DecryptingFile.dat";
+            const string testFile = Preparations.TestDataPath + "DecryptingFile.dat";
+            var unlockedPath = $"{Preparations.TestFolderPath}{vaultName}/Unlocked/DecryptingFile.dat";
             var key = CryptoRNG.GetRandomBytes(AesSizes.Key);
 
             var originalHash = GetFileHash(testFile);
 
             // create an encrypted file
             {
-                using var vault = Vault.Create(vaultName, key, TestFolderPath);
+                using var vault = Vault.Create(vaultName, key, Preparations.TestFolderPath);
                 await vault.AddFileAsync(testFile);
             }
 
             // decrypt the file
             {
-                var paths = new VaultReadingPaths($"{TestFolderPath}{vaultName}/");
+                var paths = new VaultPaths($"{Preparations.TestFolderPath}{vaultName}/");
                 using var vault = VaultReaderWriter.ReadFromConfig(paths, key);
-                var hashMatches = await vault.ExtractFile(vault.DataFiles.First());
+                var hashMatches = await vault.ExtractFile(vault.UserDataFiles.First());
                 Assert.IsTrue(hashMatches);
 
-                Assert.IsTrue(vault.DataFiles.First().Header.IsUnlocked);
+                Assert.IsTrue(vault.UserDataFiles.First().Header.IsUnlocked);
 
-                await vault.EliminateExtracted(vault.DataFiles.First());
-                Assert.IsFalse(vault.DataFiles.First().Header.IsUnlocked);
+                await vault.EliminateExtracted(vault.UserDataFiles.First());
+                Assert.IsFalse(vault.UserDataFiles.First().Header.IsUnlocked);
 
-                await vault.ExtractFile(vault.DataFiles.First());
-                Assert.IsTrue(vault.DataFiles.First().Header.IsUnlocked);
+                await vault.ExtractFile(vault.UserDataFiles.First());
+                Assert.IsTrue(vault.UserDataFiles.First().Header.IsUnlocked);
             }
 
             var decryptedHash = GetFileHash(unlockedPath);
@@ -109,19 +94,19 @@ namespace crypto.Core.Tests
         public async Task MoveFileInVault()
         {
             const string vaultName = "MoveFileInVault";
-            const string testFile = TestDataPath + "DecryptingFile.dat";
+            const string testFile = Preparations.TestDataPath + "DecryptingFile.dat";
             var key = CryptoRNG.GetRandomBytes(AesSizes.Key);
 
-            using var vault = Vault.Create(vaultName, key, TestFolderPath);
+            using var vault = Vault.Create(vaultName, key, Preparations.TestFolderPath);
             await vault.AddFileAsync(testFile);
 
-            await vault.ExtractFile(vault.DataFiles.First());
+            await vault.ExtractFile(vault.UserDataFiles.First());
 
-            vault.MoveFile(vault.DataFiles.First(), "other/files/DecryptingFile.dat");
-            vault.RenameFile(vault.DataFiles.First(), "File.dat");
+            vault.MoveFile(vault.UserDataFiles.First(), "other/files/DecryptingFile.dat");
+            vault.RenameFile(vault.UserDataFiles.First(), "File.dat");
 
-            Assert.IsTrue(File.Exists($"{TestFolderPath}{vaultName}/Unlocked/other/files/File.dat"));
-            Assert.AreEqual(vault.DataFiles.First().Header.SecuredPlainName.PlainName, "other/files/File.dat");
+            Assert.IsTrue(File.Exists($"{Preparations.TestFolderPath}{vaultName}/Unlocked/other/files/File.dat"));
+            Assert.AreEqual(vault.UserDataFiles.First().Header.SecuredPlainName.PlainName, "other/files/File.dat");
         }
 
         [Test]
@@ -129,27 +114,27 @@ namespace crypto.Core.Tests
         public async Task RemoveFileFromVault()
         {
             const string vaultName = "RemoveFileFromVault";
-            const string testFile = TestDataPath + "DecryptingFile.dat";
+            const string testFile = Preparations.TestDataPath + "DecryptingFile.dat";
             var key = CryptoRNG.GetRandomBytes(AesSizes.Key);
 
-            using var vault = Vault.Create(vaultName, key, TestFolderPath);
+            using var vault = Vault.Create(vaultName, key, Preparations.TestFolderPath);
             await vault.AddFileAsync(testFile);
 
-            await vault.RemoveFile(vault.DataFiles.First());
+            await vault.RemoveFile(vault.UserDataFiles.First());
         }
 
         [Test]
         public async Task VaultItemHeadersFileWriteRead()
         {
             const string vaultName = "TestVault";
-            const string testFile = TestDataPath + "data.dat";
+            const string testFile = Preparations.TestDataPath + "data.dat";
             var key = "passphrase".ApplySHA256();
 
-            using var file = Vault.Create(vaultName, key, TestFolderPath);
+            using var file = Vault.Create(vaultName, key, Preparations.TestFolderPath);
             await file.AddFileAsync(testFile);
             VaultReaderWriter.WriteConfig(file, key);
 
-            var paths = new VaultReadingPaths($"{TestFolderPath}/{vaultName}/");
+            var paths = new VaultPaths($"{Preparations.TestFolderPath}/{vaultName}/");
             var readFile = VaultReaderWriter.ReadFromConfig(paths, key);
             await readFile.AddFileAsync(testFile, "others");
 
@@ -159,7 +144,7 @@ namespace crypto.Core.Tests
         [Test]
         public void WriterReaderVaultHeader()
         {
-            const string targetPath = TestFolderPath + "WriterReaderVaultHeader.td";
+            const string targetPath = Preparations.TestFolderPath + "WriterReaderVaultHeader.td";
             var key = CryptoRNG.GetRandomBytes(AesSizes.Key);
 
             var header = VaultHeader.Create();
