@@ -6,10 +6,14 @@ namespace crypto.Desktop.Cnsl
 {
     public static class PasswordPrompt
     {
-        public static string PromptPassword(string? promptMessage = null)
+        public static string? ArgumentPw { get; set; }
+        
+        public static string PromptPassword(string? promptMessage = null, bool useArgument = true)
         {
+            if (ArgumentPw != null && useArgument) return ArgumentPw;
+            
             Console.Write(promptMessage ?? "Enter Password: ");
-
+            
             var password = new List<char>();
             ConsoleKeyInfo pressedKey;
             while ((pressedKey = Console.ReadKey(true)).Key != ConsoleKey.Enter)
@@ -31,8 +35,8 @@ namespace crypto.Desktop.Cnsl
 
         public static string PromptPasswordWithConfirmation()
         {
-            var pw = PromptPassword();
-            var pwRe = PromptPassword("Confirm Password: ");
+            var pw = PromptPassword("Enter Password: ", false);
+            var pwRe = PromptPassword("Confirm Password: ", false);
 
             if (pw != pwRe)
                 throw new PasswordException("Password didn't match up");

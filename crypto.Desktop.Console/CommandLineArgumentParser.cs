@@ -11,8 +11,24 @@ namespace crypto.Desktop.Cnsl
                 throw new NoConsoleArgumentException("No arguments given");
 
             var arguments = new ArrayEnumerator<string>(args);
+            
+            var firstArgument = arguments.NextOrNull();
+            
+            switch (firstArgument)
+            {
+                case "help":
+                case "--help":
+                case "-help":
+                    throw new NotImplementedException();
+                
+                case "-pw":
+                    PasswordPrompt.ArgumentPw = arguments.NextOrNull();
+                    break;
+            }
 
-            return arguments.NextOrNull() switch
+            var command = arguments.NextOrNull();
+            
+            return command switch
             {
                 "new" => new NewCommandAsync(arguments.NextOrNull(), arguments.NextOrNull()),
                 "add" => new AddCommandAsync(arguments.NextOrNull(), arguments.NextOrNull()),
