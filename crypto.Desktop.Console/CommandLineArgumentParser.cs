@@ -8,7 +8,7 @@ namespace crypto.Desktop.Cnsl
         public static CommandAsync ParseConfig(string[] args)
         {
             if (args.Length == 0)
-                throw new NoConsoleArgumentException();
+                throw new NoConsoleArgumentException("No arguments given");
 
             var arguments = new ArrayEnumerator<string>(args);
 

@@ -8,7 +8,7 @@ namespace crypto.Core
     {
         public static string RemoveRelativeParts(string path)
         {
-            var split = SplitPath(path);
+            var split = SplitPath(path.Replace('\\', '/'));
             var result = new StringBuilder();
 
             for (var i = 0; i < split.Length; i++)
