@@ -58,8 +58,6 @@ namespace crypto.Desktop.Cnsl.Commands
 
                 Notifier.Success($"Added directory {ToAddPath} to vault");
             }
-
-            Log.Debug("Added file to vault");
         }
     }
 }

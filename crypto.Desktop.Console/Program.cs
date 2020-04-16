@@ -10,9 +10,7 @@ namespace crypto.Desktop.Cnsl
         private static async Task Main(string[] args)
         {
             // logger setup
-#if DEBUG
             Log.Logger = new LoggerConfiguration().MinimumLevel.Debug().WriteTo.Console().CreateLogger();
-#endif
 
             //parse arguments
             try

@@ -24,7 +24,7 @@ namespace crypto.Core
 
         private string Name { get; }
         public VaultHeader Header { get; set; }
-        public ConcurrentBag<UserDataFile> DataFiles { get; } = new ConcurrentBag<UserDataFile>();
+        public ConcurrentBag<UserDataFile> UserDataFiles { get; } = new ConcurrentBag<UserDataFile>();
         public string VaultPath { get; set; }
         public string EncryptedFolderPath => Path.Combine(VaultPath, EncryptedFolderName);
         public string UnlockedFolderPath => Path.Combine(VaultPath, UnlockedFolderName);
@@ -32,8 +32,7 @@ namespace crypto.Core
 
         public void Dispose()
         {
-            if (!Written)
-                VaultReaderWriter.WriteConfig(this, _key);
+            VaultReaderWriter.WriteConfig(this, _key);
         }
 
         internal static string GetVaultFilePath(string vaultPath, string name)
@@ -56,7 +55,7 @@ namespace crypto.Core
             return output;
         }
 
-        public static Vault Open(VaultReadingPaths folderPath, byte[] key)
+        public static Vault Open(VaultPaths folderPath, byte[] key)
         {
             return VaultReaderWriter.ReadFromConfig(folderPath, key);
         }
@@ -84,7 +83,7 @@ namespace crypto.Core
             var destinationPath = Path.Combine(EncryptedFolderPath, newFile.Header.TargetPath);
             await WriteDecrypted(newFile, sourcePath, destinationPath);
 
-            DataFiles.Add(newFile);
+            UserDataFiles.Add(newFile);
         }
 
         private static void FileAlreadyExists()
@@ -102,7 +101,7 @@ namespace crypto.Core
 
         private bool PlainNameAlreadyExists(string plainName)
         {
-            foreach (var vltFile in DataFiles)
+            foreach (var vltFile in UserDataFiles)
             {
                 if (vltFile.Header.SecuredPlainName.PlainName == plainName)
                 {
@@ -117,7 +116,7 @@ namespace crypto.Core
         {
             File.Delete(Path.Combine(EncryptedFolderPath, file.Header.TargetPath));
             if (file.Header.IsUnlocked) await EliminateExtracted(file);
-            DataFiles.TryTake(out file);
+            UserDataFiles.TryTake(out file);
         }
         
         public void RenameFile(UserDataFile file, string name)
@@ -129,7 +128,6 @@ namespace crypto.Core
 
         public void MoveFile(UserDataFile file, string destination)
         {
-            // TODO: replace RemoveRelativeParts to a make it relative if it doesn't have a / at the start
             var relativePath = NPath.RemoveRelativeParts(destination);
             var prevFileName = file.Header.SecuredPlainName.PlainName;
             
@@ -149,11 +147,6 @@ namespace crypto.Core
             }
         }
 
-        public async Task UpdateFileContent(UserDataFile header, string source)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<bool> ExtractFile(UserDataFile file)
         {
             var encryptedSourcePath = Path.Combine(EncryptedFolderPath, file.Header.TargetPath);
@@ -162,6 +155,10 @@ namespace crypto.Core
             var hash = await UserDataFile.ExtractUserDataFile(encryptedSourcePath, unlockedTarget,
                 Header.MasterPassword.Password, file.Header.TargetCipherIV);
 
+            var now = DateTime.Now;
+            File.SetLastWriteTime(encryptedSourcePath, now);
+            File.SetLastWriteTime(unlockedTarget, now);
+            
             file.Header.IsUnlocked = true;
 
             return hash.ContentEqualTo(file.Header.TargetAuthentication);
@@ -188,14 +185,27 @@ namespace crypto.Core
             NDirectory.DeleteDirIfEmpty(parentDir, UnlockedFolderName);
         }
         
-        public UserDataFile GetByName(string name)
+        public async Task UpdateFileContent(UserDataFile header, string source)
         {
             throw new NotImplementedException();
+        }
+        
+        public UserDataFile GetFileByPath(string path)
+        {
+            foreach (var file in UserDataFiles)
+            {
+                if (file.Header.SecuredPlainName.PlainName == path)
+                {
+                    return file;
+                }
+            }
+
+            return null;
         }
 
         public void CheckAndCorrectAllItemHeaders()
         {
-            foreach (var itemHeader in DataFiles) FixItemHeaderForUnlockedFile(itemHeader);
+            foreach (var itemHeader in UserDataFiles) FixItemHeaderForUnlockedFile(itemHeader);
         }
 
         private void FixItemHeaderForUnlockedFile(UserDataFile file)
