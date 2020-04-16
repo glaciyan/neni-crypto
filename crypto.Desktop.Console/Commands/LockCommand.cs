@@ -24,7 +24,7 @@ namespace crypto.Desktop.Cnsl.Commands
             Notifier.Info("Locking files...");
             await LockAllFiles(vault);
             
-            Notifier.Success("\nLocked all files in Vault.");
+            Notifier.Success("Locked all files in Vault.");
         }
 
         private async Task LockAllFiles(Vault vault)
