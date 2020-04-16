@@ -23,7 +23,6 @@ namespace crypto.Core.Header
 
             binWriter.Write(VaultHeader.MagicNumber);
 
-            // TODO: remove iv
             binWriter.Write(_underlying.MasterPassword.AuthenticationHash);
             binWriter.Write(_underlying.MasterPassword.GetEncryptedPassword(key));
         }

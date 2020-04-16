@@ -120,18 +120,26 @@ namespace crypto.Core
             if (file.Header.IsUnlocked) await EliminateExtracted(file);
             DataFiles.TryTake(out file);
         }
+        
+        public void RenameFile(UserDataFile file, string name)
+        {
+            if (name.Contains("/")) throw new NotANameException("Argument isn't a name");
+            var dir = NDirectory.GetPathParentDir(file.Header.SecuredPlainName.PlainName);
+            MoveFile(file, dir + name);
+        }
 
         public void MoveFile(UserDataFile file, string destination)
         {
-            var destSanitized = NPath.RemoveRelativeParts(destination);
+            // TODO: replace RemoveRelativeParts to a make it relative if it doesn't have a / at the start
+            var relativePath = NPath.RemoveRelativeParts(destination);
             var prevFileName = file.Header.SecuredPlainName.PlainName;
             
-            if (PlainNameAlreadyExists(destSanitized))
+            if (PlainNameAlreadyExists(relativePath))
             {
                 FileAlreadyExists();
             }
             
-            file.Move(destSanitized);
+            file.Move(relativePath);
             
             if (file.Header.IsUnlocked)
             {
@@ -179,6 +187,11 @@ namespace crypto.Core
 
             var parentDir = Path.Combine(UnlockedFolderPath, NDirectory.GetPathParentDir(plainTextPath));
             NDirectory.DeleteDirIfEmpty(parentDir, UnlockedFolderName);
+        }
+        
+        public UserDataFile GetByName(string name)
+        {
+            throw new NotImplementedException();
         }
 
         public void CheckAndCorrectAllItemHeaders()

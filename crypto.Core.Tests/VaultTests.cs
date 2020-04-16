@@ -118,9 +118,10 @@ namespace crypto.Core.Tests
             await vault.ExtractFile(vault.DataFiles.First());
 
             vault.MoveFile(vault.DataFiles.First(), "other/files/DecryptingFile.dat");
+            vault.RenameFile(vault.DataFiles.First(), "File.dat");
 
-            Assert.IsTrue(File.Exists($"{TestFolderPath}{vaultName}/Unlocked/other/files/DecryptingFile.dat"));
-            Assert.AreEqual(vault.DataFiles.First().Header.SecuredPlainName.PlainName, "other/files/DecryptingFile.dat");
+            Assert.IsTrue(File.Exists($"{TestFolderPath}{vaultName}/Unlocked/other/files/File.dat"));
+            Assert.AreEqual(vault.DataFiles.First().Header.SecuredPlainName.PlainName, "other/files/File.dat");
         }
 
         [Test]
