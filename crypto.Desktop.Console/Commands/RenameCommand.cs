@@ -4,19 +4,19 @@ using crypto.Core;
 
 namespace crypto.Desktop.Cnsl.Commands
 {
-    public class MoveCommand : CommandAsync
+    public class RenameCommand : CommandAsync
     {
         public string? VaultPath { get; }
         public string? OldName { get; }
         public string? NewName { get; }
 
-        public MoveCommand(string? vaultPath, string? oldName, string? newName)
+        public RenameCommand(string? vaultPath, string? oldName, string? newName)
         {
             VaultPath = vaultPath ?? throw new NoConsoleArgumentException("No path to vault given");
             OldName = oldName ?? throw new NoConsoleArgumentException("No path to file given");
-            NewName = newName ?? throw new NoConsoleArgumentException("No new path given");
+            NewName = newName ?? throw new NoConsoleArgumentException("No new name given");
         }
-
+        
         public override Task Run()
         {
             using var vault = StandardVault.Generate(VaultPath);
@@ -28,9 +28,9 @@ namespace crypto.Desktop.Cnsl.Commands
                 throw new FileNotFoundException("The file to rename wasn't found");
             }
 
-            vault.MoveFile(file, NewName);
+            vault.RenameFile(file, NewName);
             
-            Notifier.Success("File moved to " + NewName);
+            Notifier.Success("File renamed to " + NewName);
             return Task.CompletedTask;
         }
     }

@@ -76,9 +76,10 @@ namespace crypto.Core
 
         public async Task RemoveFile(UserDataFile file)
         {
+            var success = UserDataFiles.TryTake(out file);
+            if (!success) throw new FileNotFoundException("Couldn't take out file.");
             File.Delete(Path.Combine(EncryptedFolderPath, file.Header.TargetPath));
             if (file.Header.IsUnlocked) await EliminateExtracted(file);
-            UserDataFiles.TryTake(out file);
         }
 
         public void RenameFile(UserDataFile file, string name)
@@ -90,6 +91,7 @@ namespace crypto.Core
 
         public void MoveFile(UserDataFile file, string destination)
         {
+            // TODO: check if destination is a path by ending with a /
             var relativePath = NPath.RemoveRelativeParts(destination);
             var prevFileName = file.Header.SecuredPlainName.PlainName;
 
