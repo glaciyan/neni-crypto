@@ -42,15 +42,10 @@ namespace crypto.Desktop.Cnsl.Commands
             else if (Directory.Exists(ToAddPath))
             {
                 var progress = new Progress<ProgressReport>();
-                progress.ProgressChanged += PrintProgress;
+                progress.ProgressChanged += FilesProgressBar.PrintProgressBar;
                 
                 await AddDirectory(vault, progress);
             }
-        }
-
-        private void PrintProgress(object? sender, ProgressReport e)
-        {
-            FilesProgressBar.PrintProgressBar(e.ModifiedFiles, e.TotalFiles, e.FailedFiles);
         }
 
         private async Task AddDirectory(Vault vault, IProgress<ProgressReport> progress)

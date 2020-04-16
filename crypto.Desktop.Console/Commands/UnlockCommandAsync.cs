@@ -23,19 +23,24 @@ namespace crypto.Desktop.Cnsl.Commands
             var paths = new VaultPaths(VaultPath);
             using var vault = Vault.Open(paths, key);
 
-            var manipulatedFiles = await ExtractAllFiles(vault);
+            var progress = new Progress<ProgressReport>();
+            progress.ProgressChanged += FilesProgressBar.PrintProgressBar;
+            
+            var manipulatedFiles = await ExtractAllFiles(vault, progress);
 
             foreach (var manipulatedFile in manipulatedFiles)
-                Notifier.Error($"File: {manipulatedFile.Header.SecuredPlainName.PlainName} " +
+                Notifier.Info($"File: {manipulatedFile.Header.SecuredPlainName.PlainName} " +
                                "has been altered, be careful with this file");
 
-            Notifier.Success("Vault unlocked.");
+            Notifier.Success("\nVault unlocked.");
         }
 
-        private static async Task<List<UserDataFile>> ExtractAllFiles(Vault vlt)
+        private static async Task<List<UserDataFile>> ExtractAllFiles(Vault vlt, IProgress<ProgressReport> progress)
         {
             var manipulatedFiles = new List<UserDataFile>();
 
+            var report = new ProgressReport(vlt.UserDataFiles.Count);
+            
             await vlt.UserDataFiles.ParallelForEachAsync(async file =>
             {
                 try
@@ -46,9 +51,13 @@ namespace crypto.Desktop.Cnsl.Commands
                 }
                 catch (Exception e)
                 {
-                    Notifier.Error($"Error unlocking file {file.Header.SecuredPlainName.PlainName}: {e.Message}");
-                    Log.Error(e.ToString());
-                    throw;
+                    report.IncrementFailedFiles();
+                    Log.Error($"Error unlocking file {file.Header.SecuredPlainName.PlainName}: {e}");
+                }
+                finally
+                {
+                    report.IncrementModifiedFiles();
+                    progress.Report(report);
                 }
             }, 0);
             

@@ -1,5 +1,4 @@
 using System;
-using System.Runtime.CompilerServices;
 
 namespace crypto.Desktop.Cnsl
 {
@@ -7,12 +6,12 @@ namespace crypto.Desktop.Cnsl
     {
         private static readonly object Locker = new object();
         
-        public static void PrintProgressBar(int done, int outOf, int failed)
+        public static void PrintProgressBar(object? sender, ProgressReport e)
         {
             lock (Locker)
             {
                 Console.CursorLeft = 0;
-                Console.Write($"Progress: {done}/{outOf} Failed: {failed}");
+                Console.Write($"Progress: {e.ModifiedFiles}/{e.TotalFiles} Failed: {e.FailedFiles}");
             }
         }
     }
