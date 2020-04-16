@@ -14,7 +14,6 @@ namespace crypto.Desktop.Cnsl
 
             return arguments.NextOrNull() switch
             {
-                // create new project
                 "new" => new NewCommandAsync(arguments.NextOrNull(), arguments.NextOrNull()),
                 "add" => new AddCommandAsync(arguments.NextOrNull(), arguments.NextOrNull()),
                 "unlock" => new UnlockCommandAsync(arguments.NextOrNull()),
@@ -22,6 +21,7 @@ namespace crypto.Desktop.Cnsl
                 "mv" => new MoveCommand(arguments.NextOrNull(), arguments.NextOrNull(), arguments.NextOrNull()),
                 "rn" => new RenameCommand(arguments.NextOrNull(), arguments.NextOrNull(), arguments.NextOrNull()),
                 "del" => new DeleteCommand(arguments.NextOrNull(), arguments.NextOrNull()),
+                "list" => new ListCommand(arguments.NextOrNull()),
                 
 
                 _ => throw new ArgumentException("Argument was not recognized")
