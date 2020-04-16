@@ -24,44 +24,38 @@ namespace crypto.Desktop.Cnsl.Commands
             var paths = new VaultPaths(VaultPath);
             using var vault = Vault.Open(paths, key);
 
-            var modifiedFiles = await EliminateAllUnmodifiedFiles(vault);
-            await UpdateThenEliminateModifiedFiles(vault, modifiedFiles);
+            await LockAllFiles(vault);
+            
+            Notifier.Success("\nLocked all files in Vault.");
         }
-        
-        //await vault.WriteDecryptedAsync(file, unlockedFi.FullName, encryptedFi.FullName);
-        //await vault.EliminateExtracted(file);
 
-        private async Task<List<ModifiedUserDataFile>> EliminateAllUnmodifiedFiles(Vault vault)
+        private async Task LockAllFiles(Vault vault)
         {
-            var modifiedFiles = new List<ModifiedUserDataFile>();
-
-            foreach (var file in vault.UserDataFiles)
+            await vault.UserDataFiles.ParallelForEachAsync(async file =>
             {
                 var encryptedFi = new FileInfo(vault.UserDataPathToEncrypted(file));
                 var unlockedFi = new FileInfo(vault.UserDataPathToUnlocked(file));
-                
-                if (encryptedFi.LastWriteTime == unlockedFi.LastWriteTime)
+
+                try
                 {
-                    await vault.EliminateExtracted(file);
+                    if (encryptedFi.LastWriteTime == unlockedFi.LastWriteTime)
+                    {
+                        await vault.EliminateExtracted(file);
+                    }
+                    else
+                    {
+                        var modFile = new ModifiedUserDataFile(file, unlockedFi.FullName, encryptedFi.FullName);
+                        Log.Information("Updating file " + modFile.UnlockedFilePath);
+                        await vault.WriteDecryptedAsync(modFile.UserDataFile, modFile.UnlockedFilePath,
+                            modFile.EncryptedFilePath);
+
+                        await vault.EliminateExtracted(modFile.UserDataFile);
+                    }
                 }
-                else
+                catch (Exception e)
                 {
-                    modifiedFiles.Add(new ModifiedUserDataFile(file, unlockedFi.FullName, encryptedFi.FullName));
+                    Log.Error($"Error locking file {file.Header.SecuredPlainName.PlainName}: {e}");
                 }
-            }
-
-            return modifiedFiles;
-        }
-
-        private async Task UpdateThenEliminateModifiedFiles(Vault vault, List<ModifiedUserDataFile> files)
-        {
-            await files.ParallelForEachAsync(async modFile =>
-            {
-                Log.Information("Updating file " + modFile.UnlockedFilePath);
-                await vault.WriteDecryptedAsync(modFile.UserDataFile, modFile.UnlockedFilePath,
-                    modFile.EncryptedFilePath);
-
-                await vault.EliminateExtracted(modFile.UserDataFile);
             }, 0);
         }
     }
