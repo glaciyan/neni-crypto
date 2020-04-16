@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using crypto.Core;
+using Dasync.Collections;
 using Serilog;
 
 namespace crypto.Desktop.Cnsl.Commands
@@ -54,14 +55,14 @@ namespace crypto.Desktop.Cnsl.Commands
 
         private async Task UpdateThenEliminateModifiedFiles(Vault vault, List<ModifiedUserDataFile> files)
         {
-            foreach (var modFile in files)
+            await files.ParallelForEachAsync(async modFile =>
             {
                 Log.Information("Updating file " + modFile.UnlockedFilePath);
                 await vault.WriteDecryptedAsync(modFile.UserDataFile, modFile.UnlockedFilePath,
                     modFile.EncryptedFilePath);
-                
+
                 await vault.EliminateExtracted(modFile.UserDataFile);
-            }
+            }, 0);
         }
     }
 }

@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading.Tasks;
 using crypto.Core;
 using crypto.Core.Extension;
+using Dasync.Collections;
 using Serilog;
 
 namespace crypto.Desktop.Cnsl.Commands
@@ -41,7 +42,9 @@ namespace crypto.Desktop.Cnsl.Commands
             }
             else if (Directory.Exists(ToAddPath))
             {
-                foreach (var file in NDirectory.GetAllFilesRecursive(ToAddPath))
+                var allFiles = NDirectory.GetAllFilesRecursive(ToAddPath);
+
+                await allFiles.ParallelForEachAsync(async file =>
                 {
                     Log.Debug($"Adding file: {file}, with size {new FileInfo(file).Length}");
                     var pathToFile = NPath.GetRelativePathToFile(ToAddPath, file);
@@ -54,7 +57,7 @@ namespace crypto.Desktop.Cnsl.Commands
                     {
                         Notifier.Error($"Error with file {file}: {e.Message}");
                     }
-                }
+                }, 0);
 
                 Notifier.Success($"Added directory {ToAddPath} to vault");
             }

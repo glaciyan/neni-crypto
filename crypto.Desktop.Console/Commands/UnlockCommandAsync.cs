@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using crypto.Core;
 using crypto.Core.Extension;
+using Dasync.Collections;
 using Serilog;
 
 namespace crypto.Desktop.Cnsl.Commands
@@ -36,7 +37,8 @@ namespace crypto.Desktop.Cnsl.Commands
         {
             var manipulatedFiles = new List<UserDataFile>();
 
-            foreach (var file in vlt.UserDataFiles)
+            await vlt.UserDataFiles.ParallelForEachAsync(async file =>
+            {
                 try
                 {
                     var status = await vlt.ExtractFile(file);
@@ -49,7 +51,8 @@ namespace crypto.Desktop.Cnsl.Commands
                     Log.Error(e.ToString());
                     throw;
                 }
-
+            }, 0);
+            
             return manipulatedFiles;
         }
     }
