@@ -24,6 +24,7 @@ namespace crypto.Desktop.Cnsl.Commands
             var paths = new VaultPaths(VaultPath);
             using var vault = Vault.Open(paths, key);
 
+            Notifier.Info("Locking files...");
             await LockAllFiles(vault);
             
             Notifier.Success("\nLocked all files in Vault.");
