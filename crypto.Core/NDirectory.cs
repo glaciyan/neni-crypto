@@ -40,7 +40,7 @@ namespace crypto.Core
             return output.ToString();
         }
 
-        public static IEnumerable<string> GetAllFilesRecursive(string path)
+        public static List<string> GetAllFilesRecursive(string path)
         {
             var allFilePaths = new List<string>();
             var dirInfo = new DirectoryInfo(path);

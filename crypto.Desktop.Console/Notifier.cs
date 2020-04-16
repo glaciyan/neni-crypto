@@ -4,8 +4,6 @@ namespace crypto.Desktop.Cnsl
 {
     public static class Notifier
     {
-        public static bool EnableColor { get; set; } = true;
-
         public static void Error(string message)
         {
             PrintColor(message, ConsoleColor.Red);
@@ -23,11 +21,11 @@ namespace crypto.Desktop.Cnsl
 
         private static void PrintColor(string m, ConsoleColor col)
         {
-            if (EnableColor) Console.ForegroundColor = col;
+            if (ColorManager.EnableColor) Console.ForegroundColor = col;
 
             Console.Error.WriteLine(m);
 
-            if (EnableColor) Console.ResetColor();
+            if (ColorManager.EnableColor) Console.ResetColor();
         }
     }
 }

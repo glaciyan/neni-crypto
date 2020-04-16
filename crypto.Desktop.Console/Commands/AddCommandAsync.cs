@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using crypto.Core;
 using crypto.Core.Extension;
@@ -42,25 +43,46 @@ namespace crypto.Desktop.Cnsl.Commands
             }
             else if (Directory.Exists(ToAddPath))
             {
-                var allFiles = NDirectory.GetAllFilesRecursive(ToAddPath);
-
-                await allFiles.ParallelForEachAsync(async file =>
-                {
-                    Log.Debug($"Adding file: {file}, with size {new FileInfo(file).Length}");
-                    var pathToFile = NPath.GetRelativePathToFile(ToAddPath, file);
-
-                    try
-                    {
-                        await vault.AddFileAsync(file, pathToFile);
-                    }
-                    catch (Exception e)
-                    {
-                        Notifier.Error($"Error with file {file}: {e.Message}");
-                    }
-                }, 0);
-
-                Notifier.Success($"Added directory {ToAddPath} to vault");
+                var progress = new Progress<ProgressReport>();
+                progress.ProgressChanged += PrintProgress;
+                
+                await AddDirectory(vault, progress);
             }
+        }
+
+        private void PrintProgress(object? sender, ProgressReport e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private async Task AddDirectory(Vault vault, IProgress<ProgressReport> progress)
+        {
+            var allFiles = NDirectory.GetAllFilesRecursive(ToAddPath);
+            
+            var report = new ProgressReport(allFiles.Count);
+
+            await allFiles.ParallelForEachAsync(async file =>
+            {
+                Log.Debug($"Adding file: {file}, with size {new FileInfo(file).Length}");
+                var pathToFile = NPath.GetRelativePathToFile(ToAddPath, file);
+
+                try
+                {
+                    await vault.AddFileAsync(file, pathToFile);
+                }
+                catch (Exception e)
+                {
+                    report.FailedFiles = report.IncrementFailedFiles();
+                    Log.Error($"Error with file {file}: {e}");
+                }
+                finally
+                {
+                    report.ModifiedFiles = report.IncrementModifiedFiles();
+                    progress.Report(report);
+                }
+            }, 0);
+
+            Notifier.Success($"Added directory {ToAddPath} to vault");
         }
     }
 }
