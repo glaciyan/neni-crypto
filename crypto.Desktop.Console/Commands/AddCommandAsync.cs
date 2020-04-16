@@ -1,9 +1,7 @@
 using System;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using crypto.Core;
-using crypto.Core.Extension;
 using Dasync.Collections;
 using Serilog;
 
@@ -52,7 +50,7 @@ namespace crypto.Desktop.Cnsl.Commands
 
         private void PrintProgress(object? sender, ProgressReport e)
         {
-            throw new NotImplementedException();
+            FilesProgressBar.PrintProgressBar(e.ModifiedFiles, e.TotalFiles, e.FailedFiles);
         }
 
         private async Task AddDirectory(Vault vault, IProgress<ProgressReport> progress)
@@ -72,17 +70,17 @@ namespace crypto.Desktop.Cnsl.Commands
                 }
                 catch (Exception e)
                 {
-                    report.FailedFiles = report.IncrementFailedFiles();
+                    report.IncrementFailedFiles();
                     Log.Error($"Error with file {file}: {e}");
                 }
                 finally
                 {
-                    report.ModifiedFiles = report.IncrementModifiedFiles();
+                    report.IncrementModifiedFiles();
                     progress.Report(report);
                 }
             }, 0);
 
-            Notifier.Success($"Added directory {ToAddPath} to vault");
+            Notifier.Success($"\nAdded directory {ToAddPath} to vault");
         }
     }
 }

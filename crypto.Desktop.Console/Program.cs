@@ -16,7 +16,9 @@ namespace crypto.Desktop.Cnsl
             //parse arguments
             try
             {
+                Console.CursorVisible = false;
                 await CommandLineArgumentParser.ParseConfig(args).Run();
+                Console.CursorVisible = true;
             }
             catch (NoConsoleArgumentException)
             {
