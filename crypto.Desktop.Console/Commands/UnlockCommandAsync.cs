@@ -43,9 +43,9 @@ namespace crypto.Desktop.Cnsl.Commands
             {
                 try
                 {
-                    var hashMatches = await vlt.ExtractFile(file);
-            
-                    if (!hashMatches ?? false)
+                    var status = await vlt.ExtractFile(file);
+
+                    if (status == ExtractStatus.HashNoMatch)
                     {
                         manipulatedFiles.Add(file);
                     }

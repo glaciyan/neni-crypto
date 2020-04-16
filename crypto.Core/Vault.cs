@@ -147,7 +147,7 @@ namespace crypto.Core
             }
         }
 
-        public async Task<bool?> ExtractFile(UserDataFile file)
+        public async Task<ExtractStatus> ExtractFile(UserDataFile file)
         {
             FixItemHeaderForUnlockedFile(file);
             
@@ -156,7 +156,7 @@ namespace crypto.Core
 
             if (file.Header.IsUnlocked)
             {
-                return null;
+                return ExtractStatus.Duplicate;
             }
             
             var hash = await UserDataFile.ExtractUserDataFile(encryptedSourcePath, unlockedTarget,
@@ -168,7 +168,7 @@ namespace crypto.Core
             
             file.Header.IsUnlocked = true;
 
-            return hash.ContentEqualTo(file.Header.TargetAuthentication);
+            return hash.ContentEqualTo(file.Header.TargetAuthentication) ? ExtractStatus.Ok : ExtractStatus.HashNoMatch;
         }
 
         private string UserDataPathToUnlocked(UserDataFile file)

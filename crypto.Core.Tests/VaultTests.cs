@@ -72,8 +72,8 @@ namespace crypto.Core.Tests
             {
                 var paths = new VaultPaths($"{Preparations.TestFolderPath}{vaultName}/");
                 using var vault = VaultReaderWriter.ReadFromConfig(paths, key);
-                var hashMatches = await vault.ExtractFile(vault.UserDataFiles.First());
-                Assert.IsTrue(hashMatches);
+                var status = await vault.ExtractFile(vault.UserDataFiles.First());
+                Assert.AreEqual(ExtractStatus.Ok, status);
 
                 Assert.IsTrue(vault.UserDataFiles.First().Header.IsUnlocked);
 
