@@ -1,6 +1,5 @@
 using System.IO;
 using System.Threading.Tasks;
-using crypto.Core;
 
 namespace crypto.Desktop.Cnsl.Commands
 {
@@ -15,7 +14,7 @@ namespace crypto.Desktop.Cnsl.Commands
             TargetPath = oldName ?? throw new NoConsoleArgumentException("No path to file given");
         }
 
-        public override Task Run()
+        public override async Task Run()
         {
             using var vault = StandardVault.Generate(VaultPath);
 
@@ -26,10 +25,8 @@ namespace crypto.Desktop.Cnsl.Commands
                 throw new FileNotFoundException("The file to rename wasn't found");
             }
 
-            vault.RemoveFile(file);
+            await vault.RemoveFile(file);
             Notifier.Info("Deleted file " + TargetPath);
-            
-            return Task.CompletedTask;
         }
     }
 }
