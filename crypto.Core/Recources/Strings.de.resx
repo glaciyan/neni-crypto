@@ -21,13 +21,13 @@
     <value>File existiert schon im Vault.</value>
   </data>
   <data name="Vault_EliminateExtracted_Decrypted_file_was_not_found" xml:space="preserve">
-    <value>Verschlüsselte Datei nicht gefunden.</value>
+    <value>Verschluesselte Datei nicht gefunden.</value>
   </data>
   <data name="Vault_AddFileAsync_File_not_found" xml:space="preserve">
     <value>Datei nicht gefunden.</value>
   </data>
   <data name="VaultReaderWriter_ReadFromConfig_Password_wasn_t_able_to_be_verified" xml:space="preserve">
-    <value>Kennwort konnte nicht bestätigt werden.</value>
+    <value>Kennwort konnte nicht bestÃ¤tigt werden.</value>
   </data>
   <data name="VaultPaths_VaultPaths_Couldn_t_find_vault_file_for_path__0_" xml:space="preserve">
     <value>Konnte Vault Datei im Pfad {0} nicht finden.</value>
