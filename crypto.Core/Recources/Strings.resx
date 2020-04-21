@@ -98,4 +98,31 @@
 	<resheader name="writer">
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
+  <data name="ArrayExtension_SetRange_The_range_doesn_t_fit_in_the_array" xml:space="preserve">
+    <value>The range doesn't fit in the array.</value>
+  </data>
+  <data name="VaultReaderWriter_ReadFromConfig_Password_wasn_t_able_to_be_verified" xml:space="preserve">
+    <value>Password wasn't able to be verified.</value>
+  </data>
+  <data name="VaultPaths_VaultPaths_Couldn_t_find_vault_file_for_path__0_" xml:space="preserve">
+    <value>Couldn't find vault file for path {0}.</value>
+  </data>
+  <data name="Vault_AddFileAsync_File_not_found" xml:space="preserve">
+    <value>File not found.</value>
+  </data>
+  <data name="Vault_RemoveFile_Couldn_t_take_out_file_" xml:space="preserve">
+    <value>Couldn't take out file.</value>
+  </data>
+  <data name="Vault_RenameFile_Argument_isn_t_a_name" xml:space="preserve">
+    <value>Argument isn't a name.</value>
+  </data>
+  <data name="Vault_EliminateExtracted_Decrypted_file_was_not_found" xml:space="preserve">
+    <value>Decrypted file was not found.</value>
+  </data>
+  <data name="Vault_FileAlreadyExists_File_already_exists_in_Vault" xml:space="preserve">
+    <value>File already exists in Vault.</value>
+  </data>
+  <data name="VaultHeaderReader_ReadFrom_Magic_number_doesn_t_match" xml:space="preserve">
+    <value>Magic number doesn't match.</value>
+  </data>
 </root>

@@ -1,6 +1,7 @@
 using System.IO;
 using System.Security.Cryptography;
 using crypto.Core.Header;
+using crypto.Core.Recources;
 
 namespace crypto.Core
 {
@@ -20,7 +21,7 @@ namespace crypto.Core
 
             var (keyWasCorrect, password) = result.Header.MasterPassword.GetDecryptedPassword(key);
 
-            if (!keyWasCorrect) throw new CryptographicException("Password wasn't able to be verified");
+            if (!keyWasCorrect) throw new CryptographicException(Strings.VaultReaderWriter_ReadFromConfig_Password_wasn_t_able_to_be_verified);
 
             while (vaultFile.Position < vaultFile.Length)
                 result.UserDataFiles.Add(new UserDataFile(UserDataHeaderReader.ReadFrom(vaultFile, password)));

@@ -1,4 +1,5 @@
 using System.IO;
+using crypto.Core.Recources;
 
 namespace crypto.Core
 {
@@ -14,7 +15,7 @@ namespace crypto.Core
             VaultFilePath = Vault.GetVaultFilePath(FullVaultFolderPath, Name);
 
             if (!File.Exists(VaultFilePath))
-                throw new FileNotFoundException("Couldn't find vault file for path " + VaultFilePath);
+                throw new FileNotFoundException(string.Format(Strings.VaultPaths_VaultPaths_Couldn_t_find_vault_file_for_path__0_, VaultFilePath));
         }
 
         public string Name { get; set; }

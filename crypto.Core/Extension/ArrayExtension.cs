@@ -1,5 +1,6 @@
 using System;
 using crypto.Core.Exceptions;
+using crypto.Core.Recources;
 
 namespace crypto.Core.Extension
 {
@@ -8,7 +9,7 @@ namespace crypto.Core.Extension
         public static void SetRange<T>(this T[] src, int srcOffset, T[] dest, int destOffset, int range)
         {
             if (src.Length - srcOffset - dest.Length - range == 0)
-                throw new ArgumentOutOfRangeException(nameof(dest), "The range doesn't fit in the array");
+                throw new ArgumentOutOfRangeException(nameof(dest), Strings.ArrayExtension_SetRange_The_range_doesn_t_fit_in_the_array);
 
             for (var i = 0; i < range; i++) src[srcOffset + i] = dest[destOffset + i];
         }

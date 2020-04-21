@@ -3,6 +3,7 @@ using System.IO;
 using System.Text;
 using crypto.Core.Cryptography;
 using crypto.Core.Extension;
+using crypto.Core.Recources;
 
 namespace crypto.Core.Header
 {
@@ -15,7 +16,7 @@ namespace crypto.Core.Header
             var magicNumber = binReader.ReadBytes(VaultHeader.MagicNumberLength);
 
             if (!magicNumber.ContentEqualTo(VaultHeader.MagicNumber))
-                throw new FormatException("Magic number doesn't match");
+                throw new FormatException(Strings.VaultHeaderReader_ReadFrom_Magic_number_doesn_t_match);
 
             var result = new VaultHeader();
 

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using crypto.Core.Exceptions;
 using crypto.Core.Extension;
 using crypto.Core.Header;
+using crypto.Core.Recources;
 
 namespace crypto.Core
 {
@@ -61,7 +62,7 @@ namespace crypto.Core
 
         public async Task AddFileAsync(string sourcePath, string path = "")
         {
-            if (!File.Exists(sourcePath)) throw new FileNotFoundException("File not found", sourcePath);
+            if (!File.Exists(sourcePath)) throw new FileNotFoundException(Strings.Vault_AddFileAsync_File_not_found, sourcePath);
 
             var name = Path.GetFileName(sourcePath);
             var newFile = new UserDataFile(UserDataHeader.Create(name, path));
@@ -77,14 +78,14 @@ namespace crypto.Core
         public async Task RemoveFile(UserDataFile file)
         {
             var success = UserDataFiles.TryTake(out file);
-            if (!success) throw new FileNotFoundException("Couldn't take out file.");
+            if (!success) throw new FileNotFoundException(Strings.Vault_RemoveFile_Couldn_t_take_out_file_);
             File.Delete(Path.Combine(EncryptedFolderPath, file.Header.TargetPath));
             if (file.Header.IsUnlocked) await EliminateExtracted(file);
         }
 
         public void RenameFile(UserDataFile file, string name)
         {
-            if (name.Contains("/")) throw new NotANameException("Argument isn't a name");
+            if (name.Contains("/")) throw new NotANameException(Strings.Vault_RenameFile_Argument_isn_t_a_name);
             var dir = NDirectory.GetPathParentDir(file.Header.SecuredPlainName.PlainName);
             MoveFile(file, dir + name);
         }
@@ -149,7 +150,7 @@ namespace crypto.Core
             if (!File.Exists(path))
             {
                 file.Header.IsUnlocked = false;
-                throw new FileNotFoundException("Decrypted file was not found", plainTextPath);
+                throw new FileNotFoundException(Strings.Vault_EliminateExtracted_Decrypted_file_was_not_found, plainTextPath);
             }
 
             await NFile.Purge(path);
@@ -183,7 +184,7 @@ namespace crypto.Core
 
         private static void FileAlreadyExists()
         {
-            throw new FileAlreadyExistsException("File already exists in Vault");
+            throw new FileAlreadyExistsException(Strings.Vault_FileAlreadyExists_File_already_exists_in_Vault);
         }
 
         public async Task WriteDecryptedAsync(UserDataFile file, string sourcePath, string destinationPath)
