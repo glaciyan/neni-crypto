@@ -115,6 +115,15 @@ namespace crypto.Desktop.Cnsl.Recources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string HelpText {
+            get {
+                return ResourceManager.GetString("HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error locking file {0}: {1}.
         /// </summary>
         internal static string LockCommand_LockAllFiles_Error_locking_file__0____1_ {

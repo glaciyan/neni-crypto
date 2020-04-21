@@ -19,8 +19,10 @@ namespace crypto.Desktop.Cnsl
             {
                 case "help":
                 case "--help":
-                case "-help":
-                    throw new NotImplementedException();
+                case "-h":
+                    Console.WriteLine(Strings.HelpText);
+                    Environment.Exit(0);
+                    break;
                 
                 case "-pw":
                     PasswordPrompt.ArgumentPw = arguments.NextOrNull();

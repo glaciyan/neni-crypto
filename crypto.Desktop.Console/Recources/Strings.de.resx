@@ -185,4 +185,23 @@
   <data name="AddCommandAsync_Run_Added_file__0__to_vault" xml:space="preserve">
     <value>Datei {0} wurde dem Vault hinzugefügt.</value>
   </data>
+  <data name="HelpText" xml:space="preserve">
+    <value>Neni-Crypto Hilfe
+&lt;&gt; - benötigt
+() - Optional
+Beispiel: crp -pw asdf123 add BeispielVault ../datei.dat
+
+Argument:
+ -pw &lt;Kennwort&gt; überspringt die Kennworteingabe mit dem gegebenen Kennwort
+
+Anweisungen:
+ new (Name) (Pfad) – erstellt einen neuen Vault mit dem gegebenen Namen.
+ add &lt;Pfad zum Vault&gt; &lt;Pfad&gt; - fügt eine oder mehrere Dateien oder Ordner dem Vault hinzu.
+ unlock (Pfad zum Vault) - Entschlüsselt alles im Vault.
+ lock (Pfad zum Vault) - Löscht jede Datei, welche im Vault entschlüsselt wurde. Dateien, welche verändert wurden, werden aktualisiert.
+ mv &lt;Pfad zum Vault&gt; &lt;Kompletter Name einer Datei im Vault&gt; &lt;Neuer Ort&gt; - Verschiebt die Datei an einem anderen Ort.
+ rn &lt;Pfad zum Vault&gt; &lt;Kompletter Name einer Datei im Vault&gt; &lt;Neuer Name&gt; - Gibt der Datei einen neuen Namen.
+ del &lt;Pfad zum Vault&gt; &lt;Kompletter Name einer Datei im Vault&gt; - Löscht die Datei vom Vault.
+ list &lt;Pfad zum Vault&gt; - Listet alle Dateien im Vault, nützlich in Verbindung mit mv, rn und del.</value>
+  </data>
 </root>
