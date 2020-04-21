@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using crypto.Core;
 
 namespace crypto.Desktop.Cnsl.Commands
 {

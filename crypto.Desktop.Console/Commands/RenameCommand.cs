@@ -1,6 +1,6 @@
 using System.IO;
 using System.Threading.Tasks;
-using crypto.Core;
+using crypto.Desktop.Cnsl.Recources;
 
 namespace crypto.Desktop.Cnsl.Commands
 {
@@ -12,9 +12,9 @@ namespace crypto.Desktop.Cnsl.Commands
 
         public RenameCommand(string? vaultPath, string? oldName, string? newName)
         {
-            VaultPath = vaultPath ?? throw new NoConsoleArgumentException("No path to vault given");
-            OldName = oldName ?? throw new NoConsoleArgumentException("No path to file given");
-            NewName = newName ?? throw new NoConsoleArgumentException("No new name given");
+            VaultPath = vaultPath ?? throw new NoConsoleArgumentException(Strings.RenameCommand_RenameCommand_No_path_to_vault_given);
+            OldName = oldName ?? throw new NoConsoleArgumentException(Strings.RenameCommand_RenameCommand_No_path_to_file_given);
+            NewName = newName ?? throw new NoConsoleArgumentException(Strings.RenameCommand_RenameCommand_No_new_name_given);
         }
         
         public override Task Run()
@@ -25,12 +25,12 @@ namespace crypto.Desktop.Cnsl.Commands
 
             if (file == null)
             {
-                throw new FileNotFoundException("The file to rename wasn't found");
+                throw new FileNotFoundException(Strings.RenameCommand_Run_The_file_to_rename_wasn_t_found);
             }
 
             vault.RenameFile(file, NewName);
             
-            Notifier.Success("File renamed to " + NewName);
+            Notifier.Success(Strings.RenameCommand_Run_File_renamed_to_ + NewName);
             return Task.CompletedTask;
         }
     }

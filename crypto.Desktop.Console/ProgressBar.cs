@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using crypto.Desktop.Cnsl.Recources;
 
 namespace crypto.Desktop.Cnsl
 {
@@ -12,9 +13,9 @@ namespace crypto.Desktop.Cnsl
             lock (Locker)
             {
                 Console.CursorLeft = 0;
-                Console.Write($"Progress: {e.ModifiedFiles}/{e.TotalFiles}");
+                Console.Write(Strings.ProgressBar_PrintProgressBar_Progress___0___1_, e.ModifiedFiles, e.TotalFiles);
                 if (Console.CursorLeft < 30) Console.CursorLeft = 30;
-                Console.Write($"{GetBar(e.ModifiedFiles, e.TotalFiles)} Failed: {e.FailedFiles}");
+                Console.Write(Strings.ProgressBar_PrintProgressBar__0__Failed___1_, GetBar(e.ModifiedFiles, e.TotalFiles), e.FailedFiles);
             }
         }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using crypto.Core.Extension;
+using crypto.Desktop.Cnsl.Recources;
 
 namespace crypto.Desktop.Cnsl
 {
@@ -12,7 +13,7 @@ namespace crypto.Desktop.Cnsl
         {
             if (ArgumentPw != null && useArgument) return ArgumentPw;
             
-            Console.Write(promptMessage ?? "Enter Password: ");
+            Console.Write(promptMessage ?? Strings.PasswordPrompt_PromptPassword_Enter_Password__);
             
             var password = new List<char>();
             ConsoleKeyInfo pressedKey;
@@ -35,11 +36,11 @@ namespace crypto.Desktop.Cnsl
 
         public static string PromptPasswordWithConfirmation()
         {
-            var pw = PromptPassword("Enter Password: ", false);
-            var pwRe = PromptPassword("Confirm Password: ", false);
+            var pw = PromptPassword(Strings.PasswordPrompt_PromptPassword_Enter_Password__, false);
+            var pwRe = PromptPassword(Strings.PasswordPrompt_PromptPasswordWithConfirmation_Confirm_Password__, false);
 
             if (pw != pwRe)
-                throw new PasswordException("Password didn't match up");
+                throw new PasswordException(Strings.PasswordPrompt_PromptPasswordWithConfirmation_Password_didn_t_match_up);
 
             return pw;
         }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using crypto.Core;
+using crypto.Desktop.Cnsl.Recources;
 using Dasync.Collections;
 using Serilog;
 
@@ -26,10 +27,10 @@ namespace crypto.Desktop.Cnsl.Commands
             var manipulatedFiles = await ExtractAllFiles(vault, progress);
 
             foreach (var manipulatedFile in manipulatedFiles)
-                Notifier.Info($"File: {manipulatedFile.Header.SecuredPlainName.PlainName} " +
-                               "has been altered, be careful with this file");
+                Notifier.Info(string.Format(Strings.UnlockCommandAsync_Run_File_has_been_altered, manipulatedFile.Header.SecuredPlainName.PlainName));
 
-            Notifier.Success("\nVault unlocked.");
+            Console.WriteLine();
+            Notifier.Success(Strings.UnlockCommandAsync_Run_Vault_unlocked_);
         }
 
         private static async Task<List<UserDataFile>> ExtractAllFiles(Vault vlt, IProgress<ProgressReport> progress)
@@ -49,7 +50,7 @@ namespace crypto.Desktop.Cnsl.Commands
                 catch (Exception e)
                 {
                     report.IncrementFailedFiles();
-                    Log.Error($"Error unlocking file {file.Header.SecuredPlainName.PlainName}: {e}");
+                    Log.Error(string.Format(Strings.UnlockCommandAsync_ExtractAllFiles_Error_unlocking_file__0____1_, file.Header.SecuredPlainName.PlainName, e));
                 }
                 finally
                 {

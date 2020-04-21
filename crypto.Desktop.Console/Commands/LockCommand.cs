@@ -1,8 +1,8 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using crypto.Core;
+using crypto.Desktop.Cnsl.Recources;
 using Dasync.Collections;
 using Serilog;
 
@@ -21,10 +21,10 @@ namespace crypto.Desktop.Cnsl.Commands
         {
             using var vault = StandardVault.Generate(VaultPath);
 
-            Notifier.Info("Locking files...");
+            Notifier.Info(Strings.LockCommand_Run_Locking_files___);
             await LockAllFiles(vault);
             
-            Notifier.Success("Locked all files in Vault.");
+            Notifier.Success(Strings.LockCommand_Run_Locked_all_files_in_Vault_);
         }
 
         private async Task LockAllFiles(Vault vault)
@@ -43,7 +43,7 @@ namespace crypto.Desktop.Cnsl.Commands
                     else
                     {
                         var modFile = new ModifiedUserDataFile(file, unlockedFi.FullName, encryptedFi.FullName);
-                        Log.Information("Updating file " + modFile.UnlockedFilePath);
+                        Log.Information(Strings.LockCommand_LockAllFiles_Updating_file_ + modFile.UnlockedFilePath);
                         await vault.WriteDecryptedAsync(modFile.UserDataFile, modFile.UnlockedFilePath,
                             modFile.EncryptedFilePath);
 
@@ -52,7 +52,7 @@ namespace crypto.Desktop.Cnsl.Commands
                 }
                 catch (Exception e)
                 {
-                    Log.Error($"Error locking file {file.Header.SecuredPlainName.PlainName}: {e}");
+                    Log.Error(string.Format(Strings.LockCommand_LockAllFiles_Error_locking_file__0____1_, file.Header.SecuredPlainName.PlainName, e));
                 }
             }, 0);
         }

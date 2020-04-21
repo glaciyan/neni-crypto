@@ -2,6 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using crypto.Core;
+using crypto.Desktop.Cnsl.Recources;
 using Serilog;
 
 namespace crypto.Desktop.Cnsl.Commands
@@ -36,13 +37,13 @@ namespace crypto.Desktop.Cnsl.Commands
                 Log.Debug($"vaultPath: {folderPath}");
 
                 if (!NDirectory.IsDirectoryEmpty(folderPath))
-                    throw new DirectoryNotEmptyException("The directory with the vault name is not empty");
+                    throw new DirectoryNotEmptyException(Strings.NewCommandAsync_Run_The_directory_vault_is_not_empty);
 
                 var key = PasswordPrompt.PromptPasswordWithConfirmationAsHash();
 
                 using var vault = Vault.Create(vaultName, key, vaultPath);
 
-                Notifier.Success($"Created vault {vaultName} as {folderPath}.");
+                Notifier.Success(string.Format(Strings.NewCommandAsync_Run_Created_vault__0__as__1__, vaultName, folderPath));
             });
         }
 
@@ -60,7 +61,7 @@ namespace crypto.Desktop.Cnsl.Commands
             if (currDir.GetDirectories().Length == 0 && currDir.GetFiles().Length == 0)
                 return currDir.Parent?.FullName ?? currDir.FullName;
 
-            throw new DirectoryNotEmptyException("The directory is not empty, can't create vault");
+            throw new DirectoryNotEmptyException(Strings.NewCommandAsync_Run_The_directory_vault_is_not_empty);
         }
 
         private static string GetCurrentDirectoryName()

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using crypto.Desktop.Cnsl.Commands;
+using crypto.Desktop.Cnsl.Recources;
 using Serilog;
 
 namespace crypto.Desktop.Cnsl
@@ -20,12 +21,12 @@ namespace crypto.Desktop.Cnsl
             }
             catch (NoConsoleArgumentException)
             {
-                Notifier.Info("No console arguments given");
+                Notifier.Info(Strings.Program_Main_No_console_arguments_given);
             }
             catch (Exception e)
             {
                 Log.Error(e.ToString());
-                Notifier.Error($"Something went wrong: {e.Message}");
+                Notifier.Error(Strings.Program_Main_Something_went_wrong__ + e.Message);
             }
         }
     }
