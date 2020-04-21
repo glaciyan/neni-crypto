@@ -176,4 +176,13 @@
   <data name="DeleteCommand_Run_Deleted_file_" xml:space="preserve">
     <value>Deleted file {0}.</value>
   </data>
+  <data name="AddCommandAsync_Run_Added_file__0__to_vault" xml:space="preserve">
+    <value>Added file {0} to vault.</value>
+  </data>
+  <data name="AddCommandAsync_AddDirectory_Error_with_file__0____1_" xml:space="preserve">
+    <value>Error with file {0}: {1}</value>
+  </data>
+  <data name="AddCommandAsync_AddDirectory_Added_directory__0__to_vault" xml:space="preserve">
+    <value>Added directory {0} to vault.</value>
+  </data>
 </root>

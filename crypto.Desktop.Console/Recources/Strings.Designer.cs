@@ -61,6 +61,33 @@ namespace crypto.Desktop.Cnsl.Recources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Added directory {0} to vault..
+        /// </summary>
+        internal static string AddCommandAsync_AddDirectory_Added_directory__0__to_vault {
+            get {
+                return ResourceManager.GetString("AddCommandAsync_AddDirectory_Added_directory__0__to_vault", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error with file {0}: {1}.
+        /// </summary>
+        internal static string AddCommandAsync_AddDirectory_Error_with_file__0____1_ {
+            get {
+                return ResourceManager.GetString("AddCommandAsync_AddDirectory_Error_with_file__0____1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Added file {0} to vault..
+        /// </summary>
+        internal static string AddCommandAsync_Run_Added_file__0__to_vault {
+            get {
+                return ResourceManager.GetString("AddCommandAsync_Run_Added_file__0__to_vault", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Argument was not recognized..
         /// </summary>
         internal static string CommandLineArgumentParser_ParseConfig_Argument_was_not_recognized {

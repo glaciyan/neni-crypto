@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using crypto.Core;
+using crypto.Desktop.Cnsl.Recources;
 using Dasync.Collections;
 using Serilog;
 
@@ -16,7 +17,7 @@ namespace crypto.Desktop.Cnsl.Commands
 
         public AddCommandAsync(string? vaultPath, string? addPath)
         {
-            ToAddPath = addPath ?? throw new NullReferenceException("Path to file not given");
+            ToAddPath = addPath ?? throw new NullReferenceException(Strings.RenameCommand_RenameCommand_No_path_to_file_given);
             VaultPath = vaultPath;
         }
 
@@ -37,7 +38,7 @@ namespace crypto.Desktop.Cnsl.Commands
             if (File.Exists(ToAddPath))
             {
                 await vault.AddFileAsync(ToAddPath);
-                Notifier.Success($"Added file {ToAddPath} to vault");
+                Notifier.Success(string.Format(Strings.AddCommandAsync_Run_Added_file__0__to_vault, ToAddPath));
             }
             else if (Directory.Exists(ToAddPath))
             {
@@ -65,7 +66,7 @@ namespace crypto.Desktop.Cnsl.Commands
                 catch (Exception e)
                 {
                     report.IncrementFailedFiles();
-                    Log.Error($"Error with file {file}: {e}");
+                    Log.Error(string.Format(Strings.AddCommandAsync_AddDirectory_Error_with_file__0____1_, file, e));
                 }
                 finally
                 {
@@ -74,7 +75,8 @@ namespace crypto.Desktop.Cnsl.Commands
                 }
             }, 0);
 
-            Notifier.Success($"\nAdded directory {ToAddPath} to vault");
+            Console.WriteLine();
+            Notifier.Success(string.Format(Strings.AddCommandAsync_AddDirectory_Added_directory__0__to_vault, ToAddPath));
         }
     }
 }
